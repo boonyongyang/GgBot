@@ -319,7 +319,34 @@ void renderCuboid(float x, float y, float z) {
 	glEnd();
 }
 
+void drawSpineJoint(){
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 0.0);
+		renderSphere(0.1);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(0.15, 0.0, 0.0);
+		glColor3f(1.0, 0.0, 0.0);
+		renderSphere(0.05);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(-0.15, 0.0, 0.0);
+		glColor3f(1.0, 0.0, 0.0);
+		renderSphere(0.05);
+	}
+	glPopMatrix();
+}
 void drawSpine() {
+
+	glPushMatrix();
+	glScalef(5.0, 5.0, 5.0);
 	//main line behind
 	glPushMatrix();
 	{
@@ -332,9 +359,13 @@ void drawSpine() {
 	glPushMatrix();
 	{
 		glTranslatef(0.0, 0.0, 1.0);
-		glColor3f(1.0, 1.0, 0.0);
-		renderSphere(0.1);
+		drawSpineJoint();
 	}
+	glPopMatrix();
+
+
+	
+
 	glPopMatrix();
 
 
