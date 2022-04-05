@@ -494,6 +494,7 @@ void display()
 		break;
 	case 2:
 		//test2();	// change to what u want for test
+		drawBody();
 		break;
 	case 3:
 		test3();	// change to what u want for test
