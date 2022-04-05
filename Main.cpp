@@ -334,6 +334,11 @@ void drawLeftLeg() {
 
 void drawRightLeg() {}
 
+void drawSpine() {
+	glColor3f(1.0, 0.0, 0.0);
+	renderCube(3,3,3);
+}
+
 void drawGgBot() {
 	glPushMatrix();
 	{
