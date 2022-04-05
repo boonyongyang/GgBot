@@ -395,20 +395,21 @@ void drawSpine2() {
 		}
 		glPopMatrix();
 
-		//glPushMatrix();
-		//{
-		//	glColor3f(1.0, 0.0, 1.0);
-		//	glTranslatef(0.0, 2.4, 0.0);
-		//	renderCube(0.1, 0.4, 0.05);
-		//}
-		//glPopMatrix();
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.0, 2.3, 0.12);
+			glRotatef(-5, 1.0, 0.0, 0.0);
+			renderCube(0.1, 0.3, 0.05);
+		}
+		glPopMatrix();
 
-		//glPushMatrix();
-		//{
-		//	glTranslatef(0.0, 2.8, 0.0);
-		//	drawSpineJoint();
-		//}
-		//glPopMatrix();
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 2.6, 0.085);
+			drawSpineJoint();
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
 }
