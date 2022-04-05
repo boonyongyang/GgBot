@@ -348,12 +348,12 @@ void drawSpine2() {
 	glPushMatrix();
 	{
 		//glScalef(6.0, 6.0, 6.0);
-		//glTranslatef(0.0, -2.0, 0.0);
+		glTranslatef(0.0, 1.0, 0.0);
 		glPushMatrix();
 		{
 			glColor3f(1.0, 0.0, 1.0);
-			glTranslatef(0.0, -0.2, 0.0);
-			renderCube(0.1, 0.6, 0.05);
+			glTranslatef(0.0, -0.4, 0.0);
+			renderCube(0.1, 0.8, 0.05);
 		}
 		glPopMatrix();
 
