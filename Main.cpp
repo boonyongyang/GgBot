@@ -418,72 +418,10 @@ void drawSpine2() {
 	}
 	glPopMatrix();
 }
-void drawSpine() {
-
-	glPushMatrix();
-	//glScalef(5.0, 5.0, 5.0);
-	//main line behind
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 2, 1.0);
-		glColor3f(1.0, 0.0, 0.0);
-		renderCube(0.1, 2, 0.05);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 0.0, 1.0);
-		drawSpineJoint();
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 0.5, 1.0);
-		drawSpineJoint();
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 1.0, 1.0);
-		drawSpineJoint();
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 1.5,  1.0);
-		drawSpineJoint();
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 2.0, 1.0);
-		drawSpineJoint();
-	}
-	glPopMatrix();
-
-
-	glPushMatrix();
-	{
-		glTranslatef(0.0, 2.5, 1.0);
-		drawSpineJoint();
-	}
-	glPopMatrix();
-
-
-	glPopMatrix();
-
-
-}
 
 void drawHead() {}
 
 void drawBody() {
-	//drawSpine();
 	drawSpine2();
 }
 
