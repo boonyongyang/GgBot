@@ -343,6 +343,10 @@ void drawSpineJoint(){
 	}
 	glPopMatrix();
 }
+
+void drawSpine2() {
+
+}
 void drawSpine() {
 
 	glPushMatrix();
