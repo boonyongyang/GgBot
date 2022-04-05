@@ -322,7 +322,9 @@ void renderCuboid(float x, float y, float z) {
 
 void drawHead() {}
 
-void drawBody() {}
+void drawBody() {
+	drawSpine();
+}
 
 void drawLeftArm() {}
 
