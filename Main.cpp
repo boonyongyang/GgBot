@@ -320,7 +320,7 @@ void renderCuboid(float x, float y, float z) {
 }
 
 void drawSpine() {
-	//glColor3f(1.0, 0.0, 0.0);
+	glColor3f(1.0, 0.0, 0.0);
 	renderCube(0.05, 2, 0.05);
 }
 
