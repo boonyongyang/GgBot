@@ -320,6 +320,7 @@ void renderCuboid(float x, float y, float z) {
 }
 
 void drawSpine() {
+	//main line behind
 	glPushMatrix();
 	{
 		glTranslatef(0.0, 2.0, 1.0);
@@ -327,6 +328,16 @@ void drawSpine() {
 		renderCube(0.1, 2, 0.05);
 	}
 	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(0.0, 0.0, 1.0);
+		glColor3f(1.0, 1.0, 0.0);
+		renderSphere(0.1);
+	}
+	glPopMatrix();
+
+
 }
 
 void drawHead() {}
@@ -496,10 +507,10 @@ void display()
 
 	switch (qNo) {
 	case 1:
-		test1();	// main robot structure here for ref
+		drawBody();
 		break;
 	case 2:
-		drawBody();
+		test1();	// main robot structure here for ref
 		break;
 	case 3:
 		test3();	// change to what u want for test
