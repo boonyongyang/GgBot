@@ -457,7 +457,10 @@ void test3() {
 	drawLeftArm();
 	renderLineCylinder(1, 1, 7);
 	glPushMatrix();
-
+	for (int i = 0; i <= 500; i++) {
+		glTranslatef(0, 0, 0.01);
+		renderDisk(0.8f, 1.0f, 5, 10);	// pentagon
+	}
 	glPopMatrix();
 }
 
@@ -484,6 +487,7 @@ void display()
 	switch (qNo) {
 	case 1:
 		test1();	// main robot structure here for ref
+		test2();	
 		break;
 	case 2:
 		test2();	// change to what u want for test
