@@ -486,7 +486,7 @@ void display()
 		test1();	// main robot structure here for ref
 		break;
 	case 2:
-		test2();	// change to what u want for test
+		//test2();	// change to what u want for test
 		break;
 	case 3:
 		test3();	// change to what u want for test
