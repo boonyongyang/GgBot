@@ -321,7 +321,7 @@ void renderCuboid(float x, float y, float z) {
 
 void drawSpine() {
 	//glColor3f(1.0, 0.0, 0.0);
-	renderCube(3, 3, 3);
+	renderCube(0.05, 2, 0.05);
 }
 
 void drawHead() {}
@@ -491,7 +491,7 @@ void display()
 
 	switch (qNo) {
 	case 1:
-		renderCube(3, 3, 3);		//test1();	// main robot structure here for ref
+		test1();	// main robot structure here for ref
 		break;
 	case 2:
 		drawBody();
