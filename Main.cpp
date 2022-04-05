@@ -377,6 +377,22 @@ void drawSpine2() {
 			drawSpineJoint();
 		}
 		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.0, 1.6, 0.15);
+			glRotatef(-20, 1.0, 0.0, 0.0);
+			renderCube(0.1, 0.4, 0.05);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 2.0, 0.0);
+			drawSpineJoint();
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
 }
