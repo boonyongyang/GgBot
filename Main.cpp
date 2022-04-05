@@ -345,7 +345,24 @@ void drawSpineJoint(){
 }
 
 void drawSpine2() {
+	glPushMatrix();
+	{
+		glScalef(6.0, 6.0, 6.0);
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			renderCube(0.1, 0.4, 0.05);
+		}
+		glPopMatrix();
 
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 0.4, 0.0);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 void drawSpine() {
 
@@ -412,7 +429,8 @@ void drawSpine() {
 void drawHead() {}
 
 void drawBody() {
-	drawSpine();
+	//drawSpine();
+	drawSpine2();
 }
 
 void drawLeftArm() {}
