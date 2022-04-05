@@ -8,6 +8,9 @@
 
 int qNo = 1;
 
+// transformation for projection matrix
+float ptX, ptY, prY = 0;
+float ptSpeed = 0.1;
 
 // transformation
 float tX, tY, tZ = 0;
@@ -24,6 +27,8 @@ float mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f;
 float mouseZoomLevel = -2.0f;
 
 // other (Seperate to your own sections too)
+float stacks = 30;
+float r = 1;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -55,7 +60,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			//textureOn = true;
 		break;
 	case WM_MOUSEWHEEL:
-		mouseZoomLevel -= GET_WHEEL_DELTA_WPARAM(wParam) / 120.0f;
+		mouseZoomLevel -= GET_WHEEL_DELTA_WPARAM(wParam) / 110.0f;
 		break;
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE)
@@ -74,31 +79,62 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				if (tZ > orthoNear)
 					tZ += tSpeed;
 			}
-			//else {
-			//	if (tZ > perspecNear) 
-			//		tZ -= tSpeed;
-			//}
+			else {
+				if (tZ > 0)
+					tZ -= tSpeed;
+			}
 		}
 		else if (wParam == VK_DOWN) {
 			if (isOrtho) {
 				if (tZ < orthoFar)
 					tZ -= tSpeed;
 			}
-			//else {
-			//	if (tZ < perspecFar) 
-			//		tZ += tSpeed;
-			//}
+			else {
+				if (tZ < perspecFar)
+					tZ += tSpeed;
+			}
 		}
 		else if (wParam == VK_LEFT) {
-			tX -= tSpeed;
+			if (isOrtho) {
+				if (tX < 5)
+					tX -= tSpeed;
+			}
+			else {
+				if (tX < 5)
+					tX += tSpeed;
+			}
 		}
 		else if (wParam == VK_RIGHT) {
 			tX += tSpeed;
 		}
+		else if (wParam == 'A') {
+			if (isOrtho) {
+				if (ptX < 1.2)
+					ptX += ptSpeed;
+			}
+		}
+		else if (wParam == 'D') {
+			if (isOrtho) {
+				if (ptX > -1.2)
+					ptX -= ptSpeed;
+			}
+		}
+		else if (wParam == 'W') {
+			if (isOrtho) {
+				if (ptY > -1.5)
+					ptY -= ptSpeed;
+			}
+		}
+		else if (wParam == 'S') {
+			if (isOrtho) {
+				if (ptY < 1.5)
+					ptY += ptSpeed;
+			}
+		}
 		else if (wParam == VK_SPACE) {
 			tX = 0, tY = 0, tZ = 0;
-			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f;
-			mouseZoomLevel = -2.0f;
+			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, mouseZoomLevel = -2.0f;
+			ptX = 0, ptY = 0, prY = 0;
 
 		}
 		else if (wParam == 'O') {
@@ -109,7 +145,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			isOrtho = false;
 			tZ = 0.0;
 		}
-		else if (wParam == 'S') {
+		else if (wParam == 'F') {
 			if (tSpeed > 0) {
 				tSpeed = 0.0;
 			}
@@ -128,8 +164,11 @@ void projection() {
 	glMatrixMode(GL_PROJECTION);		// refer to Projection Matrix
 	glLoadIdentity();					// reset the projection matrix
 
+	glTranslatef(ptX, ptY, 0.0f);		// projection translation
+	glRotatef(prY, 0.0, 1.0, 0.0);		// projection rotation (y-axis only)
+
 	if (isOrtho) {
-		glOrtho(-10, 10, -10, 10, orthoNear, orthoFar);	// Ortho default is 1.0
+		glOrtho(-10, 10, -10, 10, orthoNear, orthoFar);
 	}
 	else {
 		gluPerspective(35, 1, -1, 1);
@@ -146,30 +185,10 @@ void renderSphere(float r) {
 	gluDeleteQuadric(sphere);
 }
 
-void renderFillCylinder(float baseR, float topR, float h) {
-	GLUquadricObj* obj = NULL;
-	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_FILL);
-	gluCylinder(obj, baseR, topR, h, 50, 50);
-	gluDeleteQuadric(obj);
-}
-
-void renderLineCylinder(float baseR, float topR, float h) {
-	glLineWidth(1);
-	GLUquadricObj* obj = NULL;
-	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_LINE);
-	gluCylinder(obj, baseR, topR, h, 20, 10);
-	gluDeleteQuadric(obj);
-}
-
 void renderDisk(float inR, float outR, float slices, float loops) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
-	//gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
-	gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
-	//gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
-	//gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
+	gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_LINE, GLU_SILHOUETTE, GLU_POINT
 	gluDisk(obj, inR, outR, slices, loops);
 	gluDeleteQuadric(obj);
 }
@@ -180,6 +199,99 @@ void renderPartialDisk(float inR, float outR, float slices, float loops, float s
 	gluQuadricDrawStyle(obj, GLU_LINE);
 	gluPartialDisk(obj, inR, outR, slices, loops, startAng, endAngle);
 	gluDeleteQuadric(obj);
+}
+
+void renderPolygon(float baseR, float topR, float h, float slices) {
+	GLUquadricObj* obj = NULL;
+	obj = gluNewQuadric();
+	gluQuadricDrawStyle(obj, GLU_LINE);
+	gluCylinder(obj, baseR, topR, h, slices, 50);
+	gluDeleteQuadric(obj);
+}
+
+void renderCylinder(float baseR, float topR, float h) {
+	int slices = 50;
+	renderPolygon(baseR, topR, h, slices);
+	renderDisk(0, baseR, slices, stacks);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, h);
+	renderDisk(0, topR, slices, stacks);
+	glPopMatrix();
+}
+
+void renderCone(float topR, float h) {
+	int slices = 50;
+	renderPolygon(0, topR, h, slices);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, h);
+	renderDisk(0, topR, slices, stacks);	// cone only need one disk
+	glPopMatrix();
+}
+
+void renderPyramid(float topR, float h) {
+	int slices = 3;
+	renderPolygon(0, topR, h, slices);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, h);
+	renderDisk(0, topR, slices, stacks);	// pyramid only need one disk
+	glPopMatrix();
+}
+
+void render3DPentagon(float l, float h) {
+	int slices = 5;
+	renderPolygon(l, l, h, slices);
+	renderDisk(0, l, slices, stacks);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, h);
+	renderDisk(0, l, slices, stacks);
+	glPopMatrix();
+}
+
+void renderCuboid(float l, float h) {
+	int slices = 4;
+	glPushMatrix();
+	{
+		glRotatef(45, 0, 0, 1);
+		renderPolygon(l, l, h, slices);
+		renderDisk(0, l, slices, stacks);
+
+		glPushMatrix();
+		glTranslatef(0.0f, 0.0f, h);
+		renderDisk(0, l, slices, stacks);
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void render3DTriangle(float l, float h) {
+	int slices = 3;
+	renderPolygon(l, l, h, slices);
+	renderDisk(0, l, slices, stacks);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, h);
+	renderDisk(0, l, slices, stacks);
+	glPopMatrix();
+}
+
+void renderTrapezoid(float baseL, float topL, float h) {
+	int slices = 4;
+	glPushMatrix();
+	{
+		glRotatef(45, 0, 0, 1);
+		renderPolygon(baseL, topL, h, slices);
+		renderDisk(0, baseL, slices, stacks);
+
+		glPushMatrix();
+		glTranslatef(0.0f, 0.0f, h);
+		renderDisk(0, topL, slices, stacks);
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 
 void renderSphereWithoutGLU()
@@ -244,43 +356,7 @@ void renderCube(float x, float y, float z) {
 	glEnd();
 }
 
-void renderTrapezium(float top, float bot1, float bot2, float y, float z) {
-	glBegin(GL_LINE_LOOP);
-
-	glVertex3f(bot1, 0.0f, 0.0f);
-	glVertex3f(bot1, 0.0f, z);
-	glVertex3f(bot2, 0.0f, z);
-	glVertex3f(bot2, 0.0f, 0.0f);
-
-	glVertex3f(bot1, 0.0f, 0.0f);
-	glVertex3f(0.0f, y, 0.0f);
-	glVertex3f(top, y, 0.0f);
-	glVertex3f(bot2, 0.0f, 0.0f);
-
-	glVertex3f(bot1, 0.0f, 0.0f);
-	glVertex3f(bot1, 0.0f, z);
-	glVertex3f(0.0f, y, z);
-	glVertex3f(0.0f, y, 0.0f);
-
-	glVertex3f(top, y, 0.0f);
-	glVertex3f(top, y, z);
-	glVertex3f(0.0f, y, z);
-	glVertex3f(0.0f, y, 0.0f);
-
-	glVertex3f(top, y, 0.0f);
-	glVertex3f(top, y, z);
-	glVertex3f(bot2, 0.0f, z);
-	glVertex3f(bot2, 0.0f, 0.0f);
-
-	glVertex3f(bot2, 0.0f, z);
-	glVertex3f(top, y, z);
-	glVertex3f(0.0f, y, z);
-	glVertex3f(bot1, 0.0f, z);
-
-	glEnd();
-}
-
-void renderCuboid(float x, float y, float z) {
+void renderCuboidGg(float x, float y, float z) {
 
 	glBegin(GL_LINE_LOOP);
 	glColor3f(0.5, 0.5, 0);
@@ -319,32 +395,78 @@ void renderCuboid(float x, float y, float z) {
 	glEnd();
 }
 
+//void drawHead() {}
+//void drawBody() {}
+//void drawLeftArm() {}
+//void drawRightArm() {}
 
-void drawHead() {}
+void drawThigh() {
+	glPushMatrix();
+	{
+		//glTranslatef(0.35, -0.5, 0);
+		//glRotatef(90, 0, 1, 0);
+		//glScalef(0.03, 0.03, 0.03);
 
-void drawBody() {}
+		render3DPentagon(2, 3);
 
-void drawLeftArm() {}
+		glTranslatef(0, -5, 0);
+		renderCuboid(2, 5);
 
-void drawRightArm() {}
+		glTranslatef(4, 0, 0);
+		renderCylinder(1, 2, 3);
+		//renderCuboid(2, 10);
 
-void drawLeftLeg() {
+		glTranslatef(-8, 0, 4);
+		renderCone(2, 3);
+		//renderCuboid(2, 10);
 
+		glTranslatef(0, 4, 0);
+		renderPyramid(2, 3);
+
+		//renderCuboid(2, 10);
+
+		glTranslatef(9, 1, 0);
+		renderTrapezoid(1, 3, 3);
+
+		glTranslatef(-4, 4, 0);
+		render3DTriangle(2, 3);
+
+	}
+	glPopMatrix();
 }
 
-void drawRightLeg() {}
+void drawLeftLeg() {}
+
+void drawRightLeg() {
+
+	// pelvis
+	// hip joint (connection)
+	// thigh (femur)
+		// inner thigh
+		// back thigh (muscle)
+	// knee (connection between femur and tibia)
+	// shin (tibia)
+		// calf (muscle)
+	// foot
+
+	glPushMatrix();
+	{
+		glTranslatef(0.35, -0.5, 0);
+		glRotatef(90, 0, 1, 0);
+		glScalef(0.03, 0.03, 0.03);
+
+	}
+	glPopMatrix();
+}
 
 void drawGgBot() {
 	glPushMatrix();
 	{
 
-		drawHead();
-
-		drawBody();
-
-		drawLeftArm();
-
-		drawRightArm();
+		//drawHead();
+		//drawBody();
+		//drawLeftArm();
+		//drawRightArm();
 
 		drawLeftLeg();
 
@@ -417,23 +539,51 @@ void test1() {
 	{
 		glColor3f(0.0, 1.0, 1.0);
 		//glTranslatef(tX, tY, tZ);
-		glRotatef(tX, 0, 1, 0);	// test rotation, look cool mah
-		tX += tSpeed;			// press s to stop rotate, press s again to start rotate
+		//glRotatef(tX, 0, 1, 0);	// test rotation, look cool mah
+		//tX += tSpeed;			// press s to stop rotate, press f again to start rotate
 
-		glPushMatrix();
-		{
-			glTranslatef(0, 5.5, 0);	// move sphere up to head
-			renderSphere(1.5);
-		}
-		glPopMatrix();
+		//glPushMatrix();
+		//{
+		//	glTranslatef(0, 5.5, 0);	// move sphere up to head
+		//	renderSphere(1.5);
+		//}
+		//glPopMatrix();
 
+		glTranslatef(tX, tY, tZ);
 		robotStructure();
+		{
+
+			renderSphere(0.1);	// centre sphere
+
+			glPushMatrix();
+			{
+				glTranslatef(0, -7, 0);
+				renderSphere(0.1);	// bottom sphere middle
+			}
+			glPopMatrix();
+
+
+			glPushMatrix();
+			{
+				glTranslatef(-1.1, 0, 0);
+				renderSphere(0.1);	// left sphere 
+			}
+			glPopMatrix();
+
+			glPushMatrix();
+			{
+				glTranslatef(1.1, 0, 0);
+				renderSphere(0.1);	// right sphere 
+			}
+			glPopMatrix();
+		}
 
 		glColor3f(1.0, 1.0, 0.0);
 		drawGgBot();
 
 	}
 	glPopMatrix();
+	drawThigh();
 }
 
 void test2() {
@@ -454,13 +604,11 @@ void test2() {
 
 void test3() {
 	glColor3f(1.0, 0.0, 1.0);
-	drawLeftArm();
-	renderLineCylinder(1, 1, 7);
+
 	glPushMatrix();
-	for (int i = 0; i <= 500; i++) {
-		glTranslatef(0, 0, 0.01);
-		renderDisk(0.8f, 1.0f, 5, 10);	// pentagon
-	}
+
+	drawThigh();
+
 	glPopMatrix();
 }
 
@@ -469,7 +617,7 @@ void display()
 	// project initialization
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
 		projection();
@@ -487,7 +635,6 @@ void display()
 	switch (qNo) {
 	case 1:
 		test1();	// main robot structure here for ref
-		test2();	
 		break;
 	case 2:
 		test2();	// change to what u want for test
