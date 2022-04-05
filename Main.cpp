@@ -166,7 +166,10 @@ void renderLineCylinder(float baseR, float topR, float h) {
 void renderDisk(float inR, float outR, float slices, float loops) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_LINE);
+	//gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
+	gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
+	//gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
+	//gluQuadricDrawStyle(obj, GLU_LINE);	// GLU_FILL, GLU_SILHOUETTE, GLU_POINT
 	gluDisk(obj, inR, outR, slices, loops);
 	gluDeleteQuadric(obj);
 }
@@ -425,25 +428,37 @@ void test1() {
 		glPopMatrix();
 
 		robotStructure();
+
+		glColor3f(1.0, 1.0, 0.0);
+		drawGgBot();
+
 	}
 	glPopMatrix();
 }
 
 void test2() {
-	glColor3f(1.0, 1.0, 0.0);	
+	glColor3f(1.0, 1.0, 0.0);
 	drawGgBot();
+
 	renderDisk(0.0f, 1.0f, 5, 10);	// pentagon
+
 	glTranslatef(0, 2, 0);
 	renderDisk(0.2f, 1.0f, 20, 10);	// disk
-	glTranslatef(0, 2.5, 0);
+
+	glTranslatef(0, 2, 0);
 	renderDisk(0.7f, 1.0f, 20, 10);	// donut disk
-	glTranslatef(0, 2.8, 0);
+
+	glTranslatef(0, 2, 0);
 	renderPartialDisk(0.0f, 1.0f, 20, 10, 0, 180);	// half disk
 }
 
 void test3() {
-	glColor3f(1.0, 0.0, 1.0);	
+	glColor3f(1.0, 0.0, 1.0);
 	drawLeftArm();
+	renderLineCylinder(1, 1, 7);
+	glPushMatrix();
+
+	glPopMatrix();
 }
 
 void display()
@@ -451,7 +466,7 @@ void display()
 	// project initialization
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 		glEnable(GL_DEPTH_TEST);
 
 		projection();
