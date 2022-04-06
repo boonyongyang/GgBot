@@ -481,7 +481,7 @@ void drawLegScrew(float h) {
 	renderPrism(1.5 * r, 1 * r, 8);
 }
 
-void drawLegUpperFemur(float h) {
+void drawLegInnerNerve(float h) {
 	glPushMatrix();
 	{
 		glRotatef(90, 1, 0, 0);
@@ -500,7 +500,7 @@ void drawLegUpperFemur(float h) {
 	glPopMatrix();
 }
 
-void drawLegUpperInnerThigh(float h) {
+void drawLegInnerNerveShield(float h) {
 	glPushMatrix();
 	//glTranslatef(-3, 0, -2.75);
 	//glScalef(0.1, 0.1, 0.1);
@@ -533,16 +533,16 @@ void drawLegUpperInnerThigh(float h) {
 			glColor3f(1, 1, 0);
 			//glColor3f(87/255, 90/255, 95/255);	// rgb(87, 90, 95)
 
-			drawLegUpperFemur(h);
+			drawLegInnerNerve(h);
 
 			glTranslatef(4.5, 0, 0);
-			drawLegUpperFemur(h);
+			drawLegInnerNerve(h);
 
 			glTranslatef(0, 0, 4.5);
-			drawLegUpperFemur(h);
+			drawLegInnerNerve(h);
 
 			glTranslatef(-4.5, 0, 0);
-			drawLegUpperFemur(h);
+			drawLegInnerNerve(h);
 		}
 		glPopMatrix();
 
@@ -670,15 +670,15 @@ void drawLegUpper() {
 			// inners of thigh
 			glPushMatrix();
 			{
-				drawLegUpperInnerThigh(100);
+				drawLegInnerNerveShield(100);
 				glTranslatef(12, 0, 0);
-				drawLegUpperInnerThigh(100);
+				drawLegInnerNerveShield(100);
 
 				glRotatef(180, 0, 1, 0);
 				glTranslatef(-6, 0, -20);
-				drawLegUpperInnerThigh(100);
+				drawLegInnerNerveShield(100);
 				glTranslatef(12, 0, 0);
-				drawLegUpperInnerThigh(100);
+				drawLegInnerNerveShield(100);
 
 				//drawLegInnerThigh();		// angle, weird
 				//glRotatef(72, 0, 1, 0);
@@ -783,23 +783,37 @@ void drawLegLower() {
 	glPushMatrix();
 	glTranslatef(0.35, -4.68, -0.3);
 	glScalef(0.03, 0.03, 0.03);
+
 	{
-		drawLegUpperInnerThigh(45);
+		drawLegInnerNerveShield(45);
 		glTranslatef(12, 0, 0);
-		drawLegUpperInnerThigh(45);
+		drawLegInnerNerveShield(45);
 
 		glRotatef(180, 0, 1, 0);
 		glTranslatef(-6, 0, -20);
-		drawLegUpperInnerThigh(45);
+		drawLegInnerNerveShield(45);
 		glTranslatef(12, 0, 0);
-		drawLegUpperInnerThigh(45);
+		drawLegInnerNerveShield(45);
 	}
 	glPopMatrix();
 }
 
 void drawLegFoot() {}
 
-void drawLeftLeg() {}
+void drawLeftLeg() {
+	glPushMatrix();
+	{
+		//glTranslatef(-1.3, 0, 0);
+		glRotatef(180, 0, 1, 0);
+
+		//glScalef(0.03, 0.03, 0.03);
+		drawLegUpper();
+		drawLegKnee();
+		drawLegLower();
+		drawLegFoot();
+	}
+	glPopMatrix();
+}
 
 void drawRightLeg() {
 
@@ -825,6 +839,7 @@ void drawRightLeg() {
 		drawLegUpper();
 		drawLegKnee();
 		drawLegLower();
+		drawLegFoot();
 	}
 	glPopMatrix();
 }
