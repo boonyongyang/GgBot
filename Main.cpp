@@ -580,9 +580,14 @@ void drawSpine() {
 	glPopMatrix();
 }
 
+void drawTopBack() {
+
+}
+
 void drawHead() {}
 void drawBody() {
 	drawSpine();
+	drawTopBack();
 }
 
 void drawLeftArm() {}
