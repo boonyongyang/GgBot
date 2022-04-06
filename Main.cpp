@@ -605,6 +605,10 @@ void drawTopBack() {
 	glPopMatrix();
 }
 
+void drawInnerBodyStructure() {
+
+}
+
 void drawHead() {}
 void drawBody() {
 	glPushMatrix();
@@ -614,6 +618,7 @@ void drawBody() {
 		glTranslatef(0.0, -2.0, 0.0);
 		drawSpine();
 		drawTopBack();
+		drawInnerBodyStructure()
 	}
 	glPopMatrix();
 
