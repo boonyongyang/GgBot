@@ -490,21 +490,25 @@ void test1() {
 }
 
 void test2() {	// delete all if u want to test here 
-	glColor3f(1.0, 1.0, 0.0);
 
-	renderDisk(0.0f, 1.0f, 5, 10);	// pentagon
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 0.0);
 
-	glTranslatef(0, 2, 0);
-	renderDisk(0.2f, 1.0f, 20, 10);	// disk
+		glTranslatef(0, 0, -3);
+		renderDisk(0.0f, 1.0f, 5, 10);	// pentagon
 
-	glTranslatef(0, 2, 0);
-	renderDisk(0.7f, 1.0f, 20, 10);	// donut disk
+		glTranslatef(0, 2, 0);
+		renderDisk(0.2f, 1.0f, 20, 10);	// disk
 
-	glTranslatef(0, 2, 0);
-	renderPartialDisk(0.0f, 1.0f, 20, 10, 0, 180);	// half disk
-}
+		glTranslatef(0, 2, 0);
+		renderDisk(0.7f, 1.0f, 20, 10);	// donut disk
 
-void test3() {	// delete all if u want to test here 
+		glTranslatef(0, 2, 0);
+		renderPartialDisk(0.0f, 1.0f, 20, 10, 0, 180);	// half disk
+	}
+	glPopMatrix();
+
 	glPushMatrix();
 	{
 		glColor3f(1.0, 0.0, 1.0);
@@ -529,6 +533,10 @@ void test3() {	// delete all if u want to test here
 		renderPrism(2, 3, 3);		// tri prism
 		glPopMatrix();
 	}
+}
+
+void test3() {	// delete all if u want to test here 
+
 }
 
 void display()
