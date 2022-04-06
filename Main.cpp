@@ -667,6 +667,15 @@ void drawInnerBodyStructure() {
 			renderTrapezoidWithoutGLU(3, 0.4, 2.6, 2, 1.5);
 		}
 		glPopMatrix();
+
+		//hip
+		glPushMatrix();
+		{
+			glColor3f(0.0, 1.0, 0.0);
+			glTranslatef(-1.1, -2, -1.25);
+			renderTrapezoidWithoutGLU(2.2, 0.9, 1.3, 1, 1.5);
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
 }
