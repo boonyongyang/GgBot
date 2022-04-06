@@ -481,26 +481,26 @@ void drawLegScrew(float h) {
 	renderPrism(1.5 * r, 1 * r, 8);
 }
 
-void drawLegUpperFemur() {
+void drawLegUpperFemur(float h) {
 	glPushMatrix();
 	{
 		glRotatef(90, 1, 0, 0);
 
-		renderCylinder(r, r, 100 * r);
+		renderCylinder(r, r, h * r);
 
 		glTranslatef(2, 0, 0);
-		renderCylinder(r, r, 100 * r);
+		renderCylinder(r, r, h * r);
 
 		glTranslatef(0, 2, 0);
-		renderCylinder(r, r, 100 * r);
+		renderCylinder(r, r, h * r);
 
 		glTranslatef(-2, 0, 0);
-		renderCylinder(r, r, 100 * r);
+		renderCylinder(r, r, h * r);
 	}
 	glPopMatrix();
 }
 
-void drawLegUpperInnerThigh() {
+void drawLegUpperInnerThigh(float h) {
 	glPushMatrix();
 	//glTranslatef(-3, 0, -2.75);
 	//glScalef(0.1, 0.1, 0.1);
@@ -522,7 +522,7 @@ void drawLegUpperInnerThigh() {
 			glColor3f(0, 1, 1);
 			glTranslatef(3.2, -2.5, 3.8);
 			glRotatef(90, 1, 0, 0);
-			renderPrism(6.5 * r, 95 * r, 5);
+			renderPrism(6.5 * r, (h - 5) * r, 5);
 		}
 		glPopMatrix();
 
@@ -533,16 +533,16 @@ void drawLegUpperInnerThigh() {
 			glColor3f(1, 1, 0);
 			//glColor3f(87/255, 90/255, 95/255);	// rgb(87, 90, 95)
 
-			drawLegUpperFemur();
+			drawLegUpperFemur(h);
 
 			glTranslatef(4.5, 0, 0);
-			drawLegUpperFemur();
+			drawLegUpperFemur(h);
 
 			glTranslatef(0, 0, 4.5);
-			drawLegUpperFemur();
+			drawLegUpperFemur(h);
 
 			glTranslatef(-4.5, 0, 0);
-			drawLegUpperFemur();
+			drawLegUpperFemur(h);
 		}
 		glPopMatrix();
 
@@ -550,7 +550,8 @@ void drawLegUpperInnerThigh() {
 		glPushMatrix();
 		{
 			glColor3f(1, 0, 0);		// red
-			glTranslatef(-1, -105.25, 3.25);
+			//glTranslatef(-1, -105.25, 3.25);
+			glTranslatef(-1, -h - 5.25, 3.25);
 			glRotatef(90, 0, 1, 0);
 
 			glPushMatrix();
@@ -658,26 +659,26 @@ void drawLegUpper() {
 			glPopMatrix();
 
 			// pink penta prism bottom joint
-			glPushMatrix();
-			{
-				glTranslatef(-1, -113, 10);
-				glRotatef(90, 0, 1, 0);
-				renderPrism(6.5 * r, 20, 5);;
-			}
-			glPopMatrix();
+			//glPushMatrix();
+			//{
+			//	glTranslatef(-1, -113, 10);
+			//	glRotatef(90, 0, 1, 0);
+			//	renderPrism(6.5 * r, 20, 5);;
+			//}
+			//glPopMatrix();
 
 			// inners of thigh
 			glPushMatrix();
 			{
-				drawLegUpperInnerThigh();
+				drawLegUpperInnerThigh(100);
 				glTranslatef(12, 0, 0);
-				drawLegUpperInnerThigh();
+				drawLegUpperInnerThigh(100);
 
 				glRotatef(180, 0, 1, 0);
 				glTranslatef(-6, 0, -20);
-				drawLegUpperInnerThigh();
+				drawLegUpperInnerThigh(100);
 				glTranslatef(12, 0, 0);
-				drawLegUpperInnerThigh();
+				drawLegUpperInnerThigh(100);
 
 				//drawLegInnerThigh();		// angle, weird
 				//glRotatef(72, 0, 1, 0);
@@ -704,9 +705,97 @@ void drawLegUpper() {
 	glPopMatrix();
 }
 
-void drawLegKnee() {}
+void drawLegKneeJoint() {
+	glPushMatrix();
+	{
+		renderPrism(r, r, 6);
+		glPushMatrix();
+		renderPrism(0.3 * r, 4 * r, 8);
+		glTranslatef(0, 0, 3);
+		renderPrism(r, r, 6);
+		glPopMatrix();
 
-void drawLegLower() {}
+		glPushMatrix();
+		{
+			glTranslatef(0.875, 1.5, 0);
+			renderPrism(r, r, 6);
+			glPushMatrix();
+			renderPrism(0.3 * r, 4 * r, 8);
+			glTranslatef(0, 0, 3);
+			renderPrism(r, r, 6);
+			glPopMatrix();
+
+			//glTranslatef(0.875, 1.5, 0);
+			//renderPrism(r, r, 6);
+			//glPushMatrix();
+			//renderPrism(0.3 * r, 4 * r, 8);
+			//glTranslatef(0, 0, 3);
+			//renderPrism(r, r, 6);
+			//glPopMatrix();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.875, -1.5, 0);
+			renderPrism(r, r, 6);
+			glPushMatrix();
+			renderPrism(0.3 * r, 4 * r, 8);
+			glTranslatef(0, 0, 3);
+			renderPrism(r, r, 6);
+			glPopMatrix();
+
+			//glTranslatef(0.875, -1.5, 0);
+			//renderPrism(r, r, 6);
+			//glPushMatrix();
+			//renderPrism(0.3 * r, 4 * r, 8);
+			//glTranslatef(0, 0, 3);
+			//renderPrism(r, r, 6);
+			//glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void drawLegKnee() {
+
+	glPushMatrix();
+	{
+		glColor3f(0.5, 0.3, 0.5);
+
+		//glTranslatef(0.925, -4.8, -0.275);		
+		//glTranslatef(0.925, -4.6, -0.4);	// Don't delete, knee with 5 joints
+		glTranslatef(0.875, -4.3, -0.3);	// knee with 3 joints
+		glRotatef(-90, 0, 1, 0);
+		glRotatef(10, 0, 0, 1);
+		glScalef(0.13, 0.13, 0.13);
+
+		// connect legUpper and legLower
+		drawLegKneeJoint();
+		glTranslatef(3, 0, 0);
+		drawLegKneeJoint();
+	}
+	glPopMatrix();
+}
+
+void drawLegLower() {
+	glPushMatrix();
+	glTranslatef(0.35, -4.8, -0.3);
+	glScalef(0.03, 0.03, 0.03);
+	{
+		drawLegUpperInnerThigh(50);
+		glTranslatef(12, 0, 0);
+		drawLegUpperInnerThigh(50);
+
+		glRotatef(180, 0, 1, 0);
+		glTranslatef(-6, 0, -20);
+		drawLegUpperInnerThigh(50);
+		glTranslatef(12, 0, 0);
+		drawLegUpperInnerThigh(50);
+	}
+	glPopMatrix();
+}
 
 void drawLegFoot() {}
 
@@ -734,6 +823,8 @@ void drawRightLeg() {
 
 		//glScalef(0.03, 0.03, 0.03);
 		drawLegUpper();
+		drawLegKnee();
+		drawLegLower();
 	}
 	glPopMatrix();
 }
@@ -834,6 +925,7 @@ void test3() {
 	glTranslatef(-0.75, 3, 0);
 
 	drawLegUpper();
+	drawLegKnee();
 
 	glPopMatrix();
 }
@@ -843,7 +935,7 @@ void test4() {
 
 	glPushMatrix();
 
-	drawLegUpperArmor();
+	drawLegKnee();
 
 	glPopMatrix();
 }
