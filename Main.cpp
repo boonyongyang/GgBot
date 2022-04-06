@@ -436,8 +436,7 @@ void drawSpineJoint() {
 void drawSpine() {
 	glPushMatrix();
 	{
-		//glScalef(6.0, 6.0, 6.0);
-		glTranslatef(0.0, 1.0, 0.5);
+		//glTranslatef(0.0, 1.0, 0.5);
 		//1
 		glPushMatrix();
 		{
@@ -581,13 +580,41 @@ void drawSpine() {
 }
 
 void drawTopBack() {
+	glPushMatrix();
+	{
+		//glTranslatef(0.0, -2.0, 0.0);
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.5, 2.0, 0.0);
+			renderCube(0.4, 0.8, 0.2);
+		}
+		glPopMatrix();
 
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(-0.5, 2.0, 0.0);
+			renderCube(0.4, 0.8, 0.2);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 
 void drawHead() {}
 void drawBody() {
-	drawSpine();
-	drawTopBack();
+	glPushMatrix();
+	{
+		glScalef(6.0, 6.0, 6.0);
+		//glTranslatef(0.0, 1.0, 0.5);
+		glTranslatef(0.0, -2.0, 0.0);
+		drawSpine();
+		drawTopBack();
+	}
+	glPopMatrix();
+
+
 }
 
 void drawLeftArm() {}
