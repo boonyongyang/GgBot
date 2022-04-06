@@ -493,6 +493,7 @@ void drawSpine() {
 			drawSpineJoint();
 		}
 		glPopMatrix();
+
 		//3
 		glPushMatrix();
 		{
@@ -523,6 +524,7 @@ void drawSpine() {
 			drawSpineJoint();
 		}
 		glPopMatrix();
+
 		//4
 		glPushMatrix();
 		{
@@ -536,6 +538,13 @@ void drawSpine() {
 		glPushMatrix();
 		{
 			glTranslatef(0.0, 3.2, 0.18);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 2.9, 0.21);
 			drawSpineJoint();
 		}
 		glPopMatrix();
