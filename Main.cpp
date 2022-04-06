@@ -413,6 +413,24 @@ void drawSpineJoint() {
 		renderSphere(0.05);
 	}
 	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(0.2, 0.0, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0);
+		renderTrapezoid(0.05, 0.025, 0.2);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(-0.2, 0.0, 0.0);
+		glRotatef(-90, 0.0, 1.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0);
+		renderTrapezoid(0.05, 0.025, 0.2);
+	}
+	glPopMatrix();
 }
 
 void drawSpine() {
@@ -724,7 +742,8 @@ void display()
 
 	switch (qNo) {
 	case 1:
-		drawBody();
+		//drawBody();
+		drawSpineJoint();
 		break;
 	case 2:
 		test1();	// main robot structure here for ref
