@@ -390,6 +390,42 @@ void renderCuboid(float x, float y, float z) {
 	glEnd();
 }
 
+void renderTrapeziodWithoutGLU(float top, float bot1, float bot2, float y, float z) {
+	glBegin(GL_LINE_LOOP);
+
+	glVertex3f(bot1, 0.0f, 0.0f);
+	glVertex3f(bot1, 0.0f, z);
+	glVertex3f(bot2, 0.0f, z);
+	glVertex3f(bot2, 0.0f, 0.0f);
+
+	glVertex3f(bot1, 0.0f, 0.0f);
+	glVertex3f(0.0f, y, 0.0f);
+	glVertex3f(top, y, 0.0f);
+	glVertex3f(bot2, 0.0f, 0.0f);
+
+	glVertex3f(bot1, 0.0f, 0.0f);
+	glVertex3f(bot1, 0.0f, z);
+	glVertex3f(0.0f, y, z);
+	glVertex3f(0.0f, y, 0.0f);
+
+	glVertex3f(top, y, 0.0f);
+	glVertex3f(top, y, z);
+	glVertex3f(0.0f, y, z);
+	glVertex3f(0.0f, y, 0.0f);
+
+	glVertex3f(top, y, 0.0f);
+	glVertex3f(top, y, z);
+	glVertex3f(bot2, 0.0f, z);
+	glVertex3f(bot2, 0.0f, 0.0f);
+
+	glVertex3f(bot2, 0.0f, z);
+	glVertex3f(top, y, z);
+	glVertex3f(0.0f, y, z);
+	glVertex3f(bot1, 0.0f, z);
+
+	glEnd();
+}
+
 void drawSpineJoint() {
 	glPushMatrix();
 	{
@@ -606,7 +642,15 @@ void drawTopBack() {
 }
 
 void drawInnerBodyStructure() {
-
+	glPushMatrix();
+	{
+		glPushMatrix();
+		{
+			renderTrapezoid(0.5, 0.2, 0.4);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 }
 
 void drawHead() {}
@@ -618,7 +662,7 @@ void drawBody() {
 		glTranslatef(0.0, -2.0, 0.0);
 		drawSpine();
 		drawTopBack();
-		drawInnerBodyStructure()
+		drawInnerBodyStructure();
 	}
 	glPopMatrix();
 
