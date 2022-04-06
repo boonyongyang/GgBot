@@ -418,8 +418,8 @@ void drawSpineJoint() {
 void drawSpine() {
 	glPushMatrix();
 	{
-		//glScalef(6.0, 6.0, 6.0);
-		glTranslatef(0.0, 1.0, 0.0);
+		glScalef(6.0, 6.0, 6.0);
+		glTranslatef(0.0, -1.0, 0.0);
 		//1
 		glPushMatrix();
 		{
@@ -480,6 +480,19 @@ void drawSpine() {
 		}
 		glPopMatrix();
 
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 1.2, 0.27);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 0.8, 0.13);
+			drawSpineJoint();
+		}
+		glPopMatrix();
 		//3
 		glPushMatrix();
 		{
