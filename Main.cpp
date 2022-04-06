@@ -393,6 +393,41 @@ void renderCuboidWithoutGLU(float x, float y, float z) {
 	glEnd();
 }
 
+void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float z) {
+	glBegin(GL_LINE_LOOP);
+
+	glVertex3f(bot1, 0.0f, 0.0f);
+	glVertex3f(bot1, 0.0f, z);
+	glVertex3f(bot2, 0.0f, z);
+	glVertex3f(bot2, 0.0f, 0.0f);
+
+	glVertex3f(bot1, 0.0f, 0.0f);
+	glVertex3f(0.0f, y, 0.0f);
+	glVertex3f(top, y, 0.0f);
+	glVertex3f(bot2, 0.0f, 0.0f);
+
+	glVertex3f(bot1, 0.0f, 0.0f);
+	glVertex3f(bot1, 0.0f, z);
+	glVertex3f(0.0f, y, z);
+	glVertex3f(0.0f, y, 0.0f);
+
+	glVertex3f(top, y, 0.0f);
+	glVertex3f(top, y, z);
+	glVertex3f(0.0f, y, z);
+	glVertex3f(0.0f, y, 0.0f);
+
+	glVertex3f(top, y, 0.0f);
+	glVertex3f(top, y, z);
+	glVertex3f(bot2, 0.0f, z);
+	glVertex3f(bot2, 0.0f, 0.0f);
+
+	glVertex3f(bot2, 0.0f, z);
+	glVertex3f(top, y, z);
+	glVertex3f(0.0f, y, z);
+	glVertex3f(bot1, 0.0f, z);
+
+	glEnd();
+}
 
 void robotStructure() {
 	glPushMatrix();
@@ -467,8 +502,273 @@ void robotStructure() {
 
 }
 
+void drawSpineJoint() {
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 0.0);
+		renderSphere(0.1);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(0.15, 0.0, 0.0);
+		glColor3f(1.0, 0.0, 0.0);
+		renderSphere(0.05);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(-0.15, 0.0, 0.0);
+		glColor3f(1.0, 0.0, 0.0);
+		renderSphere(0.05);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(0.2, 0.0, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0);
+		renderTrapezoid(0.05, 0.025, 0.2);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(-0.2, 0.0, 0.0);
+		glRotatef(-90, 0.0, 1.0, 0.0);
+		glColor3f(0.0, 1.0, 1.0);
+		renderTrapezoid(0.05, 0.025, 0.2);
+	}
+	glPopMatrix();
+}
+
+void drawSpine() {
+	glPushMatrix();
+	{
+		//glTranslatef(0.0, 1.0, 0.5);
+		//1
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.0, -0.4, 0.0);
+			renderCubeWithoutGLU(0.1, 0.8, 0.05);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 0.4, 0.0);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, -0.4, 0.0);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, -0.8, 0.0);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, -1.2, 0.0);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		//2
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.0, 1.0, 0.2);
+			glRotatef(20, 1.0, 0.0, 0.0);
+			renderCubeWithoutGLU(0.1, 0.6, 0.05);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 1.6, 0.4);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 1.2, 0.27);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 0.8, 0.13);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		//3
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.0, 2.1, 0.33);
+			glRotatef(-10, 1.0, 0.0, 0.0);
+			renderCubeWithoutGLU(0.1, 0.5, 0.05);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 2.6, 0.24);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 2.3, 0.3);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 1.95, 0.36);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		//4
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(0.0, 2.9, 0.21);
+			glRotatef(-5, 1.0, 0.0, 0.0);
+			renderCubeWithoutGLU(0.1, 0.3, 0.05);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 3.2, 0.18);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 2.9, 0.21);
+			drawSpineJoint();
+		}
+		glPopMatrix();
+
+		// end of the spine
+		glPushMatrix();
+		{
+			glTranslatef(0.0, -1.3, 0.0);
+			glRotatef(90, 1.0, 0.0, 0.0);
+			glColor3f(1.0, 0.0, 1.0);
+			renderTrapezoid(0.1, 0.025, 0.4);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void drawTopBack() {
+	glPushMatrix();
+	{
+		//glTranslatef(0.0, -2.0, 0.0);
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(0.6, 2.5, 0.05);
+			glRotatef(-10, 1.0, 0.0, 0.0);
+			renderCubeWithoutGLU(0.4, 0.8, 0.2);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(-0.6, 2.5, 0.05);
+			glRotatef(-10, 1.0, 0.0, 0.0);
+			renderCubeWithoutGLU(0.4, 0.8, 0.2);
+		}
+		glPopMatrix();
+
+	}
+	glPopMatrix();
+}
+
+void drawInnerBodyStructure() {
+	glPushMatrix();
+	{
+		glPushMatrix();
+		{
+			glColor3f(0.0, 1.0, 0.0);
+			glTranslatef(-2.5, 2.02, -1.25);
+			renderTrapezoidWithoutGLU(5, 0.2, 4.8, 1, 1.5);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.0, 1.0, 0.0);
+			glTranslatef(-2.3, 1, -1.25);
+			renderTrapezoidWithoutGLU(4.6, 0.8, 3.8, 1, 1.5);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.0, 1.0, 0.0);
+			glTranslatef(-1.5, -1, -1.25);
+			renderTrapezoidWithoutGLU(3, 0.4, 2.6, 2, 1.5);
+		}
+		glPopMatrix();
+
+		//hip
+		glPushMatrix();
+		{
+			glColor3f(0.0, 1.0, 0.0);
+			glTranslatef(-1.1, -2, -1.25);
+			renderTrapezoidWithoutGLU(2.2, 0.9, 1.3, 1, 1.5);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
 void drawHead() {}
-void drawBody() {}
+void drawBody() {
+	glPushMatrix();
+	{
+		//glScalef(6.0, 6.0, 6.0);
+		glTranslatef(0.0, 1.0, 0.5);
+		//glTranslatef(0.0, -1.0, 0.0);
+		drawSpine();
+		drawTopBack();
+		drawInnerBodyStructure();
+	}
+	glPopMatrix();
+}
 
 void drawLeftArm() {}
 void drawRightArm() {}
