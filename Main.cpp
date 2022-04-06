@@ -566,6 +566,16 @@ void drawSpine() {
 			drawSpineJoint();
 		}
 		glPopMatrix();
+
+		// end of the spine
+		glPushMatrix();
+		{
+			glTranslatef(0.0, -1.3, 0.0);
+			glRotatef(90, 1.0, 0.0, 0.0);
+			glColor3f(1.0, 0.0, 1.0);
+			renderTrapezoid(0.1, 0.025, 0.4);
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
 }
