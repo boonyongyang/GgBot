@@ -436,8 +436,8 @@ void drawSpineJoint() {
 void drawSpine() {
 	glPushMatrix();
 	{
-		glScalef(6.0, 6.0, 6.0);
-		glTranslatef(0.0, -2.0, 0.0);
+		//glScalef(6.0, 6.0, 6.0);
+		glTranslatef(0.0, 1.0, 0.5);
 		//1
 		glPushMatrix();
 		{
@@ -742,8 +742,8 @@ void display()
 
 	switch (qNo) {
 	case 1:
-		//drawBody();
-		drawSpineJoint();
+		drawBody();
+		//drawSpineJoint();
 		break;
 	case 2:
 		test1();	// main robot structure here for ref
