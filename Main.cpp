@@ -781,18 +781,18 @@ void drawLegKnee() {
 
 void drawLegLower() {
 	glPushMatrix();
-	glTranslatef(0.35, -4.8, -0.3);
+	glTranslatef(0.35, -4.68, -0.3);
 	glScalef(0.03, 0.03, 0.03);
 	{
-		drawLegUpperInnerThigh(50);
+		drawLegUpperInnerThigh(45);
 		glTranslatef(12, 0, 0);
-		drawLegUpperInnerThigh(50);
+		drawLegUpperInnerThigh(45);
 
 		glRotatef(180, 0, 1, 0);
 		glTranslatef(-6, 0, -20);
-		drawLegUpperInnerThigh(50);
+		drawLegUpperInnerThigh(45);
 		glTranslatef(12, 0, 0);
-		drawLegUpperInnerThigh(50);
+		drawLegUpperInnerThigh(45);
 	}
 	glPopMatrix();
 }
