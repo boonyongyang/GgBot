@@ -698,6 +698,20 @@ void drawChest() {
 	
 }
 
+void drawRibs() {
+	glPushMatrix();
+	{
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			//glTranslatef(-2.5, 2.02, -1.25);
+			renderTrapezoidWithoutGLU(5, 0.2, 4.8, 1, 1.5);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
 void drawInnerBodyStructure() {
 	glPushMatrix();
 	{
@@ -750,6 +764,7 @@ void drawBody() {
 		drawInnerBodyStructure();
 		drawHeart();
 		drawChest();
+		drawRibs();
 	}
 	glPopMatrix();
 
