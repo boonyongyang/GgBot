@@ -641,6 +641,13 @@ void drawTopBack() {
 	glPopMatrix();
 }
 
+void drawHeart() {
+	glColor3f(1.0, 0.0, 0.0);
+	glTranslatef(-0.25, 1.7, -1.5);
+	//glRotatef(180, 0.0, 0.0, 1.0);
+	renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+}
+
 void drawInnerBodyStructure() {
 	glPushMatrix();
 	{
@@ -681,6 +688,7 @@ void drawInnerBodyStructure() {
 }
 
 void drawHead() {}
+
 void drawBody() {
 	glPushMatrix();
 	{
@@ -690,6 +698,7 @@ void drawBody() {
 		drawSpine();
 		drawTopBack();
 		drawInnerBodyStructure();
+		drawHeart();
 	}
 	glPopMatrix();
 
