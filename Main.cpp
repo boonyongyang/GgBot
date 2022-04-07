@@ -648,6 +648,10 @@ void drawHeart() {
 	renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
 }
 
+void drawChest() {
+	renderPrism(1, 0.4, 5);
+}
+
 void drawInnerBodyStructure() {
 	glPushMatrix();
 	{
@@ -699,6 +703,7 @@ void drawBody() {
 		drawTopBack();
 		drawInnerBodyStructure();
 		drawHeart();
+		drawChest();
 	}
 	glPopMatrix();
 
