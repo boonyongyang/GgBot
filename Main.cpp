@@ -645,9 +645,22 @@ void drawHeart() {
 	glPushMatrix(); 
 	{
 		glColor3f(1.0, 0.0, 0.0);
-		glTranslatef(-0.25, 1.7, -1.5);
+		glTranslatef(0.0, 1.9, -1.5);
+		glScalef(2.3, 0.7, 1.0);
 		//glRotatef(180, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+		renderPrism(0.25, 0.5, 3);
+		//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(0.0, 1.72, -1.5);
+		glScalef(2.3, 0.7, 1.0);
+		glRotatef(180, 0.0, 0.0, 1.0);
+		renderPrism(0.25, 0.5, 3);
+		//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
 	}
 	glPopMatrix();
 }
@@ -659,7 +672,7 @@ void drawChest() {
 		glScalef(1.3, 0.7, 1.0);
 		glTranslatef(0.9, 3.5, -1.5);
 		glRotatef(22.5, 0.0, 0.0, 1.0);
-		renderPrism(1, 0.4, 8);
+		renderPrism(1, 1, 8);
 	}
 	glPopMatrix();
 
@@ -669,17 +682,17 @@ void drawChest() {
 		glScalef(1.3, 0.7, 1.0);
 		glTranslatef(-0.9, 3.5, -1.5);
 		glRotatef(22.5, 0.0, 0.0, 1.0);
-		renderPrism(1, 0.4, 8);
+		renderPrism(1, 1, 8);
 	}
 	glPopMatrix();
 
-	glPushMatrix();//fk
+	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 0.0);
 		glScalef(1.0, 0.4, 1.0);
 		glTranslatef(0.0, 7.5, -1.5);
 		glRotatef(180, 0.0, 0.0, 1.0);
-		renderPrism(0.7, 0.4, 3);
+		renderPrism(0.7, 1, 3);
 	}
 	glPopMatrix();
 	
