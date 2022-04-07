@@ -673,7 +673,7 @@ void drawChest() {
 	}
 	glPopMatrix();
 
-	glPushMatrix();
+	glPushMatrix();//fk
 	{
 		glColor3f(1.0, 1.0, 0.0);
 		glScalef(1.0, 0.4, 1.0);
