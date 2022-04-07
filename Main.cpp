@@ -704,8 +704,18 @@ void drawRibs() {
 		glPushMatrix();
 		{
 			glColor3f(1.0, 0.0, 1.0);
-			//glTranslatef(-2.5, 2.02, -1.25);
-			renderTrapezoidWithoutGLU(1, 0.2, 0.5, 1, 1.5);
+			glTranslatef(-0.45, 1.8, -1.25);
+			glRotatef(-27, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(2.4, 0.5, 2.2, 1, 0.5);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 1.0);
+			glTranslatef(-1.7, 0.7, -1.25);
+			glRotatef(27, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(2.4, 0.2, 1.9, 1, 0.5);
 		}
 		glPopMatrix();
 	}
