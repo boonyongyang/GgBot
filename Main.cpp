@@ -642,14 +642,37 @@ void drawTopBack() {
 }
 
 void drawHeart() {
-	glColor3f(1.0, 0.0, 0.0);
-	glTranslatef(-0.25, 1.7, -1.5);
-	//glRotatef(180, 0.0, 0.0, 1.0);
-	renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+	glPushMatrix(); 
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(-0.25, 1.7, -1.5);
+		//glRotatef(180, 0.0, 0.0, 1.0);
+		renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+	}
+	glPopMatrix();
 }
 
 void drawChest() {
-	renderPrism(1, 0.4, 5);
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glScalef(1.3, 0.7, 1.0);
+		glTranslatef(0.9, 3.5, -1.5);
+		glRotatef(22.5, 0.0, 0.0, 1.0);
+		renderPrism(1, 0.4, 8);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glScalef(1.3, 0.7, 1.0);
+		glTranslatef(-0.9, 3.5, -1.5);
+		glRotatef(22.5, 0.0, 0.0, 1.0);
+		renderPrism(1, 0.4, 8);
+	}
+	glPopMatrix();
+	
 }
 
 void drawInnerBodyStructure() {
