@@ -705,7 +705,7 @@ void drawRibs() {
 		{
 			glColor3f(1.0, 0.0, 1.0);
 			//glTranslatef(-2.5, 2.02, -1.25);
-			renderTrapezoidWithoutGLU(5, 0.2, 4.8, 1, 1.5);
+			renderTrapezoidWithoutGLU(1, 0.2, 0.5, 1, 1.5);
 		}
 		glPopMatrix();
 	}
