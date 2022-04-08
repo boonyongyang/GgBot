@@ -6,6 +6,9 @@
 
 #define WINDOW_TITLE "GgBot"
 
+//GLUquadricObj* obj = NULL;
+//GLUquadricObj* obj = gluNewQuadric();
+
 int qNo = 1;
 float stacks = 30;
 
@@ -188,6 +191,8 @@ void projection() {
 		glFrustum(-10, 10, -10, 10, perspecNear, perspecFar);
 		glEnable(GL_DEPTH_TEST);
 	}
+
+
 }
 
 void renderSphere(float r) {
@@ -953,7 +958,6 @@ void drawLegKnee() {
 	glPopMatrix();
 }
 
-
 void drawLeftArm() {
 	glPushMatrix();
 	{
@@ -1007,19 +1011,6 @@ void drawLegScrew(float h) {
 	glTranslatef(0, 0, h);
 	renderPrism(1.5 * r, 1 * r, 8);
 }
-
-//void drawLegNerveJoint(float h) {	// penta joint
-//	glPushMatrix();
-//	{
-//		glColor3f(0, 1, 1);
-//		glTranslatef(-h / 2, 0, 0);
-//		glRotatef(90, 0, 1, 0);
-//		renderPrism(3.5 * r, h, 5);
-//	}
-//	glPopMatrix();
-//}
-
-
 
 void drawLegLower(float h) {
 	glPushMatrix();
@@ -1227,7 +1218,8 @@ void test4() {
 
 	glPushMatrix();
 
-	drawLegKnee();
+	//drawLegKnee();
+	renderSphere(1);
 
 	glPopMatrix();
 }
@@ -1239,7 +1231,7 @@ void display()
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-
+		
 		projection();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
