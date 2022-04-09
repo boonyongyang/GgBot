@@ -44,6 +44,18 @@ char temp = 'A';
 
 //Leg
 int r = 1;
+float legLeftUpperAngle, legLeftLowerAngle = 0;
+float leftRightUpperAngle, legRightLowerAngle = 0;
+
+bool leftAtFront = false, moveLeftLeg = true, moveLowerLeftLeg = false;
+bool rightAtFront = false, moveRightLeg = false, moveLowerRightLeg = false;
+
+bool moveX = 0, moveY = 0, moveZ = 0;
+bool bodyAngle = 0;
+
+float walkSpeed = 1;
+
+void walk();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -96,6 +108,13 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, perspecZoomLevel = -2.0f;
 			ptX = 0, ptY = 0, prY = 0;
 
+			// leg angles
+			legLeftUpperAngle = 0, legLeftLowerAngle = 0;
+			leftRightUpperAngle = 0, legRightLowerAngle = 0;
+			leftAtFront = false, moveLeftLeg = false, moveLowerLeftLeg = false;
+			rightAtFront = false, moveRightLeg = false, moveLowerRightLeg = false;
+			moveX = 0, moveY = 0, moveZ = 0;
+			//walkSpeed = 0.5;
 		}
 		else if (wParam == VK_UP) {
 			if (isOrtho) {
@@ -125,44 +144,44 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				tX += tSpeed;
 		}
 		else if (wParam == 'A') {
-			//if (isOrtho) {
-			//	if (ptX < 1.1)
-			//		ptX += ptSpeed;
-			//}
-			//else {
-			//	prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
-			//}
-			faceAngle = 270;
+			if (isOrtho) {
+				if (ptX < 1.1)
+					ptX += ptSpeed;
+			}
+			else {
+				prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
+			}
+			//faceAngle = 270;
 		}
 		else if (wParam == 'D') {
-			//if (isOrtho) {
-			//	if (ptX > -1.1)
-			//		ptX -= ptSpeed;
-			//}
-			//else {
-			//	prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
-			//}
-			faceAngle = 90;
+			if (isOrtho) {
+				if (ptX > -1.1)
+					ptX -= ptSpeed;
+			}
+			else {
+				prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
+			}
+			//faceAngle = 90;
 		}
 		else if (wParam == 'W') {
-			//if (isOrtho) {
-			//	if (ptY > -1.3)
-			//		ptY -= ptSpeed;
-			//}
-			//else {
-			//	perspecZoomLevel -= 1;
-			//}
-			faceAngle = 0;
+			if (isOrtho) {
+				if (ptY > -1.3)
+					ptY -= ptSpeed;
+			}
+			else {
+				perspecZoomLevel -= 1;
+			}
+			//faceAngle = 0;
 		}
 		else if (wParam == 'S') {
-			//if (isOrtho) {
-			//	if (ptY < 1.3)
-			//		ptY += ptSpeed;
-			//}
-			//else {
-			//	perspecZoomLevel += 1;
-			//}
-			faceAngle = 180;
+			if (isOrtho) {
+				if (ptY < 1.3)
+					ptY += ptSpeed;
+			}
+			else {
+				perspecZoomLevel += 1;
+			}
+			//faceAngle = 180;
 		}
 		else if (wParam == 'O') {
 			isOrtho = true;
@@ -185,26 +204,21 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			if (wParam == temp) {
 				armUpBool = false;
 				temp = NULL;
-
 			}
 			else {
 				armUpBool = true;
 				temp = wParam;
-
 			}
-
 		}
 		else if (wParam == 'I') {
 			armUpBool = false;
 			if (wParam == temp) {
 				armDownBool = false;
 				temp = NULL;
-
 			}
 			else {
 				armDownBool = true;
 				temp = wParam;
-
 			}
 		}
 		else if (wParam == 'T') {
@@ -212,28 +226,30 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			if (wParam == temp) {
 				armLeftBool = false;
 				temp = NULL;
-
 			}
 			else {
 				armLeftBool = true;
 				temp = wParam;
-
 			}
-
 		}
 		else if (wParam == 'Y') {
 			armLeftBool = false;
 			if (wParam == temp) {
 				armRightBool = false;
 				temp = NULL;
-
 			}
 			else {
 				armRightBool = true;
 				temp = wParam;
-
 			}
 		}
+		else if (wParam == 'E') {
+			walk();
+		}
+		else if (wParam == 'Q') {
+			moveX += 5;
+		}
+
 		break;
 	default:
 		break;
@@ -1176,12 +1192,57 @@ void drawRightArm() {
 
 // ******************************************** LEG **********************************************//
 
-void drawLegScrew(float r, float h) {
-	glRotatef(90, 0, 1, 0);
-	renderCylinder(1, 1, h);
-	renderPrism(1.5 * r, 1 * r, 8);
-	glTranslatef(0, 0, h);
-	renderPrism(1.5 * r, 1 * r, 8);
+void walk() {
+
+	if (moveLeftLeg) {
+		if (!leftAtFront) {
+
+			if (legLeftUpperAngle <= 40 && legLeftUpperAngle >= -40) {
+				legLeftUpperAngle += 1;
+				legLeftLowerAngle -= 1.5;
+			}
+			else {
+				leftAtFront = true;
+			}
+		}
+		else {
+			if (!legLeftUpperAngle == 0) {
+				legLeftUpperAngle -= 1;
+				legLeftLowerAngle += 1.5;
+				moveZ += 1;
+			}
+			else {
+				leftAtFront = false;
+				moveLeftLeg = false;
+				moveRightLeg = true;
+			}
+		}
+	}
+	else {
+		if (!rightAtFront) {
+
+			if (leftRightUpperAngle <= 40 && leftRightUpperAngle >= -40) {
+				leftRightUpperAngle += 1;
+				legRightLowerAngle -= 1.5;
+			}
+			else {
+				rightAtFront = true;
+			}
+		}
+		else {
+			if (!leftRightUpperAngle == 0) {
+				leftRightUpperAngle -= 1;
+				legRightLowerAngle += 1.5;
+				moveZ += 1;
+			}
+			else {
+				rightAtFront = false;
+				moveRightLeg = false;
+				moveLeftLeg = true;
+			}
+		}
+	}
+
 }
 
 void drawLegInnerNerve(float r, float h) {
@@ -1368,42 +1429,6 @@ void drawLegKnee() {
 	glPopMatrix();
 }
 
-void drawLegLower(float h) {
-	glPushMatrix();
-	{
-		glScalef(0.3, 0.3, 0.3);
-		glRotatef(90, 0, 1, 0);
-
-		// 4 nerves
-		glPushMatrix();
-		glTranslatef(-0.5, 0, -0.5);	// move to origin
-		{
-			glPushMatrix();
-			drawLegInnerNerve(0.2, h);
-
-			glPushMatrix();
-			glTranslatef(1, 0, 0);
-			drawLegInnerNerve(0.2, h);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(0, 0, 1);
-			drawLegInnerNerve(0.2, h);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(1, 0, 1);
-			drawLegInnerNerve(0.2, h);
-			glPopMatrix();
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-	}
-
-	glPopMatrix();
-}
-
 void drawLegFoot(float d) {
 	glPushMatrix();
 	{
@@ -1479,65 +1504,6 @@ void drawLegFoot(float d) {
 		//glRotatef(-90, 1, 0, 0);
 		//renderSphereWithoutGLU(0.5);
 		//glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-void drawLegOuter1(float n) {
-	//int n = 8;
-
-	glPushMatrix();
-	{
-		glScalef(0.3, 0.3, 0.3);
-
-		glPushMatrix();
-		{
-			//glRotatef(90, 1, 0, 0);
-
-			//renderCubeWithoutGLU(0.2, 2, 1);
-			// 
-			//renderCubeWithoutGLU(1, 2, 0.2);
-
-			//glRotatef(72, 0, 1, 0);
-			//glTranslatef(2, 0, 2);
-			//renderCubeWithoutGLU(1, 2, 0.2);
-
-			//glRotatef(72, 0, 1, 0);
-			//glTranslatef(2, 0, 2);
-			//renderCubeWithoutGLU(1, 2, 0.2);
-
-			//glRotatef(72, 0, 1, 0);
-			//glTranslatef(2, 0, 2);
-			//renderCubeWithoutGLU(1, 2, 0.2);
-
-			//glRotatef(72, 0, 1, 0);
-			//glTranslatef(2, 0, 2);
-			//renderCubeWithoutGLU(1, 2, 0.2);
-
-			//glRotatef(72, 0, 1, 0);
-			//glTranslatef(2, 0, 2);
-			//renderCubeWithoutGLU(1, 2, 0.2);
-
-			if (n <= 4) {
-				glTranslatef(1.5, 0, 1.5);
-			}
-			if (n >= 8) {
-				glTranslatef(0.5, 0, 1.2);
-				//glTranslatef(1, 0, 2.4);
-			}
-			//glRotatef(90, 1, 0, 0);
-
-			for (int i = 0; i <= n; i++) {
-				glRotatef(360 / n, 0, 1, 0);
-				glTranslatef(1, 0, 0);
-				//glTranslatef(20 / n, 0, 0);
-				//glTranslatef(1 / (2 * n), 0, 1 / (2 * n));
-				renderCubeWithoutGLU(1, 4, 0.2);
-				glColor3f(0.2, 0.5, 0.2);
-			}
-
-		}
-		glPopMatrix();
 	}
 	glPopMatrix();
 }
@@ -1689,50 +1655,75 @@ void drawLeftLeg() {
 	// whole leg
 	glPushMatrix();
 	{
+		glRotatef(legLeftUpperAngle, 1, 0, 0);
 
-		// left leg upper nerve (thigh)
+		// upper leg section
 		glPushMatrix();
 		{
-			glTranslatef(-0.65, -2, 0);	// move to left leg position
-			drawLegInner(10);
-			drawLegUpperArmor(-1);
+			//glRotatef(legLeftAngle2, 1, 0, 0);
+
+			// left leg upper nerve (thigh)
+			glPushMatrix();
+			{
+				glTranslatef(-0.65, -2, 0);	// move to left leg position
+				drawLegInner(10);
+				drawLegUpperArmor(-1);
+			}
+			glPopMatrix();
 		}
 		glPopMatrix();
 
-		// left knee leg joint
+		// lower leg section
 		glPushMatrix();
 		{
-			glTranslatef(-0.39, -3.8, -0.3);	// knee with 3 joints
-			drawLegKnee();
-			//drawLegKneeArmor();
+			glTranslatef(0, -3.4, 0);
+			glRotatef(legLeftLowerAngle, 1, 0, 0);
+			glTranslatef(0, 3.4, 0);
+
+			// left knee leg joint
+			glPushMatrix();
+			{
+				glTranslatef(-0.39, -3.8, -0.3);	// knee with 3 joints
+				drawLegKnee();
+				//drawLegKneeArmor();
+			}
+			glPopMatrix();
+
+
+			// left leg lower nerve (shin)
+			glPushMatrix();
+			{
+				glTranslatef(-0.65, -5, 0);	// move to left leg position
+				//glRotatef(legLeftLowerAngle, 1, 0, 0);
+				drawLegInner(7);
+				drawLegLowerArmor(8);
+			}
+			glPopMatrix();
+
+			// left leg joint (ankle)
+			glPushMatrix();
+			{
+				glTranslatef(-0.45, -6.3, -0.25);	// move to left leg position
+				//glRotatef(legLeftLowerAngle, 1, 0, 0);
+				glScalef(0.8, 0.8, 0.8);
+				drawLegKnee();
+			}
+			glPopMatrix();
+
+			// left foot
+			glPushMatrix();
+			{
+				glTranslatef(-0.65, -6.8, 0);	// move to left leg position
+				//glRotatef(legLeftLowerAngle, 1, 0, 0);
+				drawLegFoot(1);
+			}
+			glPopMatrix();
+
+			//glRotatef(legLeftLowerAngle, 1, 0, 0);
 		}
 		glPopMatrix();
 
-		// left leg lower nerve (shin)
-		glPushMatrix();
-		{
-			glTranslatef(-0.65, -5, 0);	// move to left leg position
-			drawLegInner(7);
-			drawLegLowerArmor(8);
-		}
-		glPopMatrix();
 
-		// left leg joint (ankle)
-		glPushMatrix();
-		{
-			glTranslatef(-0.45, -6.3, -0.25);	// move to left leg position
-			glScalef(0.8, 0.8, 0.8);
-			drawLegKnee();
-		}
-		glPopMatrix();
-
-		// left foot
-		glPushMatrix();
-		{
-			glTranslatef(-0.65, -6.8, 0);	// move to left leg position
-			drawLegFoot(1);
-		}
-		glPopMatrix();
 	}
 	glPopMatrix();
 
@@ -1743,6 +1734,7 @@ void drawRightLeg() {
 	// whole leg
 	glPushMatrix();
 	{
+		glRotatef(leftRightUpperAngle, 1, 0, 0);
 
 		// right leg upper nerve (thigh)
 		glPushMatrix();
@@ -1753,37 +1745,46 @@ void drawRightLeg() {
 		}
 		glPopMatrix();
 
-		// right knee leg joint
+		// lower leg section
 		glPushMatrix();
 		{
-			glTranslatef(0.91, -3.8, -0.3);	// knee with 3 joints
-			drawLegKnee();
-		}
-		glPopMatrix();
+			glTranslatef(0, -3.4, 0);
+			glRotatef(legRightLowerAngle, 1, 0, 0);
+			glTranslatef(0, 3.4, 0);
 
-		// right leg lower nerve (shin)
-		glPushMatrix();
-		{
-			glTranslatef(0.65, -5, 0);	// move to right leg position
-			drawLegInner(7);
-			drawLegLowerArmor(8);
-		}
-		glPopMatrix();
+			// right knee leg joint
+			glPushMatrix();
+			{
+				glTranslatef(0.91, -3.8, -0.3);	// knee with 3 joints
+				drawLegKnee();
+			}
+			glPopMatrix();
 
-		// right leg joint (ankle)
-		glPushMatrix();
-		{
-			glTranslatef(0.85, -6.3, -0.25);	// move to right leg position
-			glScalef(0.8, 0.8, 0.8);
-			drawLegKnee();
-		}
-		glPopMatrix();
+			// right leg lower nerve (shin)
+			glPushMatrix();
+			{
+				glTranslatef(0.65, -5, 0);	// move to right leg position
+				drawLegInner(7);
+				drawLegLowerArmor(8);
+			}
+			glPopMatrix();
 
-		// right foot
-		glPushMatrix();
-		{
-			glTranslatef(0.65, -6.8, 0);	// move to right leg position
-			drawLegFoot(-1);
+			// right leg joint (ankle)
+			glPushMatrix();
+			{
+				glTranslatef(0.85, -6.3, -0.25);	// move to right leg position
+				glScalef(0.8, 0.8, 0.8);
+				drawLegKnee();
+			}
+			glPopMatrix();
+
+			// right foot
+			glPushMatrix();
+			{
+				glTranslatef(0.65, -6.8, 0);	// move to right leg position
+				drawLegFoot(-1);
+			}
+			glPopMatrix();
 		}
 		glPopMatrix();
 
@@ -1798,6 +1799,10 @@ void drawRightLeg() {
 void summonGgBot() {
 	glPushMatrix();
 	{
+		glTranslatef(moveX, moveY, moveZ);
+		glRotatef(bodyAngle, 1, 0, 0);
+		moveX++;
+
 		drawHead();
 		drawBody();
 
@@ -1814,7 +1819,7 @@ void test1() {
 	glPushMatrix();
 	{
 		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(tX, tY, tZ);
+		//glTranslatef(tX, tY, tZ);
 		//glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
 		//glRotatef(tX, 0, 1, 0);		// test rotation, look cool mah
 		//tX += tSpeed;					// press s to stop rotate, press f again to start rotate
@@ -1877,15 +1882,12 @@ void test3() {
 	glColor3f(1.0, 0.0, 1.0);
 
 	glPushMatrix();
-	//robotStructure();
+	robotStructure();
 
-	glScalef(3, 3, 3);
-	//drawLegInner(7);
-	//drawLegUpperArmor(1);
-	drawLegKnee();
-	//drawLegKneeArmor();
+	//glScalef(3, 3, 3);
 
-	//drawLegLowerArmor(8);
+	drawLeftArm();
+	drawLeftLeg();
 
 	glPopMatrix();
 }
@@ -1900,15 +1902,10 @@ void test4() {
 	//	//renderCubeWithoutGLU(1, 1, 1);
 	//}
 
-	//glTranslatef(-1, -1.5, -2.5);	
-	//renderTrapezoidWithoutGLU(2, 0.5, 1, 3, 2);	// sample
-
-	//renderTrapezoidWithoutGLU(1.5, 0, 4, 1.5, 2);
-	//glScalef(3, 3, 3);
-	drawLegFoot(-1);
-	//drawLegKneeArmor();
-	//drawLegUpperArmor(-1);
-
+	//drawLeftArm();
+	//drawRightArm();
+	drawLeftLeg();
+	//drawRightLeg();
 
 	glPopMatrix();
 }
@@ -2034,50 +2031,3 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	return true;
 }
-
-
-//void drawLeftArm() {
-//	glPushMatrix();
-//	{
-//		glTranslatef(1.85, 2.8, 0);	// move to left upper arm position
-//		drawLegInner(5);
-//	}
-//	glPopMatrix();
-//
-//	glPushMatrix();
-//	{
-//		glTranslatef(-1.59, 1.8, -0.3);	// knee with 3 joints
-//		drawLegKnee();
-//	}
-//	glPopMatrix();
-//
-//	glPushMatrix();
-//	{
-//		glTranslatef(1.85, 0.85, 0);	// move to left lower arm position
-//		drawLegInner(5);
-//	}
-//	glPopMatrix();
-//}
-
-//void drawRightArm() {
-//	glPushMatrix();
-//	{
-//		glTranslatef(-1.85, 2.8, 0);	// move to right upper arm position
-//		drawLegInner(5);
-//	}
-//	glPopMatrix();
-//
-//	glPushMatrix();
-//	{
-//		glTranslatef(2.11, 1.8, -0.3);	// knee with 3 joints
-//		drawLegKnee();
-//	}
-//	glPopMatrix();
-//
-//	glPushMatrix();
-//	{
-//		glTranslatef(-1.85, 0.85, 0);	// move to right lower arm position
-//		drawLegInner(5);
-//	}
-//	glPopMatrix();
-//}
