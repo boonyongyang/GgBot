@@ -747,7 +747,9 @@ void drawTopBack() {
 	glPopMatrix();
 }
 
+void drawBottomBack() {
 
+}
 
 void drawHeart() {
 	glPushMatrix(); 
@@ -1068,10 +1070,11 @@ void drawBody() {
 		glTranslatef(0.0, -1.0, 0.0);
 		drawSpine();
 		drawTopBack();
+		drawBottomBack();
 		drawInnerBodyStructure();
-		drawHeart();
-		drawChest();
-		drawRibs();
+		//drawHeart();
+		//drawChest();
+		//drawRibs();
 		drawCore6Packs();
 		drawPelvis();
 		drawShoulder();
