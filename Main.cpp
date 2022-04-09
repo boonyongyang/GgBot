@@ -1190,6 +1190,10 @@ void drawNoseAndMouth() {
 	glPopMatrix();
 }
 
+void drawEar() {
+
+}
+
 void drawHead() {
 	glPushMatrix(); 
 	{
@@ -1199,6 +1203,7 @@ void drawHead() {
 		drawStructureHead();
 		drawEye(); 
 		drawNoseAndMouth();
+		drawEar();
 	}
 	glPopMatrix();
 }
