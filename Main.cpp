@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 3;
+int qNo = 1;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -831,25 +831,25 @@ void drawRibs() {
 }
 
 void drawCoreDetail1() {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 6; i++) {
 		glPushMatrix();
 		{
 			glColor3f(1.0, 0.0, 0.0);
-			glTranslatef(-0.1, i*-0.4, 0.0);
-			glRotatef(-3, 1.0, 0.0, 0.0);
+			glTranslatef(-0.1, i*-0.2, 0.0);
+			glRotatef(-10, 1.0, 0.0, 0.0);
 			glRotatef(90, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(0.5, -0.1, 0.4, 0.2, 0.1);
+			renderTrapezoidWithoutGLU(0.4, -0.1, 0.3, 0.2, 0.1);
 		}
 		glPopMatrix();
 
 		glPushMatrix();
 		{
 			glColor3f(1.0, 0.0, 0.0);
-			glTranslatef(0.1, i * -0.4, 0.0);
-			glRotatef(-3, 1.0, 0.0, 0.0);
+			glTranslatef(0.1, i * -0.2, 0.0);
+			glRotatef(-10, 1.0, 0.0, 0.0);
 			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(90, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(0.5, -0.1, 0.4, 0.2, 0.1);
+			renderTrapezoidWithoutGLU(0.4, -0.1, 0.3, 0.2, 0.1);
 		}
 		glPopMatrix();
 	}
