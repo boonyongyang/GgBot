@@ -28,6 +28,9 @@ float mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f;
 float perspecZoomLevel = -2.0f;
 
 // other (Seperate to your own sections too)
+//texture
+BITMAP BMP;				// bitmap structure
+HBITMAP hBMP = NULL;	// bitmap handle
 
 
 
@@ -195,7 +198,8 @@ void renderSphere(float r) {
 void renderDisk(float inR, float outR, float slices, float loops) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_LINE);	// will change to GLU_FILL		// GLU_LINE, GLU_SILHOUETTE, GLU_POINT
+	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL		// GLU_LINE, GLU_SILHOUETTE, GLU_POINT
+	gluQuadricTexture(obj, true);
 	gluDisk(obj, inR, outR, slices, loops);
 	gluDeleteQuadric(obj);
 }
@@ -211,7 +215,8 @@ void renderPartialDisk(float inR, float outR, float slices, float loops, float s
 void renderPolygon(float baseR, float topR, float h, float slices) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
-	gluQuadricDrawStyle(obj, GLU_LINE);	// will change to GLU_FILL
+	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL
+	gluQuadricTexture(obj, true);
 	gluCylinder(obj, baseR, topR, h, slices, 50);
 	gluDeleteQuadric(obj);
 }
@@ -219,7 +224,7 @@ void renderPolygon(float baseR, float topR, float h, float slices) {
 void renderCylinder(float baseR, float topR, float h) {
 	int slices = 50;
 	renderPolygon(baseR, topR, h, slices);
-	renderDisk(0, baseR, slices, stacks);
+	renderDisk(0, baseR, slices, stacks); 
 
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, h);
@@ -289,7 +294,6 @@ void renderTrapezoid(float baseL, float topL, float h) {
 	glPopMatrix();
 }
 
-
 void renderSphereWithoutGLU()
 {
 	const float PI = 3.141592f;
@@ -320,37 +324,62 @@ void renderCubeWithoutGLU(float x, float y, float z) {
 
 	glPushMatrix();
 	{
-		
-		glBegin(GL_LINE_LOOP);
+		glColor3f(1.0, 1.0, 1.0);
 
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0, 1);
 		glVertex3f(-x, -y, -z);
+		glTexCoord2f(1, 1);
 		glVertex3f(-x, -y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(x, -y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(x, -y, -z);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(-x, -y, -z);
+		glTexCoord2f(1, 1);
 		glVertex3f(-x, y, -z);
+		glTexCoord2f(1, 0);
 		glVertex3f(x, y, -z);
+		glTexCoord2f(0, 0);
 		glVertex3f(x, -y, -z);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(-x, -y, -z);
+		glTexCoord2f(1, 1);
 		glVertex3f(-x, -y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(-x, y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(-x, y, -z);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(x, y, -z);
+		glTexCoord2f(1, 1);
 		glVertex3f(x, y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(-x, y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(-x, y, -z);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(x, y, -z);
+		glTexCoord2f(1, 1);
 		glVertex3f(x, y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(x, -y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(x, -y, -z);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(x, -y, z);
+		glTexCoord2f(1, 1);
 		glVertex3f(x, y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(-x, y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(-x, -y, z);
 
 		glEnd();
@@ -400,38 +429,62 @@ void renderCuboid(float x, float y, float z) {
 
 void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float z) {
 	glPushMatrix(); {
-
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-top / 2, -y / 2, -z / 2);
-		glBegin(GL_LINE_LOOP);
+		glBegin(GL_QUADS);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(bot1, 0.0f, 0.0f);
+		glTexCoord2f(1, 1);
 		glVertex3f(bot1, 0.0f, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(bot2, 0.0f, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(bot2, 0.0f, 0.0f);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(bot1, 0.0f, 0.0f);
+		glTexCoord2f(1, 1);
 		glVertex3f(0.0f, y, 0.0f);
+		glTexCoord2f(1, 0);
 		glVertex3f(top, y, 0.0f);
+		glTexCoord2f(0, 0);
 		glVertex3f(bot2, 0.0f, 0.0f);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(bot1, 0.0f, 0.0f);
+		glTexCoord2f(1, 1);
 		glVertex3f(bot1, 0.0f, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(0.0f, y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(0.0f, y, 0.0f);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(top, y, 0.0f);
+		glTexCoord2f(1, 1);
 		glVertex3f(top, y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(0.0f, y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(0.0f, y, 0.0f);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(top, y, 0.0f);
+		glTexCoord2f(1, 1);
 		glVertex3f(top, y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(bot2, 0.0f, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(bot2, 0.0f, 0.0f);
 
+		glTexCoord2f(0, 1);
 		glVertex3f(bot2, 0.0f, z);
+		glTexCoord2f(1, 1);
 		glVertex3f(top, y, z);
+		glTexCoord2f(1, 0);
 		glVertex3f(0.0f, y, z);
+		glTexCoord2f(0, 0);
 		glVertex3f(bot1, 0.0f, z);
 
 		glEnd();
@@ -440,10 +493,33 @@ void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float
 	
 }
 
+GLuint loadTexture(LPCSTR filename) {
+	//take from step 1
+	GLuint texture = 0;		//texture name
+
+	// Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	// Step 4: Assign texture to polygon.
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//Take from step 5
+	DeleteObject(hBMP);
+	return texture;
+}
+
 void drawInnerBody() {
+
 	glPushMatrix();
 	{
-		glColor3f(0.2, 0.2, 0.2);
+		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, -1, -0.5);
 		glScalef(1.0, 1.0, 0.5);
 		glRotatef(-90, 1.0, 0.0, 0.0);
@@ -674,7 +750,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
-			glColor3f(0.0, 0.0, 1.0);
+			//glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-1.0, 2.3, -0.2);
 			glRotatef(-10, 1.0, 0.0, 0.0);
 			renderCubeWithoutGLU(0.6, 0.7, 0.4);
@@ -683,7 +759,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
-			glColor3f(0.0, 0.0, 1.0);
+			//glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(0.9, 1.0, -0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
 			renderCubeWithoutGLU(0.5, 0.6, 0.4);
@@ -692,7 +768,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
-			glColor3f(0.0, 0.0, 1.0);
+			//glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-0.9, 1.0, -0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
 			renderCubeWithoutGLU(0.5, 0.6, 0.4);
@@ -1221,34 +1297,56 @@ void drawEar() {
 void drawHead() {
 	glPushMatrix(); 
 	{
+
+		GLuint textureArr[2];
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
+		textureArr[0] = loadTexture("textures/steel32.bmp");
 		drawStructureHead();
 		drawEye(); 
 		drawNoseAndMouth();
 		drawEar();
+		glDeleteTextures(1, &textureArr[0]);
+
+		glDisable(GL_TEXTURE_2D);
 	}
 	glPopMatrix();
 }
 
 void drawBody() {
+
 	glPushMatrix();
 	{
+		//GLuint textureArr[2];
+
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
-		//glTranslatef(0.0, -5.0, 0.0);
-		//drawInnerBody();
-		//drawSpine();
-		//drawTopBack();
-		drawInnerBodyStructure();
-		//drawHeart();
-		//drawChest();
-		//drawRibs();
-		//drawCore6Packs();
-		//drawPelvis();
-		//drawShoulder();
+		////glTranslatef(0.0, -5.0, 0.0);
+		//textureArr[0] = loadTexture("textures/steel32.bmp");
+		
+		drawInnerBody();
+
+		drawSpine();
+
+
+		//glDeleteTextures(1, &textureArr[0]);
+
+		//glDisable(GL_TEXTURE_2D);
+
+		drawTopBack();
+		drawRibs();
+		drawCore6Packs();
+		drawPelvis();
+		drawShoulder();
 		drawNeck();
+		drawInnerBodyStructure();
+		drawHeart();
+		drawChest();
+
+
+
+		// Step5: Remove texture info.
 	}
 	glPopMatrix();
 
@@ -1404,6 +1502,7 @@ void test3() {	// delete all if u want to test here
 
 void display()
 {
+
 	// project initialization
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
