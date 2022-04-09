@@ -748,7 +748,21 @@ void drawTopBack() {
 }
 
 void drawBottomBack() {
+	glPushMatrix();
+	{
+		glColor3f(0.0, 0.0, 1.0);
+		glTranslatef(0.5, 0.0, -0.12);
+		renderCube(0.4, 0.5, 0.2);
+	}
+	glPopMatrix();
 
+	glPushMatrix();
+	{
+		glColor3f(0.0, 0.0, 1.0);
+		glTranslatef(-0.5, 0.0, -0.12);
+		renderCube(0.4, 0.5, 0.2);
+	}
+	glPopMatrix();
 }
 
 void drawHeart() {
