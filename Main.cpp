@@ -771,9 +771,9 @@ void drawCore6Packs() {
 			glPushMatrix();
 			{
 				glColor3f(0.0, 1.0, 1.0);
-				glTranslatef(-1, -1, 0.0);
+				glTranslatef(-1, -0.8, 0.0);
 				glRotatef(-16, 0.0, 0.0, 1.0);
-				renderTrapezoidWithoutGLU(1.3, 0.4, 1.5, 0.7, 0.4);
+				renderTrapezoidWithoutGLU(1.3, 0.4, 1.5, 0.5, 0.4);
 			}
 			glPopMatrix();
 		}
@@ -785,10 +785,10 @@ void drawCore6Packs() {
 			glPushMatrix();
 			{
 				glColor3f(0.0, 1.0, 1.0);
-				glTranslatef(1, -1, 0.0);
+				glTranslatef(1, -0.8, 0.0);
 				glRotatef(180, 0.0, 1.0, 0.0);
 				glRotatef(-16, 0.0, 0.0, 1.0);
-				renderTrapezoidWithoutGLU(1.3, 0.4, 1.5, 0.7, 0.4);
+				renderTrapezoidWithoutGLU(1.3, 0.4, 1.5, 0.5, 0.4);
 			}
 			glPopMatrix();
 		}
