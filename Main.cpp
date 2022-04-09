@@ -999,6 +999,10 @@ void drawShoulder() {
 	glPopMatrix();
 }
 
+void drawNeck() {
+
+}
+
 void drawInnerBodyStructure() {
 	glPushMatrix();
 	{
@@ -1055,6 +1059,7 @@ void drawBody() {
 		drawCore6Packs();
 		drawPelvis();
 		drawShoulder();
+		drawNeck();
 	}
 	glPopMatrix();
 
@@ -1204,7 +1209,8 @@ void test2() {	// delete all if u want to test here
 
 void test3() {	// delete all if u want to test here 
 	//drawScale();
-	drawCoreDetail1();
+	//drawCoreDetail1();
+	drawNeck();
 }
 
 void display()
