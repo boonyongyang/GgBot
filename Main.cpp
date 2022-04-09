@@ -324,7 +324,7 @@ void renderCubeWithoutGLU(float x, float y, float z) {
 
 	glPushMatrix();
 	{
-		glColor3f(1.0, 1.0, 1.0);
+		//glColor3f(1.0, 1.0, 1.0);
 
 		glBegin(GL_QUADS);
 
@@ -429,7 +429,7 @@ void renderCuboid(float x, float y, float z) {
 
 void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float z) {
 	glPushMatrix(); {
-		glColor3f(1.0, 1.0, 1.0);
+		//glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-top / 2, -y / 2, -z / 2);
 		glBegin(GL_QUADS);
 
@@ -1318,31 +1318,31 @@ void drawBody() {
 
 	glPushMatrix();
 	{
-		//GLuint textureArr[2];
+		GLuint textureArr[2];
 
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
 		////glTranslatef(0.0, -5.0, 0.0);
-		//textureArr[0] = loadTexture("textures/steel32.bmp");
-		
-		drawInnerBody();
-
-		drawSpine();
-
-
-		//glDeleteTextures(1, &textureArr[0]);
-
-		//glDisable(GL_TEXTURE_2D);
-
+		textureArr[0] = loadTexture("textures/steel32.bmp");
 		drawTopBack();
 		drawRibs();
 		drawCore6Packs();
 		drawPelvis();
 		drawShoulder();
 		drawNeck();
-		drawInnerBodyStructure();
+		//drawInnerBodyStructure();
 		drawHeart();
 		drawChest();
+		drawInnerBody();
+		drawSpine();
+
+
+
+		glDeleteTextures(1, &textureArr[0]);
+
+		glDisable(GL_TEXTURE_2D);
+
+
 
 
 
