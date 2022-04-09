@@ -1168,7 +1168,7 @@ void drawNoseAndMouth() {
 	glPushMatrix();
 	{
 		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(0.0, -0.15, -0.4);
+		glTranslatef(0.0, -0.25, -0.6);
 		//glRotatef(-30, 0.0, 1.0, 0.0);
 		glRotatef(90, 1.0, 0.0, 0.0);
 		//renderPrismCylinder(0.75, 0.55, 0.7, 6);
