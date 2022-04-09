@@ -227,16 +227,16 @@ void renderCylinder(float baseR, float topR, float h) {
 	glPopMatrix();
 }
 
-void renderPrismCylinder(float baseR, float topR, float h, float slices) {
-	//int slices = 50;
-	renderPolygon(baseR, topR, h, slices);
-	renderDisk(0, baseR, slices, stacks);
-
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, h);
-	renderDisk(0, topR, slices, stacks);
-	glPopMatrix();
-}
+//void renderPrismCylinder(float baseR, float topR, float h, float slices) {
+//	//int slices = 50;
+//	renderPolygon(baseR, topR, h, slices);
+//	renderDisk(0, baseR, slices, stacks);
+//
+//	glPushMatrix();
+//	glTranslatef(0.0f, 0.0f, h);
+//	renderDisk(0, topR, slices, stacks);
+//	glPopMatrix();
+//}
 
 void renderCone(float topR, float h) {
 	int slices = 50;
@@ -1193,9 +1193,38 @@ void drawNoseAndMouth() {
 void drawEar() {
 	glPushMatrix();
 	{	
-		glTranslatef(-0.6, 0.0, 0.0);
+		glTranslatef(-0.63, 0.0, 0.0);
 		glRotatef(90, 0.0, 1.0, 0.0);
 		renderCylinder(0.15, 0.15, 1.3);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(0.0, 0.0, 1.0);
+		glScalef(1.0, 1.0, 0.5);
+		glTranslatef(-0.6, 0.1, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		renderPrism(0.7, 0.05, 3);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(0.0, 0.0, 1.0);
+		glScalef(1.0, 1.0, 0.5);
+		glTranslatef(0.6, 0.1, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		renderPrism(0.7, 0.05, 3);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glScalef(1.0, 0.5, 0.5);
+		glTranslatef(-0.6, -0.5, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		renderCylinder(0.35, 0.35, 1.2);
 	}
 	glPopMatrix();
 }
