@@ -1158,8 +1158,9 @@ void drawEye() {
 	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 1.0);
-		glTranslatef(0.0, 0.2, -0.4);
-		renderCube(0.2, 0.05, 0.2);
+		glTranslatef(0.0, 0.2, -0.32);
+		glRotatef(30, 1.0, 0.0, 0.0);
+		renderCube(0.3, 0.1, 0.2);
 	}
 	glPopMatrix();
 }
@@ -1196,7 +1197,7 @@ void drawHead() {
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
 		drawStructureHead();
-		//drawEye(); 
+		drawEye(); 
 		drawNoseAndMouth();
 	}
 	glPopMatrix();
