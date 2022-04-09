@@ -827,6 +827,21 @@ void drawPelvis() {
 		}
 		glPopMatrix();
 	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glTranslatef(-0.25, 0.0, -1.2);
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(0.0, -2.2, 0.0);
+			//glRotatef(-16, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 0.4);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
 
 
 }
