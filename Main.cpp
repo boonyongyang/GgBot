@@ -1270,7 +1270,6 @@ void drawLegScrew(float r, float h) {
 	renderPrism(1.5 * r, 1 * r, 8);
 }
 
-
 void drawLegInnerNerve(float r, float h) {
 
 	// 4 nerves
@@ -1616,11 +1615,6 @@ void test1() {
 
 		glColor3f(1.0, 1.0, 0.0);
 		summonGgBot();
-
-		//for (int i = 0; i <= 100000; i++) {
-		//	//renderCylinder(1, 1, 1);
-		//	renderCubeWithoutGLU(10, 10, 10);
-		//}
 	}
 	glPopMatrix();
 }
