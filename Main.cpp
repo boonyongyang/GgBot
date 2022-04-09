@@ -34,6 +34,16 @@ float perspecZoomLevel = -2.0f;
 // other (Seperate to your own sections too)
 int r = 1;
 
+
+//Hand
+bool armUpBool = false;
+bool armDownBool = false;
+bool armLeftBool = false;
+bool armRightBool = false;
+float armRSpeed = 0.1;
+float armRup = 0.01, armRup1 = 0.01, armRsword = 0.01; //arm rotation variable, need reset for space
+char temp = 'A';
+
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -167,6 +177,60 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			}
 			else {
 				tSpeed = 0.5;
+			}
+		}
+		else if (wParam == 'U') {
+			armDownBool = false;
+			if (wParam == temp) {
+				armUpBool = false;
+				temp = NULL;
+
+			}
+			else {
+				armUpBool = true;
+				temp = wParam;
+
+			}
+
+		}
+		else if (wParam == 'I') {
+			armUpBool = false;
+			if (wParam == temp) {
+				armDownBool = false;
+				temp = NULL;
+
+			}
+			else {
+				armDownBool = true;
+				temp = wParam;
+
+			}
+		}
+		else if (wParam == 'T') {
+			armRightBool = false;
+			if (wParam == temp) {
+				armLeftBool = false;
+				temp = NULL;
+
+			}
+			else {
+				armLeftBool = true;
+				temp = wParam;
+
+			}
+
+		}
+		else if (wParam == 'Y') {
+			armLeftBool = false;
+			if (wParam == temp) {
+				armRightBool = false;
+				temp = NULL;
+
+			}
+			else {
+				armRightBool = true;
+				temp = wParam;
+
 			}
 		}
 		break;
@@ -512,6 +576,59 @@ void robotStructure() {
 
 }
 
+void robotStructure1() {
+
+
+	glPushMatrix();
+	glTranslatef(0, 2, 0);	// move to centre on window
+	{
+		//glScalef(0.10, 0.10, 0.10);
+
+		//head
+		glPushMatrix();
+		glTranslatef(0, 3.5, 0);
+		renderCubeWithoutGLU(0.75, 0.75, 0.75);
+		glPopMatrix();
+
+		//body 
+		glPushMatrix();
+		renderCubeWithoutGLU(1, 2, 0.75);
+		glPopMatrix();
+
+
+
+
+		// left leg
+		glPushMatrix();
+		glTranslatef(-0.65, -5.5, 0);
+		renderCubeWithoutGLU(0.5, 3.5, 0.75);
+		glPopMatrix();
+
+		// right leg
+		glPushMatrix();
+		glTranslatef(0.65, -5.5, 0);
+		renderCubeWithoutGLU(0.5, 3.5, 0.75);
+		glPopMatrix();
+
+		/*
+		// left hand connection point
+		glPushMatrix();
+		glTranslatef(-1.2, 1.5, 0);
+		renderSphere(0.25);
+		glPopMatrix();
+		*/
+
+		/*
+		// right hand connection point
+		glPushMatrix();
+		glTranslatef(1.2, 1.5, 0);
+		renderSphere(0.25);
+		glPopMatrix();
+		*/
+	}
+	glPopMatrix();
+}
+
 void drawSpineJoint() {
 	glPushMatrix();
 	{
@@ -781,6 +898,369 @@ void drawBody() {
 }
 
 
+
+void drawLeftArm() {
+
+	if (armUpBool) {
+		if (armRup1 <= 50) {
+			armRup1 += armRSpeed;
+
+		}
+		else if (armRup <= 15 || armRup1 <= 110) {
+			if (armRup <= 15) {
+				armRup += armRSpeed / 2;
+				armRup1 += armRSpeed / 2;
+			}
+			else {
+				armRup1 += armRSpeed / 2;
+
+			}
+
+
+		}
+	}
+	else if (armDownBool) {
+		if (armRup1 >= 50) {
+			armRup1 -= armRSpeed;
+
+		}
+		else if (armRup1 >= 0) {
+			if (armRup >= 0) {
+				armRup -= armRSpeed / 2;
+				armRup1 -= armRSpeed / 2;
+			}
+			else {
+				armRup1 -= armRSpeed;
+			}
+
+
+		}
+	}
+
+	if (armLeftBool) {
+		if (armRsword <= 86) {
+			armRsword += armRSpeed;
+
+		}
+	}
+	else if (armRightBool) {
+		if (armRsword >= 0)
+			armRsword -= armRSpeed;
+	}
+
+	glPushMatrix();
+	glTranslatef(0, 2, 0);	// move to centre on window
+
+	//left hand
+		//white
+	glPushMatrix();
+	glTranslatef(-1.85, 1.8, 0);
+	renderCubeWithoutGLU(0.8, 0.4, 0.80);
+	glPopMatrix();
+
+	//below white
+	glPushMatrix();
+	glTranslatef(-1.85, 1.2, -0.6);
+	renderCubeWithoutGLU(0.8, 0.2, 0.2);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(-1.85, 1.2, 0.6);
+	renderCubeWithoutGLU(0.8, 0.2, 0.2);
+	glPopMatrix();
+
+	//black
+	glPushMatrix();
+	glTranslatef(-2.55, 1.8, 0);
+	renderCubeWithoutGLU(0.3, 0.2, 1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.65, 1.8, 0);
+	renderCubeWithoutGLU(0.6, 0.2, 1);
+	glPopMatrix();
+
+	//Connection
+	glPushMatrix();
+	glTranslatef(-2.15, 1.4, 0);
+	glRotatef(90, 0, 1, 0);
+	renderCylinder(0.2, 0.2, 1.5);
+	glPopMatrix();
+
+
+
+	//Upper arm
+	glPushMatrix();
+	glTranslatef(-1.85, 1.4, 0);
+	glRotatef(armRup, 1, 0, 0);
+	glTranslatef(1.85, -1.4, 0);
+	//white inner hand
+	glPushMatrix();
+	glTranslatef(-1.85, 1.4, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.4, 0.2, 1.6);
+	glPopMatrix();
+
+	//Lower arm
+	glPushMatrix();
+	glTranslatef(-1.85, 0.0, 0);
+	glRotatef(armRup1, 1, 0, 0);
+	glRotatef(armRsword, 1, 0, 1);	// a
+	glTranslatef(1.85, 0.0, 0);
+	//black inner hand
+	glPushMatrix();
+	glTranslatef(-1.85, 0.0, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.4, 0.6, 1.6);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.85, -1.2, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.6, 0.8, 0.2);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.85, -1.4, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.8, 0.6, 0.6);
+	glPopMatrix();
+	//end black inner hand
+
+	//yellow part
+	glPushMatrix();
+	glTranslatef(-2, -0.6, 0);
+	glRotatef(90, -1, -0.5, 0);
+	renderTrapezoid(0.3, 0.02, 0.8);
+	glPopMatrix();
+
+	//palm
+	glPushMatrix();
+	glTranslatef(-2.25, -2.2, 0);
+	glRotatef(90, 0, 1, 0);
+	renderTrapezoid(0.2, 0.6, 0.2);
+	glPopMatrix();
+
+	//finger
+	glPushMatrix();
+	glTranslatef(-1.95, -2.2, 0);
+	renderCubeWithoutGLU(0.1, 0.4, 0.4);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -2.2, -0.5);
+	glRotatef(45, 1, 0, 0);
+	renderCubeWithoutGLU(0.1, 0.4, 0.1);
+	glPopMatrix();
+
+	//1st part finger
+	glPushMatrix();
+	glTranslatef(-1.95, -2.8, -0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -2.8, -0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -2.8, 0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -2.8, 0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	//2nd part
+	glPushMatrix();
+	glTranslatef(-1.95, -3.2, -0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -3.2, -0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -3.2, 0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-1.95, -3.2, 0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+	glPopMatrix(); //left lowerarm pop
+	glPopMatrix(); //left upperarm pop
+
+	glPopMatrix(); // translate up 2 via y
+
+
+}
+
+void drawRightArm() {
+
+	glPushMatrix();
+	glTranslatef(0, 2, 0);	// move to centre on window
+	//right hand
+		//white
+	glPushMatrix();
+	glTranslatef(1.85, 1.8, 0);
+	renderCubeWithoutGLU(0.8, 0.4, 0.80);
+	glPopMatrix();
+
+	//below white
+	glPushMatrix();
+	glTranslatef(1.85, 1.2, -0.6);
+	renderCubeWithoutGLU(0.8, 0.2, 0.2);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.85, 1.2, 0.6);
+	renderCubeWithoutGLU(0.8, 0.2, 0.2);
+	glPopMatrix();
+
+	//black
+	glPushMatrix();
+	glTranslatef(2.55, 1.8, 0);
+	renderCubeWithoutGLU(0.3, 0.2, 1);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(1.65, 1.8, 0);
+	renderCubeWithoutGLU(0.6, 0.2, 1);
+	glPopMatrix();
+
+	//Connection
+	glPushMatrix();
+	glTranslatef(0.65, 1.4, 0);
+	glRotatef(90, 0, 1, 0);
+	renderCylinder(0.2, 0.2, 1.5);
+	glPopMatrix();
+
+	//white inner hand
+	glPushMatrix();
+	glTranslatef(1.85, 1.4, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.4, 0.2, 1.2);
+	glPopMatrix();
+
+	//black inner hand
+	glPushMatrix();
+	glTranslatef(1.85, 0.4, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.4, 0.6, 1.6);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(1.85, -1.2, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.6, 0.8, 0.2);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(1.85, -1.4, 0);
+	glRotatef(90, 1, 0, 0);
+	renderTrapezoid(0.8, 0.6, 0.6);
+	glPopMatrix();
+	//end black inner hand
+
+	//yellow part
+	glPushMatrix();
+	glTranslatef(2, -0.6, 0);
+	glRotatef(90, -1, 0.5, 0);
+	renderTrapezoid(0.3, 0.02, 0.8);
+	glPopMatrix();
+
+
+	//palm
+	glPushMatrix();
+	glTranslatef(2.25, -2.2, 0);
+	glRotatef(90, 0, 1, 0);
+	renderTrapezoid(0.6, 0.2, 0.2);
+	glPopMatrix();
+	//finger
+	glPushMatrix();
+	glTranslatef(1.95, -2.2, 0);
+	renderCubeWithoutGLU(0.1, 0.4, 0.4);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -2.2, -0.5);
+	glRotatef(45, 1, 0, 0);
+	renderCubeWithoutGLU(0.1, 0.4, 0.1);
+	glPopMatrix();
+	//1st part finger
+	glPushMatrix();
+	glTranslatef(1.95, -2.8, -0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -2.8, -0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -2.8, 0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -2.8, 0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	//2nd part
+	glPushMatrix();
+	glTranslatef(1.95, -3.2, -0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -3.2, -0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -3.2, 0.3);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(1.95, -3.2, 0.1);
+	renderCubeWithoutGLU(0.1, 0.2, 0.1);
+	glPopMatrix();
+
+
+	//gun
+	//glColor3f(0, 1, 0);
+	//glPushMatrix();
+	//glTranslatef(1.85, -1.8, 0);
+	//glRotatef(90, 1, 0, 0);
+	//renderCylinder(0.3, 0.3, 0.7);
+	//glPopMatrix();
+
+	////bullet
+	//glColor3f(1, 0, 0);
+	//glPushMatrix();
+	//glTranslatef(1.85, -1.8, 0);
+	//glRotatef(90, 1, 0, 0);
+	//renderSphere(0.28);
+	//glPopMatrix();
+	//end Right hand
+
+	glPopMatrix(); // translate up 2 via y
+
+}
+
+
+
+
+void drawLegScrew(float r, float h) {
+	glRotatef(90, 0, 1, 0);
+	renderCylinder(1, 1, h);
+	renderPrism(1.5 * r, 1 * r, 8);
+	glTranslatef(0, 0, h);
+	renderPrism(1.5 * r, 1 * r, 8);
+}
+
+
 void drawLegInnerNerve(float r, float h) {
 
 	// 4 nerves
@@ -961,60 +1441,6 @@ void drawLegKnee() {
 		drawLegKneeJoint();
 	}
 	glPopMatrix();
-}
-
-void drawLeftArm() {
-	glPushMatrix();
-	{
-		glTranslatef(1.85, 2.8, 0);	// move to left upper arm position
-		drawLegInner(5);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(-1.59, 1.8, -0.3);	// knee with 3 joints
-		drawLegKnee();
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(1.85, 0.85, 0);	// move to left lower arm position
-		drawLegInner(5);
-	}
-	glPopMatrix();
-}
-
-void drawRightArm() {
-	glPushMatrix();
-	{
-		glTranslatef(-1.85, 2.8, 0);	// move to right upper arm position
-		drawLegInner(5);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(2.11, 1.8, -0.3);	// knee with 3 joints
-		drawLegKnee();
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glTranslatef(-1.85, 0.85, 0);	// move to right lower arm position
-		drawLegInner(5);
-	}
-	glPopMatrix();
-}
-
-void drawLegScrew(float r, float h) {
-	glRotatef(90, 0, 1, 0);
-	renderCylinder(1, 1, h);
-	renderPrism(1.5 * r, 1 * r, 8);
-	glTranslatef(0, 0, h);
-	renderPrism(1.5 * r, 1 * r, 8);
 }
 
 void drawLegLower(float h) {
@@ -1365,3 +1791,50 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	return true;
 }
+
+
+//void drawLeftArm() {
+//	glPushMatrix();
+//	{
+//		glTranslatef(1.85, 2.8, 0);	// move to left upper arm position
+//		drawLegInner(5);
+//	}
+//	glPopMatrix();
+//
+//	glPushMatrix();
+//	{
+//		glTranslatef(-1.59, 1.8, -0.3);	// knee with 3 joints
+//		drawLegKnee();
+//	}
+//	glPopMatrix();
+//
+//	glPushMatrix();
+//	{
+//		glTranslatef(1.85, 0.85, 0);	// move to left lower arm position
+//		drawLegInner(5);
+//	}
+//	glPopMatrix();
+//}
+
+//void drawRightArm() {
+//	glPushMatrix();
+//	{
+//		glTranslatef(-1.85, 2.8, 0);	// move to right upper arm position
+//		drawLegInner(5);
+//	}
+//	glPopMatrix();
+//
+//	glPushMatrix();
+//	{
+//		glTranslatef(2.11, 1.8, -0.3);	// knee with 3 joints
+//		drawLegKnee();
+//	}
+//	glPopMatrix();
+//
+//	glPushMatrix();
+//	{
+//		glTranslatef(-1.85, 0.85, 0);	// move to right lower arm position
+//		drawLegInner(5);
+//	}
+//	glPopMatrix();
+//}
