@@ -1191,7 +1191,13 @@ void drawNoseAndMouth() {
 }
 
 void drawEar() {
-
+	glPushMatrix();
+	{	
+		glTranslatef(-0.6, 0.0, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		renderCylinder(0.15, 0.15, 1.3);
+	}
+	glPopMatrix();
 }
 
 void drawHead() {
