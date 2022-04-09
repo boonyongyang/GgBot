@@ -651,6 +651,26 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(0.2, 2.3, 0.05);
+			glRotatef(-10, 1.0, 0.0, 0.0);
+			glRotatef(-90, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.6, 0.1, 0.5, 0.4, 0.35);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(-0.2, 2.3, 0.05);
+			glRotatef(-10, 1.0, 0.0, 0.0);
+			glRotatef(90, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.6, 0.1, 0.5, 0.4, 0.35);
+		}
+		glPopMatrix();
+
 	}
 	glPopMatrix();
 }
@@ -858,7 +878,6 @@ void drawPelvis() {
 	}
 	glPopMatrix();
 
-	
 }
 
 void drawInnerBodyStructure() {
@@ -911,10 +930,10 @@ void drawBody() {
 		drawSpine();
 		drawTopBack();
 		drawInnerBodyStructure();
-		drawHeart();
-		drawChest();
-		drawRibs();
-		drawCore6Packs();
+		//drawHeart();
+		//drawChest();
+		//drawRibs();
+		//drawCore6Packs();
 		drawPelvis();
 	}
 	glPopMatrix();
