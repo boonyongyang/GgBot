@@ -747,84 +747,6 @@ void drawTopBack() {
 	glPopMatrix();
 }
 
-void drawBottomBack() {
-	//glPushMatrix();
-	//{
-	//	glColor3f(0.0, 0.0, 1.0);
-	//	glTranslatef(0.5, 0.0, -0.12);
-	//	renderCube(0.4, 0.5, 0.2);
-	//}
-	//glPopMatrix();
-
-	//glPushMatrix();
-	//{
-	//	glColor3f(0.0, 0.0, 1.0);
-	//	glTranslatef(-0.5, 0.0, -0.12);
-	//	renderCube(0.4, 0.5, 0.2);
-	//}
-	//glPopMatrix();
-	glPushMatrix();
-	{
-		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(-0.7, 0.28, 0.0);
-		glRotatef(-16, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(1.3, 0.2, 1.4, 0.3, 0.4);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(0.7, 0.28, 0.0);
-		glRotatef(180, 0.0, 1.0, 0.0);
-		glRotatef(-16, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(1.3, 0.2, 1.4, 0.3, 0.4);
-	}
-	glPopMatrix();
-
-	//2
-	glPushMatrix();
-	{
-		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(-0.6, -0.15, 0.0);
-		glRotatef(-16, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(1.2, 0.2, 1.3, 0.3, 0.4);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(0.6, -0.15, 0.0);
-		glRotatef(180, 0.0, 1.0, 0.0);
-		glRotatef(-16, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(1.2, 0.2, 1.3, 0.3, 0.4);
-	}
-	glPopMatrix();
-
-	//3
-	glPushMatrix();
-	{
-		glColor3f(0.0, 1.0, 1.0);
-		glTranslatef(-0.5, -0.6, 0.0);
-		//glTranslatef(-1, -0.8, 0.0);
-		glRotatef(-16, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 0.4);
-	}
-	glPopMatrix();
-
-	glPushMatrix();
-	{
-		glColor3f(0.0, 1.0, 1.0);
-		//glTranslatef(1, -0.8, 0.0);
-		glTranslatef(0.5, -0.6, 0.0);
-		glRotatef(180, 0.0, 1.0, 0.0);
-		glRotatef(-16, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 0.4);
-	}
-	glPopMatrix();
-}
-
 void drawHeart() {
 	glPushMatrix(); 
 	{
@@ -1185,13 +1107,12 @@ void drawBody() {
 		//glTranslatef(0.0, 1.0, 0.5);
 		glTranslatef(0.0, -1.0, 0.0);
 		drawSpine();
-		//drawTopBack();
-		//drawBottomBack();
+		drawTopBack();
 		drawInnerBodyStructure();
 		drawHeart();
 		//drawChest();
 		drawRibs();
-		//drawCore6Packs();
+		drawCore6Packs();
 		drawPelvis();
 		drawShoulder();
 		drawNeck();
