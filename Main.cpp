@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int qNo = 2;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -1121,14 +1121,20 @@ void drawInnerBodyStructure() {
 	glPopMatrix();
 }
 
-void drawHead() {}
+void drawStructureHead() {
+
+}
+
+void drawHead() {
+	drawStructureHead();
+}
 
 void drawBody() {
 	glPushMatrix();
 	{
 		//glScalef(6.0, 6.0, 6.0);
-		//glTranslatef(0.0, 1.0, 0.5);
-		glTranslatef(0.0, -1.0, 0.0);
+		glTranslatef(0.0, 1.0, 0.5);
+		//glTranslatef(0.0, -1.0, 0.0);
 		drawInnerBody();
 		drawSpine();
 		drawTopBack();
