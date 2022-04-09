@@ -316,7 +316,7 @@ void renderSphereWithoutGLU()
 	}
 }
 
-void renderCube(float x, float y, float z) {
+void renderCubeWithoutGLU(float x, float y, float z) {
 
 	glPushMatrix();
 	{
@@ -504,7 +504,7 @@ void drawSpine() {
 		{
 			glColor3f(1.0, 0.0, 1.0);
 			glTranslatef(0.0, -0.4, 0.0);
-			renderCube(0.1, 0.8, 0.05);
+			renderCubeWithoutGLU(0.1, 0.8, 0.05);
 		}
 		glPopMatrix();
 
@@ -548,7 +548,7 @@ void drawSpine() {
 			glColor3f(1.0, 0.0, 1.0);
 			glTranslatef(0.0, 1.0, 0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
-			renderCube(0.1, 0.6, 0.05);
+			renderCubeWithoutGLU(0.1, 0.6, 0.05);
 		}
 		glPopMatrix();
 
@@ -579,7 +579,7 @@ void drawSpine() {
 			glColor3f(1.0, 0.0, 1.0);
 			glTranslatef(0.0, 2.1, 0.33);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.1, 0.5, 0.05);
+			renderCubeWithoutGLU(0.1, 0.5, 0.05);
 		}
 		glPopMatrix();
 
@@ -610,7 +610,7 @@ void drawSpine() {
 			glColor3f(1.0, 0.0, 1.0);
 			glTranslatef(0.0, 2.9, 0.21);
 			glRotatef(-5, 1.0, 0.0, 0.0);
-			renderCube(0.1, 0.3, 0.05);
+			renderCubeWithoutGLU(0.1, 0.3, 0.05);
 		}
 		glPopMatrix();
 
@@ -668,7 +668,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(1.0, 2.3, -0.2);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.6, 0.7, 0.4);
+			renderCubeWithoutGLU(0.6, 0.7, 0.4);
 		}
 		glPopMatrix();
 
@@ -677,7 +677,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-1.0, 2.3, -0.2);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.6, 0.7, 0.4);
+			renderCubeWithoutGLU(0.6, 0.7, 0.4);
 		}
 		glPopMatrix();
 
@@ -686,7 +686,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(0.9, 1.0, -0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
-			renderCube(0.5, 0.6, 0.4);
+			renderCubeWithoutGLU(0.5, 0.6, 0.4);
 		}
 		glPopMatrix();
 
@@ -695,7 +695,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-0.9, 1.0, -0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
-			renderCube(0.5, 0.6, 0.4);
+			renderCubeWithoutGLU(0.5, 0.6, 0.4);
 		}
 		glPopMatrix();
 
@@ -912,7 +912,7 @@ void drawCore6Packs() {
 			glScalef(3.5, 1.5, 1.0);
 			glTranslatef(0.0, 0.6, -0.9);
 			glRotatef(45, 0.0, 0.0, 1.0);
-			renderCube(0.3,0.3,0.2);
+			renderCubeWithoutGLU(0.3,0.3,0.2);
 		}
 		glPopMatrix();
 
@@ -1126,7 +1126,7 @@ void drawStructureHead() {
 	//{
 	//	glColor3f(1.0, 0.0, 0.0);
 	//	//glTranslatef(0.0, 5.2, 0.0);
-	//	renderCube(0.55, 0.35, 0.55);
+	//	renderCubeWithoutGLU(0.55, 0.35, 0.55);
 	//}
 	//glPopMatrix();
 
@@ -1149,7 +1149,7 @@ void drawEye() {
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, 0.2, -0.32);
 		glRotatef(30, 1.0, 0.0, 0.0);
-		renderCube(0.3, 0.1, 0.2);
+		renderCubeWithoutGLU(0.3, 0.1, 0.2);
 	}
 	glPopMatrix();
 }
@@ -1285,36 +1285,36 @@ void robotStructure() {
 		// head
 		glPushMatrix();
 		glTranslatef(0, 3.5, 0);
-		renderCube(0.75, 0.75, 0.75);
+		renderCubeWithoutGLU(0.75, 0.75, 0.75);
 		glPopMatrix();
 
 		// body 
 		glPushMatrix();
-		renderCube(1, 2, 0.75);
+		renderCubeWithoutGLU(1, 2, 0.75);
 		glPopMatrix();
 
 		// left hand
 		glPushMatrix();
 		glTranslatef(-1.85, -0.5, 0);
-		renderCube(0.5, 2.5, 0.5);
+		renderCubeWithoutGLU(0.5, 2.5, 0.5);
 		glPopMatrix();
 
 		// right hand
 		glPushMatrix();
 		glTranslatef(1.85, -0.5, 0);
-		renderCube(0.5, 2.5, 0.5);
+		renderCubeWithoutGLU(0.5, 2.5, 0.5);
 		glPopMatrix();
 
 		// left leg
 		glPushMatrix();
 		glTranslatef(-0.65, -5.5, 0);
-		renderCube(0.5, 3.5, 0.75);
+		renderCubeWithoutGLU(0.5, 3.5, 0.75);
 		glPopMatrix();
 
 		// right leg
 		glPushMatrix();
 		glTranslatef(0.65, -5.5, 0);
-		renderCube(0.5, 3.5, 0.75);
+		renderCubeWithoutGLU(0.5, 3.5, 0.75);
 		glPopMatrix();
 
 		// left hand connection point
