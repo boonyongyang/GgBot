@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 2;
+int qNo = 1;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -1122,19 +1122,32 @@ void drawInnerBodyStructure() {
 }
 
 void drawStructureHead() {
-
+	glPushMatrix();
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		//glTranslatef(0.0, 5.2, 0.0);
+		renderCube(0.55, 0.55, 0.55);
+	}
+	glPopMatrix();
 }
 
 void drawHead() {
-	drawStructureHead();
+	glPushMatrix(); 
+	{
+		//glScalef(4.0, 4.0, 4.0);
+		glTranslatef(0.0, 5.0, 0.0);
+		//glTranslatef(0.0, -0.5, 0.0);
+		drawStructureHead();
+	}
+	glPopMatrix();
 }
 
 void drawBody() {
 	glPushMatrix();
 	{
-		//glScalef(6.0, 6.0, 6.0);
+		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
-		//glTranslatef(0.0, -1.0, 0.0);
+		//glTranslatef(0.0, -5.0, 0.0);
 		drawInnerBody();
 		drawSpine();
 		drawTopBack();
@@ -1322,7 +1335,7 @@ void display()
 	switch (qNo) {
 	case 1:
 		drawBody();
-		//drawSpineJoint();
+		drawHead();
 		break;
 	case 2:
 		test1();	// main robot structure here for ref
