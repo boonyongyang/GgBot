@@ -1002,9 +1002,7 @@ void drawCore6Packs() {
 }
 
 void drawPelvis() {
-	glPushMatrix();
-	{
-		//glTranslatef(-0.5, 0.0, -1.2);
+
 		glPushMatrix();
 		{
 			glColor3f(0.0, 0.0, 1.0);
@@ -1013,12 +1011,7 @@ void drawPelvis() {
 			renderTrapezoidWithoutGLU(1.5, 0.4, 1.6, 0.3, 1.5);
 		}
 		glPopMatrix();
-	}
-	glPopMatrix();
 
-	glPushMatrix();
-	{
-		//glTranslatef(0.5, 0.0, 0.3);
 		glPushMatrix();
 		{
 			glColor3f(0.0, 0.0, 1.0);
@@ -1028,22 +1021,24 @@ void drawPelvis() {
 			renderTrapezoidWithoutGLU(1.5, 0.4, 1.6, 0.3, 1.5);
 		}
 		glPopMatrix();
-	}
-	glPopMatrix();
 
-	glPushMatrix();
-	{
-		//glTranslatef(-0.25, 0.0, -1.2);
 		glPushMatrix();
 		{
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(0.0, -1.6, -0.45);
-			//glRotatef(-16, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
 		}
 		glPopMatrix();
-	}
-	glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.2, 0.2, 0.2);
+			glTranslatef(1.0, -1.5, -0.5);
+			glRotatef(-90, 0.0, 1.0, 0.0);
+			renderCylinder(0.1, 0.1, 2.0);
+		}
+		glPopMatrix();
+
 
 }
 
