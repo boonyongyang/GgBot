@@ -742,6 +742,22 @@ void drawTopBack() {
 			drawScale();
 		}
 		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(1.0, 1.0, 1.0);
+			glTranslatef(1.8, 1.5, -0.2);
+			renderTrapezoidWithoutGLU(1.2, 0.0, 0.3, 1.0, 0.8);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(1.0, 1.0, 1.0);
+			glTranslatef(-1.8, 1.5, -0.2);
+			renderTrapezoidWithoutGLU(1.2, 0.9, 1.2, 1.0, 0.8);
+		}
+		glPopMatrix();
 		
 	}
 	glPopMatrix();
