@@ -845,6 +845,18 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
+			glColor3f(1.0, 1.0, 0.0);
+			glTranslatef(0.0, 0.0, -1.1);
+			glRotatef(180, 0.0, 1.0, 0.0);
+			glScalef(3.5, 1.5, 1.0);
+			glTranslatef(0.0, 0.6, 0.0);
+			glRotatef(45, 0.0, 0.0, 1.0);
+			renderTrapezoid(0.4, 0.1, 0.3);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
 			//glTranslatef(-0.5, 0.0, -1.1);
 			glPushMatrix();
 			{
@@ -1007,7 +1019,7 @@ void drawBody() {
 		//drawHeart();
 		//drawChest();
 		//drawRibs();
-		//drawCore6Packs();
+		drawCore6Packs();
 		drawPelvis();
 	}
 	glPopMatrix();
@@ -1189,7 +1201,7 @@ void display()
 		test1();	// main robot structure here for ref
 		break;
 	case 3:
-		test3();	// change to what u want for test
+		test2();	// change to what u want for test
 		break;
 	default:
 		test1();
