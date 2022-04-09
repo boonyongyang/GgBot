@@ -1175,6 +1175,18 @@ void drawNoseAndMouth() {
 		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.3, 0.3);
 	}
 	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 0.0);
+		glTranslatef(0.0, 0.24, -0.52);
+		//glRotatef(-30, 0.0, 1.0, 0.0);
+		glRotatef(15, 1.0, 0.0, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
+		glRotatef(90, 0.0, 0.0, 1.0);
+		renderTrapezoidWithoutGLU(0.6, -0.1, -0.1, 0.3, 0.7);
+	}
+	glPopMatrix();
 }
 
 void drawHead() {
