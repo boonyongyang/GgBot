@@ -1126,16 +1126,17 @@ void drawStructureHead() {
 	{
 		glColor3f(1.0, 0.0, 0.0);
 		//glTranslatef(0.0, 5.2, 0.0);
-		renderCube(0.55, 0.55, 0.55);
+		renderCube(0.55, 0.35, 0.55);
 	}
 	glPopMatrix();
+
 }
 
 void drawHead() {
 	glPushMatrix(); 
 	{
 		//glScalef(4.0, 4.0, 4.0);
-		glTranslatef(0.0, 5.0, 0.0);
+		glTranslatef(0.0, 4.7, 0.0);
 		//glTranslatef(0.0, -0.5, 0.0);
 		drawStructureHead();
 	}
