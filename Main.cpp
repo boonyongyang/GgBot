@@ -10,7 +10,7 @@
 //GLUquadricObj* obj = gluNewQuadric();
 
 int qNo = 1;
-float stacks = 30;
+float stacks = 10;
 
 // transformation for projection matrix
 float ptX, ptY, prY = 0;
@@ -224,7 +224,7 @@ void renderPolygon(float baseR, float topR, float h, float slices) {
 	obj = gluNewQuadric();
 	gluQuadricDrawStyle(obj, GLU_LINE);	// will change to GLU_FILL
 	//gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL
-	gluCylinder(obj, baseR, topR, h, slices, 50);
+	gluCylinder(obj, baseR, topR, h, slices, stacks);
 	gluDeleteQuadric(obj);
 }
 
@@ -786,7 +786,8 @@ void drawLegInnerNerve(float r, float h) {
 	// 4 nerves
 	glPushMatrix();
 	{
-		glTranslatef(-r, h / 2, -r);	// move to origin
+		//glTranslatef(-r, h / 2, -r);	// move to origin with 4 nerves
+		glTranslatef(0, h / 2, 0);	// move to origin just 1 nerve
 		glPushMatrix();
 		{
 			glRotatef(90, 1, 0, 0);
@@ -794,26 +795,26 @@ void drawLegInnerNerve(float r, float h) {
 
 			renderCylinder(r, r, h);
 
-			glPushMatrix();
-			glTranslatef(2 * r, 0, 0);		// move right
-			renderCylinder(r, r, h);
-			glPopMatrix();
+			//glPushMatrix();
+			//glTranslatef(2 * r, 0, 0);		// move right
+			//renderCylinder(r, r, h);
+			//glPopMatrix();
 
-			glPushMatrix();
-			glTranslatef(0, 2 * r, 0);		// move up
-			renderCylinder(r, r, h);
-			glPopMatrix();
+			//glPushMatrix();
+			//glTranslatef(0, 2 * r, 0);		// move up
+			//renderCylinder(r, r, h);
+			//glPopMatrix();
 
-			glPushMatrix();
-			glTranslatef(2 * r, 2 * r, 0);		// move left
-			renderCylinder(r, r, h);
-			glPopMatrix();
+			//glPushMatrix();
+			//glTranslatef(2 * r, 2 * r, 0);		// move left
+			//renderCylinder(r, r, h);
+			//glPopMatrix();
 		}
 		glPopMatrix();
 	}
 	glPopMatrix();
 
-	// nerve shield
+	// nerve shield (cover)
 	glPushMatrix();
 	{
 		glColor3f(1, 0, 0);				  // red
@@ -823,6 +824,7 @@ void drawLegInnerNerve(float r, float h) {
 	}
 	glPopMatrix();
 
+	// penta joint (top)
 	glPushMatrix();
 	{
 		glColor3f(0, 1, 1);
@@ -835,6 +837,7 @@ void drawLegInnerNerve(float r, float h) {
 	}
 	glPopMatrix();
 
+	// penta joint (bottom)
 	glPushMatrix();
 	{
 		glColor3f(0, 1, 1);
@@ -845,6 +848,8 @@ void drawLegInnerNerve(float r, float h) {
 		glPushMatrix();
 		glRotatef(180, 0, 0, 1);
 		renderPrism(3 * r, 4 * r, 5);
+		glColor3f(1, 0, 0);
+		renderCylinder(1.5 * r, 1.5 * r, 5 * r);
 		glPopMatrix();
 	}
 	glPopMatrix();
@@ -861,21 +866,21 @@ void drawLegInner(float h) {
 		glTranslatef(-0.5, 0, -0.5);	// move to origin
 		{
 			glPushMatrix();
-			drawLegInnerNerve(0.2, h);
+			drawLegInnerNerve(0.2, h);	// nerve 1
 
 			glPushMatrix();
 			glTranslatef(1, 0, 0);
-			drawLegInnerNerve(0.2, h);
+			drawLegInnerNerve(0.2, h);	// nerve 2
 			glPopMatrix();
 
 			glPushMatrix();
 			glTranslatef(0, 0, 1);
-			drawLegInnerNerve(0.2, h);
+			drawLegInnerNerve(0.2, h);	// nerve 3
 			glPopMatrix();
 
 			glPushMatrix();
 			glTranslatef(1, 0, 1);
-			drawLegInnerNerve(0.2, h);
+			drawLegInnerNerve(0.2, h);	// nerve 4
 			glPopMatrix();
 			glPopMatrix();
 		}
@@ -1004,7 +1009,7 @@ void drawRightArm() {
 	glPopMatrix();
 }
 
-void drawLegScrew(float h) {
+void drawLegScrew(float r, float h) {
 	glRotatef(90, 0, 1, 0);
 	renderCylinder(1, 1, h);
 	renderPrism(1.5 * r, 1 * r, 8);
@@ -1048,7 +1053,9 @@ void drawLegLower(float h) {
 	glPopMatrix();
 }
 
-void drawLegFoot() {}
+void drawLegFoot() {
+
+}
 
 void drawLeftLeg() {
 	glPushMatrix();
@@ -1107,7 +1114,22 @@ void drawRightLeg() {
 		}
 		glPopMatrix();
 
-		//drawLegFoot();
+		glPushMatrix();
+		{
+			glTranslatef(0.85, -6.3, -0.25);	// move to right leg position
+			glScalef(0.8, 0.8, 0.8);
+			drawLegKnee();
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(0.65, -6.6, 0);	// move to right leg position
+			drawLegInner(1);
+		}
+		glPopMatrix();
+
+		drawLegFoot();
 	}
 	glPopMatrix();
 }
@@ -1136,19 +1158,16 @@ void test1() {
 		//glRotatef(tX, 0, 1, 0);		// test rotation, look cool mah
 		//tX += tSpeed;					// press s to stop rotate, press f again to start rotate
 
-		//glPushMatrix();
-		//{
-		//	glTranslatef(0, 5.5, 0);	// move sphere up to head
-		//	renderSphere(1.5);
-		//}
-		//glPopMatrix();
-
 		//glTranslatef(tX, tY, tZ);           
 		robotStructure();
 
 		glColor3f(1.0, 1.0, 0.0);
 		summonGgBot();
 
+		//for (int i = 0; i <= 100000; i++) {
+		//	//renderCylinder(1, 1, 1);
+		//	renderCubeWithoutGLU(10, 10, 10);
+		//}
 	}
 	glPopMatrix();
 }
@@ -1204,11 +1223,9 @@ void test3() {
 	glPushMatrix();
 	//robotStructure();
 
-	//glScalef(0.3, 0.3, 0.3);
 	//glTranslatef(-0.75, 3, 0);
 
 	drawLegInner(10);
-	drawLegKnee();
 
 	glPopMatrix();
 }
@@ -1219,7 +1236,10 @@ void test4() {
 	glPushMatrix();
 
 	//drawLegKnee();
-	renderSphere(1);
+	for (int i = 0; i <= 1000; i++) {
+		renderCylinder(1, 1, 1);
+		//renderCubeWithoutGLU(1, 1, 1);
+	}
 
 	glPopMatrix();
 }
@@ -1231,7 +1251,7 @@ void display()
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-		
+
 		projection();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
