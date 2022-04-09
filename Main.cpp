@@ -632,14 +632,17 @@ void drawSpine() {
 void drawScale() {
 	glPushMatrix();
 	{
-		glPushMatrix();
-		{
-			glTranslatef(0.0, -1.3, 0.0);
-			glRotatef(90, 1.0, 0.0, 0.0);
-			glColor3f(1.0, 0.0, 1.0);
-			renderTrapezoid(0.1, 0.025, 0.4);
-		}
 		glPopMatrix();
+		for (int i = 0; i <= 6; i++) {
+			glPushMatrix();
+			{
+				glTranslatef(0.0, i*-0.4, 0.0);
+				glRotatef(180, 1.0, 0.0, 0.0);
+				glColor3f(1.0, 0.0, 1.0);
+				renderTrapezoidWithoutGLU(0.6, 0.0, 0.0, 0.4, 0.6);
+			}
+			glPopMatrix();
+		}
 	}
 	glPopMatrix();
 }
