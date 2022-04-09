@@ -883,6 +883,8 @@ void drawInnerBodyStructure() {
 	glPopMatrix();
 }
 
+// ***************************************** HEAD & BODY *******************************************//
+
 void drawHead() {}
 void drawBody() {
 	glPushMatrix();
@@ -897,7 +899,7 @@ void drawBody() {
 	glPopMatrix();
 }
 
-
+// ******************************************** ARM **********************************************//
 
 void drawLeftArm() {
 
@@ -1249,8 +1251,7 @@ void drawRightArm() {
 
 }
 
-
-
+// ******************************************** LEG **********************************************//
 
 void drawLegScrew(float r, float h) {
 	glRotatef(90, 0, 1, 0);
@@ -1519,6 +1520,7 @@ void drawRightLeg() {
 	glPushMatrix();
 	{
 
+		// right leg upper nerve (thigh)
 		glPushMatrix();
 		{
 			glTranslatef(0.65, -2, 0);	// move to right leg position
@@ -1526,6 +1528,7 @@ void drawRightLeg() {
 		}
 		glPopMatrix();
 
+		// right knee leg joint
 		glPushMatrix();
 		{
 			glTranslatef(0.91, -3.8, -0.3);	// knee with 3 joints
@@ -1533,6 +1536,7 @@ void drawRightLeg() {
 		}
 		glPopMatrix();
 
+		// right leg lower nerve (shin)
 		glPushMatrix();
 		{
 			glTranslatef(0.65, -5, 0);	// move to right leg position
@@ -1540,6 +1544,7 @@ void drawRightLeg() {
 		}
 		glPopMatrix();
 
+		// right leg joint (angle)
 		glPushMatrix();
 		{
 			glTranslatef(0.85, -6.3, -0.25);	// move to right leg position
@@ -1555,7 +1560,7 @@ void drawRightLeg() {
 		}
 		glPopMatrix();
 
-		drawLegFoot();
+		//drawLegFoot();
 	}
 	glPopMatrix();
 }
