@@ -656,7 +656,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(1.0, 2.5, 0.05);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.6, 0.8, 0.2);
+			renderCube(0.6, 0.6, 0.2);
 		}
 		glPopMatrix();
 
@@ -665,7 +665,16 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-1.0, 2.5, 0.05);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.6, 0.8, 0.2);
+			renderCube(0.6, 0.6, 0.2);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(1.0, 1.0, 0.05);
+			glRotatef(20, 1.0, 0.0, 0.0);
+			renderCube(0.6, 0.6, 0.2);
 		}
 		glPopMatrix();
 
