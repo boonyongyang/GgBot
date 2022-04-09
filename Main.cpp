@@ -680,6 +680,15 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(-0.9, 2.0, 0.5);
+			glRotatef(-10, 1.0, 0.0, 0.0);
+			renderTrapezoidWithoutGLU(1.0, 0.4, 1.0, 1.5, 0.35);
+		}
+		glPopMatrix();
+
 	}
 	glPopMatrix();
 }
