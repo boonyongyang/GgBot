@@ -979,6 +979,10 @@ void drawPelvis() {
 
 }
 
+void drawShoulder() {
+
+}
+
 void drawInnerBodyStructure() {
 	glPushMatrix();
 	{
@@ -1034,6 +1038,7 @@ void drawBody() {
 		//drawRibs();
 		drawCore6Packs();
 		drawPelvis();
+		drawShoulder();
 	}
 	glPopMatrix();
 
