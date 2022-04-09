@@ -1144,18 +1144,26 @@ void drawStructureHead() {
 	glPushMatrix();
 	{
 		glColor3f(1.0, 0.0, 0.0);
-		glTranslatef(0.0, -0.3, 0.0);
-		glRotatef(-30, 0.0, 1.0, 0.0);
-		glRotatef(-90, 1.0, 0.0, 0.0);
-		renderPrismCylinder(0.75, 0.55, 0.7, 6);
+		//glTranslatef(0.0, -0.3, 0.0);
+		//glRotatef(-30, 0.0, 1.0, 0.0);
+		glRotatef(180, 1.0, 0.0, 0.0);
+		//renderPrismCylinder(0.75, 0.55, 0.7, 6);
+		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.7, 1.1);
 	}
 	glPopMatrix();
 
 }
 
 void drawEye() {
-
+	glPushMatrix();
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glTranslatef(0.0, 0.0, -0.45);
+		renderCube(0.2, 0.1, 0.2);
+	}
+	glPopMatrix();
 }
+
 void drawHead() {
 	glPushMatrix(); 
 	{
