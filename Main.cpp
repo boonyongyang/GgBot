@@ -65,8 +65,8 @@ bool bodyAngle = 0;	// need?
 void walk();
 
 //texture
-BITMAP BMP;				// bitmap structure
-HBITMAP hBMP = NULL;	// bitmap handle
+//BITMAP BMP;				// bitmap structure
+//HBITMAP hBMP = NULL;	// bitmap handle
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -608,27 +608,27 @@ void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float
 
 // ***************************************** TEXTURES *******************************************//
 
-GLuint loadTexture(LPCSTR filename) {
-	//take from step 1
-	GLuint texture = 0;		//texture name
-
-	// Step 3: Initialize texture info
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-	GetObject(hBMP, sizeof(BMP), &BMP);
-
-	// Step 4: Assign texture to polygon.
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
-
-	//Take from step 5
-	DeleteObject(hBMP);
-	return texture;
-}
+//GLuint loadTexture(LPCSTR filename) {
+//	//take from step 1
+//	GLuint texture = 0;		//texture name
+//
+//	// Step 3: Initialize texture info
+//	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+//	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+//	GetObject(hBMP, sizeof(BMP), &BMP);
+//
+//	// Step 4: Assign texture to polygon.
+//	glEnable(GL_TEXTURE_2D);
+//	glGenTextures(1, &texture);
+//	glBindTexture(GL_TEXTURE_2D, texture);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+//
+//	//Take from step 5
+//	DeleteObject(hBMP);
+//	return texture;
+//}
 
 void robotStructure() {
 	glPushMatrix();
@@ -1487,18 +1487,18 @@ void drawHead() {
 	glPushMatrix();
 	{
 
-		GLuint textureArr[2];
+		//GLuint textureArr[2];
+		//textureArr[0] = loadTexture("textures/steel32.bmp");
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
-		textureArr[0] = loadTexture("textures/steel32.bmp");
 		drawStructureHead();
 		drawEye();
 		drawNoseAndMouth();
 		drawEar();
-		glDeleteTextures(1, &textureArr[0]);
+		//glDeleteTextures(1, &textureArr[0]);
 
-		glDisable(GL_TEXTURE_2D);
+		//glDisable(GL_TEXTURE_2D);
 	}
 	glPopMatrix();
 }
@@ -1507,12 +1507,11 @@ void drawBody() {
 
 	glPushMatrix();
 	{
-		GLuint textureArr[2];
-
+		//GLuint textureArr[2];
+		//textureArr[0] = loadTexture("textures/steel32.bmp");
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
 		////glTranslatef(0.0, -5.0, 0.0);
-		textureArr[0] = loadTexture("textures/steel32.bmp");
 		drawTopBack();
 		drawRibs();
 		drawCore6Packs();
@@ -1527,9 +1526,9 @@ void drawBody() {
 
 
 
-		glDeleteTextures(1, &textureArr[0]);
+		//glDeleteTextures(1, &textureArr[0]);
 
-		glDisable(GL_TEXTURE_2D);
+		//glDisable(GL_TEXTURE_2D);
 
 
 
@@ -2802,9 +2801,9 @@ void drawRightLeg() {
 	// whole leg
 	glPushMatrix();
 	{
-		GLuint textureArr[2];
+		//GLuint textureArr[2];
 
-		textureArr[0] = loadTexture("textures/steel32.bmp");
+		//textureArr[0] = loadTexture("textures/steel32.bmp");
 		glRotatef(leftRightUpperAngle, 1, 0, 0);
 
 		// right leg upper nerve (thigh)
@@ -2858,9 +2857,9 @@ void drawRightLeg() {
 			glPopMatrix();
 		}
 		glPopMatrix();
-		glDeleteTextures(1, &textureArr[0]);
+		//glDeleteTextures(1, &textureArr[0]);
 
-		glDisable(GL_TEXTURE_2D);
+		//glDisable(GL_TEXTURE_2D);
 
 	}
 	glPopMatrix();
