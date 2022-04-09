@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int qNo = 3;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -629,6 +629,21 @@ void drawSpine() {
 	glPopMatrix();
 }
 
+void drawScale() {
+	glPushMatrix();
+	{
+		glPushMatrix();
+		{
+			glTranslatef(0.0, -1.3, 0.0);
+			glRotatef(90, 1.0, 0.0, 0.0);
+			glColor3f(1.0, 0.0, 1.0);
+			renderTrapezoid(0.1, 0.025, 0.4);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
 void drawTopBack() {
 	glPushMatrix();
 	{
@@ -688,10 +703,12 @@ void drawTopBack() {
 			renderTrapezoidWithoutGLU(1.0, 0.4, 1.0, 1.5, 0.35);
 		}
 		glPopMatrix();
-
+		
 	}
 	glPopMatrix();
 }
+
+
 
 void drawHeart() {
 	glPushMatrix(); 
@@ -1101,7 +1118,7 @@ void test2() {	// delete all if u want to test here
 }
 
 void test3() {	// delete all if u want to test here 
-	renderCube(0.6, 0.9, 0.2);
+	drawScale();
 }
 
 void display()
@@ -1136,7 +1153,7 @@ void display()
 		test3();	// change to what u want for test
 		break;
 	default:
-		test1();
+		test3();
 		break;
 	}
 
