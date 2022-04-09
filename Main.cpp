@@ -1145,10 +1145,10 @@ void drawStructureHead() {
 	{
 		glColor3f(1.0, 0.0, 0.0);
 		//glTranslatef(0.0, -0.3, 0.0);
-		//glRotatef(90, 0.0, 1.0, 0.0);
+		glRotatef(90, 0.0, 1.0, 0.0);
 		glRotatef(180, 1.0, 0.0, 0.0);
 		//renderPrismCylinder(0.75, 0.55, 0.7, 6);
-		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.9, 0.9);
+		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.9, 1.1);
 	}
 	glPopMatrix();
 
@@ -1184,7 +1184,7 @@ void drawHead() {
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
 		drawStructureHead();
-		drawEye(); 
+		//drawEye(); 
 		drawNoseAndMouth();
 	}
 	glPopMatrix();
