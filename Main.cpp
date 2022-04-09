@@ -730,9 +730,9 @@ void drawCore6Packs() {
 		{
 			glColor3f(0.0, 1.0, 1.0);
 			glScalef(3.5, 1.5, 1.0);
-			glTranslatef(0.0, 0.6, -0.7);
+			glTranslatef(0.0, 0.6, -0.9);
 			glRotatef(45, 0.0, 0.0, 1.0);
-			renderCube(0.3,0.3,0.3);
+			renderCube(0.3,0.3,0.2);
 		}
 		glPopMatrix();
 
