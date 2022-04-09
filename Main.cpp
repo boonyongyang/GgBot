@@ -980,7 +980,14 @@ void drawPelvis() {
 }
 
 void drawShoulder() {
-
+	glPushMatrix();
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(-2.0, 3.2, -0.5);
+		glRotatef(180, 1.0, 0.0, 0.0);
+		renderTrapezoidWithoutGLU(2.5, 2.0, 2.0, 0.3, 1.5);
+	}
+	glPopMatrix();
 }
 
 void drawInnerBodyStructure() {
