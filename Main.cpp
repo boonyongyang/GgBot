@@ -441,7 +441,15 @@ void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float
 }
 
 void drawInnerBody() {
-
+	glPushMatrix();
+	{
+		glColor3f(0.2, 0.2, 0.2);
+		glTranslatef(0.0, -1, -0.5);
+		glScalef(1.0, 1.0, 0.5);
+		glRotatef(-90, 1.0, 0.0, 0.0);
+		renderCylinder(0.5, 2.0, 4.0);
+	}
+	glPopMatrix();
 }
 
 void drawSpineJoint() {
