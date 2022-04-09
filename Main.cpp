@@ -900,6 +900,18 @@ void drawCore6Packs() {
 		{
 			glColor3f(1.0, 0.0, 0.0);
 			glTranslatef(-0.1, -0.05, -1.1);
+			glRotatef(-2, 1.0, 0.0, 0.0);
+			glRotatef(90, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.8, -0.1, 0.7, 0.2, 0.1);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(0.1, -0.05, -1.1);
+			glRotatef(-2, 1.0, 0.0, 0.0);
+			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(90, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(0.8, -0.1, 0.7, 0.2, 0.1);
 		}
