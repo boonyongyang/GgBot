@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int qNo = 3;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -1000,7 +1000,17 @@ void drawShoulder() {
 }
 
 void drawNeck() {
-
+	for (int i = 0; i <= 23; i++) {
+		glPushMatrix();
+		{
+			glRotatef(i* 15, 0.0, 1.0, 0.0);
+			glTranslatef(0.1, 0.0, 0.0);
+			glRotatef(-90, 1.0, 0.0, 0.0);
+			glColor3f(1.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.5, 0.0, 0.0, 0.4, 0.4);
+		}
+		glPopMatrix();
+	}
 }
 
 void drawInnerBodyStructure() {
