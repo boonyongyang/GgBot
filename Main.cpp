@@ -317,39 +317,46 @@ void renderSphereWithoutGLU()
 }
 
 void renderCube(float x, float y, float z) {
-	glBegin(GL_LINE_LOOP);
 
-	glVertex3f(-x, -y, -z);
-	glVertex3f(-x, -y, z);
-	glVertex3f(x, -y, z);
-	glVertex3f(x, -y, -z);
+	glPushMatrix();
+	{
+		
+		glBegin(GL_LINE_LOOP);
 
-	glVertex3f(-x, -y, -z);
-	glVertex3f(-x, y, -z);
-	glVertex3f(x, y, -z);
-	glVertex3f(x, -y, -z);
+		glVertex3f(-x, -y, -z);
+		glVertex3f(-x, -y, z);
+		glVertex3f(x, -y, z);
+		glVertex3f(x, -y, -z);
 
-	glVertex3f(-x, -y, -z);
-	glVertex3f(-x, -y, z);
-	glVertex3f(-x, y, z);
-	glVertex3f(-x, y, -z);
+		glVertex3f(-x, -y, -z);
+		glVertex3f(-x, y, -z);
+		glVertex3f(x, y, -z);
+		glVertex3f(x, -y, -z);
 
-	glVertex3f(x, y, -z);
-	glVertex3f(x, y, z);
-	glVertex3f(-x, y, z);
-	glVertex3f(-x, y, -z);
+		glVertex3f(-x, -y, -z);
+		glVertex3f(-x, -y, z);
+		glVertex3f(-x, y, z);
+		glVertex3f(-x, y, -z);
 
-	glVertex3f(x, y, -z);
-	glVertex3f(x, y, z);
-	glVertex3f(x, -y, z);
-	glVertex3f(x, -y, -z);
+		glVertex3f(x, y, -z);
+		glVertex3f(x, y, z);
+		glVertex3f(-x, y, z);
+		glVertex3f(-x, y, -z);
 
-	glVertex3f(x, -y, z);
-	glVertex3f(x, y, z);
-	glVertex3f(-x, y, z);
-	glVertex3f(-x, -y, z);
+		glVertex3f(x, y, -z);
+		glVertex3f(x, y, z);
+		glVertex3f(x, -y, z);
+		glVertex3f(x, -y, -z);
 
-	glEnd();
+		glVertex3f(x, -y, z);
+		glVertex3f(x, y, z);
+		glVertex3f(-x, y, z);
+		glVertex3f(-x, -y, z);
+
+		glEnd();
+	}
+	glPopMatrix();
+	
 }
 
 void renderCuboid(float x, float y, float z) {
@@ -392,39 +399,45 @@ void renderCuboid(float x, float y, float z) {
 }
 
 void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float z) {
-	glBegin(GL_LINE_LOOP);
+	glPushMatrix(); {
 
-	glVertex3f(bot1, 0.0f, 0.0f);
-	glVertex3f(bot1, 0.0f, z);
-	glVertex3f(bot2, 0.0f, z);
-	glVertex3f(bot2, 0.0f, 0.0f);
+		glTranslatef(-top / 2, -y / 2, -z / 2);
+		glBegin(GL_LINE_LOOP);
 
-	glVertex3f(bot1, 0.0f, 0.0f);
-	glVertex3f(0.0f, y, 0.0f);
-	glVertex3f(top, y, 0.0f);
-	glVertex3f(bot2, 0.0f, 0.0f);
+		glVertex3f(bot1, 0.0f, 0.0f);
+		glVertex3f(bot1, 0.0f, z);
+		glVertex3f(bot2, 0.0f, z);
+		glVertex3f(bot2, 0.0f, 0.0f);
 
-	glVertex3f(bot1, 0.0f, 0.0f);
-	glVertex3f(bot1, 0.0f, z);
-	glVertex3f(0.0f, y, z);
-	glVertex3f(0.0f, y, 0.0f);
+		glVertex3f(bot1, 0.0f, 0.0f);
+		glVertex3f(0.0f, y, 0.0f);
+		glVertex3f(top, y, 0.0f);
+		glVertex3f(bot2, 0.0f, 0.0f);
 
-	glVertex3f(top, y, 0.0f);
-	glVertex3f(top, y, z);
-	glVertex3f(0.0f, y, z);
-	glVertex3f(0.0f, y, 0.0f);
+		glVertex3f(bot1, 0.0f, 0.0f);
+		glVertex3f(bot1, 0.0f, z);
+		glVertex3f(0.0f, y, z);
+		glVertex3f(0.0f, y, 0.0f);
 
-	glVertex3f(top, y, 0.0f);
-	glVertex3f(top, y, z);
-	glVertex3f(bot2, 0.0f, z);
-	glVertex3f(bot2, 0.0f, 0.0f);
+		glVertex3f(top, y, 0.0f);
+		glVertex3f(top, y, z);
+		glVertex3f(0.0f, y, z);
+		glVertex3f(0.0f, y, 0.0f);
 
-	glVertex3f(bot2, 0.0f, z);
-	glVertex3f(top, y, z);
-	glVertex3f(0.0f, y, z);
-	glVertex3f(bot1, 0.0f, z);
+		glVertex3f(top, y, 0.0f);
+		glVertex3f(top, y, z);
+		glVertex3f(bot2, 0.0f, z);
+		glVertex3f(bot2, 0.0f, 0.0f);
 
-	glEnd();
+		glVertex3f(bot2, 0.0f, z);
+		glVertex3f(top, y, z);
+		glVertex3f(0.0f, y, z);
+		glVertex3f(bot1, 0.0f, z);
+
+		glEnd();
+	}
+	glPopMatrix();
+	
 }
 
 void drawSpineJoint() {
@@ -625,7 +638,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(1.0, 2.5, 0.05);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.6, 0.9, 0.2);
+			renderCube(0.6, 0.8, 0.2);
 		}
 		glPopMatrix();
 
@@ -634,7 +647,7 @@ void drawTopBack() {
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-1.0, 2.5, 0.05);
 			glRotatef(-10, 1.0, 0.0, 0.0);
-			renderCube(0.6, 0.9, 0.2);
+			renderCube(0.6, 0.8, 0.2);
 		}
 		glPopMatrix();
 
@@ -705,7 +718,7 @@ void drawRibs() {
 		glPushMatrix();
 		{
 			glColor3f(1.0, 0.0, 1.0);
-			glTranslatef(-0.45, 1.8, -1.25);
+			glTranslatef(0.8, 1.7, -0.8);
 			glRotatef(-27, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(2.4, 0.5, 2.2, 1, 0.5);
 		}
@@ -714,7 +727,7 @@ void drawRibs() {
 		glPushMatrix();
 		{
 			glColor3f(1.0, 0.0, 1.0);
-			glTranslatef(-1.7, 0.7, -1.25);
+			glTranslatef(-0.8, 1.7, -0.8);
 			glRotatef(27, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(2.4, 0.2, 1.9, 1, 0.5);
 		}
@@ -738,11 +751,11 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
-			glTranslatef(-0.5, 0.0, -1.1);
+			//glTranslatef(-0.5, 0.0, -1.1);
 			glPushMatrix();
 			{
 				glColor3f(0.0, 1.0, 1.0);
-				glTranslatef(-1.2, -0.1, 0.0);
+				glTranslatef(-0.81, 0.1, -0.9);
 				glRotatef(-16, 0.0, 0.0, 1.0);
 				renderTrapezoidWithoutGLU(1.5, 0.4, 1.7, 0.7, 0.4);
 			}
@@ -752,11 +765,11 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
-			glTranslatef(0.5, 0.0, -0.7);
+			//glTranslatef(0.5, 0.0, -0.7);
 			glPushMatrix();
 			{
 				glColor3f(0.0, 1.0, 1.0);
-				glTranslatef(1.2, -0.1, 0.0);
+				glTranslatef(0.81, 0.1, -0.9);
 				glRotatef(180, 0.0, 1.0, 0.0);
 				glRotatef(-16, 0.0, 0.0, 1.0);
 				renderTrapezoidWithoutGLU(1.5, 0.4, 1.7, 0.7, 0.4);
@@ -767,13 +780,14 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
-			glTranslatef(-0.5, 0.0, -1.1);
+			//glTranslatef(-0.5, 0.0, -1.1);
 			glPushMatrix();
 			{
 				glColor3f(0.0, 1.0, 1.0);
-				glTranslatef(-1, -0.8, 0.0);
+				glTranslatef(-0.7, -0.6, -0.9);
+				//glTranslatef(-1, -0.8, 0.0);
 				glRotatef(-16, 0.0, 0.0, 1.0);
-				renderTrapezoidWithoutGLU(1.3, 0.4, 1.5, 0.5, 0.4);
+				renderTrapezoidWithoutGLU(1.3, 0.4, 1.45, 0.5, 0.4);
 			}
 			glPopMatrix();
 		}
@@ -781,14 +795,15 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
-			glTranslatef(0.5, 0.0, -0.7);
+			//glTranslatef(0.5, 0.0, -0.7);
 			glPushMatrix();
 			{
 				glColor3f(0.0, 1.0, 1.0);
-				glTranslatef(1, -0.8, 0.0);
+				//glTranslatef(1, -0.8, 0.0);
+				glTranslatef(0.7, -0.6, -0.9);
 				glRotatef(180, 0.0, 1.0, 0.0);
 				glRotatef(-16, 0.0, 0.0, 1.0);
-				renderTrapezoidWithoutGLU(1.3, 0.4, 1.5, 0.5, 0.4);
+				renderTrapezoidWithoutGLU(1.3, 0.4, 1.45, 0.5, 0.4);
 			}
 			glPopMatrix();
 		}
@@ -802,11 +817,11 @@ void drawCore6Packs() {
 void drawPelvis() {
 	glPushMatrix();
 	{
-		glTranslatef(-0.5, 0.0, -1.2);
+		//glTranslatef(-0.5, 0.0, -1.2);
 		glPushMatrix();
 		{
 			glColor3f(0.0, 0.0, 1.0);
-			glTranslatef(-1.0, -1.2, 0.0);
+			glTranslatef(-0.75, -1.0, -0.45);
 			glRotatef(-16, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(1.5, 0.4, 1.6, 0.3, 1.5);
 		}
@@ -816,11 +831,11 @@ void drawPelvis() {
 
 	glPushMatrix();
 	{
-		glTranslatef(0.5, 0.0, 0.3);
+		//glTranslatef(0.5, 0.0, 0.3);
 		glPushMatrix();
 		{
 			glColor3f(0.0, 0.0, 1.0);
-			glTranslatef(1.0, -1.2, 0.0);
+			glTranslatef(0.75, -1.0, -0.45);
 			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(1.5, 0.4, 1.6, 0.3, 1.5);
@@ -831,19 +846,19 @@ void drawPelvis() {
 
 	glPushMatrix();
 	{
-		glTranslatef(-0.25, 0.0, -1.2);
+		//glTranslatef(-0.25, 0.0, -1.2);
 		glPushMatrix();
 		{
 			glColor3f(0.0, 0.0, 1.0);
-			glTranslatef(0.0, -2.2, 0.0);
+			glTranslatef(0.0, -1.6, -0.45);
 			//glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 0.4);
+			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
 		}
 		glPopMatrix();
 	}
 	glPopMatrix();
 
-
+	
 }
 
 void drawInnerBodyStructure() {
@@ -852,7 +867,7 @@ void drawInnerBodyStructure() {
 		glPushMatrix();
 		{
 			glColor3f(0.0, 1.0, 0.0);
-			glTranslatef(-2.5, 2.02, -1.25);
+			glTranslatef(0.0, 2.52, -0.5);
 			renderTrapezoidWithoutGLU(5, 0.2, 4.8, 1, 1.5);
 		}
 		glPopMatrix();
@@ -860,7 +875,7 @@ void drawInnerBodyStructure() {
 		glPushMatrix();
 		{
 			glColor3f(0.0, 1.0, 0.0);
-			glTranslatef(-2.3, 1, -1.25);
+			glTranslatef(0.0, 1.5, -0.5);
 			renderTrapezoidWithoutGLU(4.6, 0.8, 3.8, 1, 1.5);
 		}
 		glPopMatrix();
@@ -868,7 +883,7 @@ void drawInnerBodyStructure() {
 		glPushMatrix();
 		{
 			glColor3f(0.0, 1.0, 0.0);
-			glTranslatef(-1.5, -1, -1.25);
+			glTranslatef(0.0, 0.0, -0.5);
 			renderTrapezoidWithoutGLU(3, 0.4, 2.6, 2, 1.5);
 		}
 		glPopMatrix();
@@ -877,7 +892,7 @@ void drawInnerBodyStructure() {
 		glPushMatrix();
 		{
 			glColor3f(0.0, 1.0, 0.0);
-			glTranslatef(-1.1, -2, -1.25);
+			glTranslatef(0.0, -1.5, -0.5);
 			renderTrapezoidWithoutGLU(2.2, 0.9, 1.3, 1, 1.5);
 		}
 		glPopMatrix();
@@ -896,10 +911,10 @@ void drawBody() {
 		drawSpine();
 		drawTopBack();
 		drawInnerBodyStructure();
-		//drawHeart();
-		//drawChest();
-		//drawRibs();
-		//drawCore6Packs();
+		drawHeart();
+		drawChest();
+		drawRibs();
+		drawCore6Packs();
 		drawPelvis();
 	}
 	glPopMatrix();
@@ -1049,7 +1064,7 @@ void test2() {	// delete all if u want to test here
 }
 
 void test3() {	// delete all if u want to test here 
-
+	renderCube(0.6, 0.9, 0.2);
 }
 
 void display()
@@ -1081,7 +1096,7 @@ void display()
 		test1();	// main robot structure here for ref
 		break;
 	case 3:
-		test2();	// change to what u want for test
+		test3();	// change to what u want for test
 		break;
 	default:
 		test1();
