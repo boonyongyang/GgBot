@@ -227,17 +227,6 @@ void renderCylinder(float baseR, float topR, float h) {
 	glPopMatrix();
 }
 
-//void renderPrismCylinder(float baseR, float topR, float h, float slices) {
-//	//int slices = 50;
-//	renderPolygon(baseR, topR, h, slices);
-//	renderDisk(0, baseR, slices, stacks);
-//
-//	glPushMatrix();
-//	glTranslatef(0.0f, 0.0f, h);
-//	renderDisk(0, topR, slices, stacks);
-//	glPopMatrix();
-//}
-
 void renderCone(float topR, float h) {
 	int slices = 50;
 	renderPolygon(0, topR, h, slices);
