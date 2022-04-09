@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int qNo = 3;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -831,26 +831,30 @@ void drawRibs() {
 }
 
 void drawCoreDetail1() {
-	glPushMatrix();
-	{
-		glColor3f(1.0, 0.0, 0.0);
-		glTranslatef(-0.1, 0.15, -1.1);
-		glRotatef(-2, 1.0, 0.0, 0.0);
-		glRotatef(90, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(0.5, -0.1, 0.4, 0.2, 0.1);
-	}
-	glPopMatrix();
+	for (int i = 0; i < 6; i++) {
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(-0.1, i*-0.4, 0.0);
+			glRotatef(-2, 1.0, 0.0, 0.0);
+			glRotatef(90, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.5, -0.1, 0.4, 0.2, 0.1);
+		}
+		glPopMatrix();
 
-	glPushMatrix();
-	{
-		glColor3f(1.0, 0.0, 0.0);
-		glTranslatef(0.1, 0.15, -1.1);
-		glRotatef(-2, 1.0, 0.0, 0.0);
-		glRotatef(180, 0.0, 1.0, 0.0);
-		glRotatef(90, 0.0, 0.0, 1.0);
-		renderTrapezoidWithoutGLU(0.5, -0.1, 0.4, 0.2, 0.1);
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(0.1, i * -0.4, 0.0);
+			glRotatef(-2, 1.0, 0.0, 0.0);
+			glRotatef(180, 0.0, 1.0, 0.0);
+			glRotatef(90, 0.0, 0.0, 1.0);
+			renderTrapezoidWithoutGLU(0.5, -0.1, 0.4, 0.2, 0.1);
+		}
+		glPopMatrix();
 	}
-	glPopMatrix();
+
+
 }
 
 void drawCore6Packs() {
@@ -921,7 +925,7 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
-			glTranslatef(-0.1, 0.15, -1.1);
+			glTranslatef(0.0, 0.15, -1.1);
 			drawCoreDetail1();
 		}
 		glPopMatrix();
@@ -1178,7 +1182,8 @@ void test2() {	// delete all if u want to test here
 }
 
 void test3() {	// delete all if u want to test here 
-	drawScale();
+	//drawScale();
+	drawCoreDetail1();
 }
 
 void display()
@@ -1210,7 +1215,7 @@ void display()
 		test1();	// main robot structure here for ref
 		break;
 	case 3:
-		test2();	// change to what u want for test
+		test3();	// change to what u want for test
 		break;
 	default:
 		test1();
