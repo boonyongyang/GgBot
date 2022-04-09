@@ -30,6 +30,7 @@ float perspecZoomLevel = -2.0f;
 // other (Seperate to your own sections too)
 
 
+
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -734,6 +735,21 @@ void drawCore6Packs() {
 			renderCube(0.3,0.3,0.3);
 		}
 		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(-0.5, 0.0, -0.7);
+			glPushMatrix();
+			{
+				glColor3f(0.0, 1.0, 1.0);
+				glTranslatef(-1.2, -0.1, 0.0);
+				glRotatef(-16, 0.0, 0.0, 1.0);
+				renderTrapezoidWithoutGLU(1.5, 0.4, 1.7, 0.7, 0.4);
+			}
+			glPopMatrix();
+		}
+		glPopMatrix();
+		
 	}
 	glPopMatrix();
 }
