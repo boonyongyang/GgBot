@@ -1133,13 +1133,13 @@ void drawInnerBodyStructure() {
 }
 
 void drawStructureHead() {
-	glPushMatrix();
-	{
-		glColor3f(1.0, 0.0, 0.0);
-		//glTranslatef(0.0, 5.2, 0.0);
-		renderCube(0.55, 0.35, 0.55);
-	}
-	glPopMatrix();
+	//glPushMatrix();
+	//{
+	//	glColor3f(1.0, 0.0, 0.0);
+	//	//glTranslatef(0.0, 5.2, 0.0);
+	//	renderCube(0.55, 0.35, 0.55);
+	//}
+	//glPopMatrix();
 
 	glPushMatrix();
 	{
@@ -1148,7 +1148,7 @@ void drawStructureHead() {
 		//glRotatef(90, 0.0, 1.0, 0.0);
 		glRotatef(180, 1.0, 0.0, 0.0);
 		//renderPrismCylinder(0.75, 0.55, 0.7, 6);
-		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.7, 1.1);
+		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.9, 1.1);
 	}
 	glPopMatrix();
 
