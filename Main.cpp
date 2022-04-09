@@ -1141,6 +1141,16 @@ void drawStructureHead() {
 	}
 	glPopMatrix();
 
+	glPushMatrix();
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(0.0, -0.3, 0.0);
+		glRotatef(-30, 0.0, 1.0, 0.0);
+		glRotatef(-90, 1.0, 0.0, 0.0);
+		renderPrismCylinder(0.75, 0.55, 0.7, 6);
+	}
+	glPopMatrix();
+
 }
 
 void drawEye() {
@@ -1164,16 +1174,16 @@ void drawBody() {
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
 		//glTranslatef(0.0, -5.0, 0.0);
-		drawInnerBody();
-		drawSpine();
-		drawTopBack();
+		//drawInnerBody();
+		//drawSpine();
+		//drawTopBack();
 		drawInnerBodyStructure();
-		drawHeart();
+		//drawHeart();
 		//drawChest();
-		drawRibs();
-		drawCore6Packs();
-		drawPelvis();
-		drawShoulder();
+		//drawRibs();
+		//drawCore6Packs();
+		//drawPelvis();
+		//drawShoulder();
 		drawNeck();
 	}
 	glPopMatrix();
