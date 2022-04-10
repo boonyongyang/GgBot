@@ -2447,6 +2447,24 @@ void drawRightArm() {
 }
 // ******************************************** LEG **********************************************//
 
+void attack360() {
+	if (rBodySpeed > 0) {
+		rBodySpeed = 0.0;
+	}
+	else {
+		rBodySpeed = 0.5;
+
+		boolWeapon = true;
+		boolHI = false;
+		boolSword = false;
+		leftArmUpBool = true;
+		rightArmUpBool = true;
+		leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
+			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
+
+		//walkFront();
+	}
+}
 
 void walkFront() {
 
