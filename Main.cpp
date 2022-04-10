@@ -19,7 +19,7 @@ float tSpeed = 0.5;
 float faceAngle = 0;
 
 // set Perspective View as default
-boolean isOrtho = false;
+boolean isOrtho = true;
 float orthoNear = -20, orthoFar = 20.0;
 float perspecNear = 10, perspecFar = 20;
 
@@ -72,6 +72,10 @@ float rCream = 0;
 
 // Lighting
 bool isLightOn = true;
+bool isAmbientOn = true;
+bool isDiffuseOn = true;
+bool isSpecularOn = false;
+float materialFv = 1;
 float lax = 0, lay = -1, laz = 0;
 float ldx = 0, ldy = 3, ldz = 0;
 float amb[] = { 1.0, 1.0, 1.0 ,1.0 };			// red color ambient light 
@@ -81,7 +85,7 @@ float dif[] = { 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
 float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
 
 float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
-float difM[] = { 0.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
+float difM[] = { 1.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 
 // Texture
 bool isTextureOn = true;
@@ -132,11 +136,17 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 0x32) {
 			qNo = 2;
 		}
-		else if (wParam == 0x33) {
-			qNo = 3;
+		else if (wParam == 0x33) { 
+			dif[0] = 0.0, dif[1] = 0.0; 
+			amb[0] = 1.0, amb[1] = 1.0;
+			difM[1] = 0.0;
+			materialFv = 1;
 		}
 		else if (wParam == 0x34) {
-			qNo = 4;
+			dif[0] = 1.0, dif[1] = 1.0;
+			amb[0] = 0.0, amb[1] = 0.0;
+			difM[1] = 1.0;
+			materialFv = 2;
 		}
 		else if (wParam == VK_SPACE) {
 			tX = 0, tY = 0, tZ = 0;
@@ -400,6 +410,15 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'N') {
 		hAngle -= hSpeed;
 		}
+		else if (wParam == 'G') {
+		isAmbientOn = !isAmbientOn;
+		}
+		else if (wParam == 'H') {
+		isDiffuseOn = !isDiffuseOn;
+		}
+		else if (wParam == 'J') {
+		isSpecularOn = !isSpecularOn;
+		}
 		break;
 	default:
 		break;
@@ -436,15 +455,35 @@ void lighting() {
 		glDisable(GL_LIGHTING);
 	}
 
-	// Light 0: Red Color Ambient Light at pos (0,6,0)
 	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 	glLightfv(GL_LIGHT0, GL_POSITION, posA);	// set the position of the light
-	glEnable(GL_LIGHT0);			// turn light 0 on
+	if (isAmbientOn) {
+		glEnable(GL_LIGHT0);
+	}
+	else {
+		glDisable(GL_LIGHT0);
+	}
 
 	// Light 1: Green Color Diffuse Light at pos (6,0,0)
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
 	glLightfv(GL_LIGHT1, GL_POSITION, posD);	// set the position of the light
-	glEnable(GL_LIGHT1);			// turn light 1 on
+	if (isDiffuseOn) {
+		glEnable(GL_LIGHT1);
+	}
+	else {
+		glDisable(GL_LIGHT1);
+	}
+
+	glLightfv(GL_LIGHT2, GL_SPECULAR, dif);
+	glLightfv(GL_LIGHT2, GL_POSITION, posD);	// set the position of the light
+	if (isSpecularOn) {
+		glEnable(GL_LIGHT2);
+	}
+	else {
+		glDisable(GL_LIGHT2);
+	}
+
+
 }
 
 // ***************************************** TEXTURES *******************************************//
@@ -3061,7 +3100,9 @@ void drawOcean() {
 void summonGgBot() {
 	glPushMatrix();
 	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+			glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
+			glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
 
 		glTranslatef(tX, tY, moveZ);
 		//glRotatef(bodyAngle, 1, 0, 0);
@@ -3332,7 +3373,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	return true;
 }
-
 void iceCream() {
 	//glScalef(0.1,0.1,0.1);
 	glRotatef(0.2, 0.0, 1.0, 0.1);	// rotate the whole ice cream
