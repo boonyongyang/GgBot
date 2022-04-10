@@ -410,7 +410,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			walkFront();
 		}
 		else if (wParam == 'E') {
-			//walkBackwards();	// not sure what to do yet, maybe reverse walking
+
 		}
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
@@ -819,6 +819,7 @@ void drawInnerBody() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, -1, -0.5);
 		glScalef(1.0, 1.0, 0.4);
@@ -829,8 +830,10 @@ void drawInnerBody() {
 }
 
 void drawSpineJoint() {
+
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(1.0, 1.0, 0.0);
 		renderSphere(0.1);
 	}
@@ -874,6 +877,7 @@ void drawSpineJoint() {
 void drawSpine() {
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		//glTranslatef(0.0, 1.0, 0.5);
 		//1
 		glPushMatrix();
@@ -1038,9 +1042,10 @@ void drawScale() {
 void drawTopBack() {
 	glPushMatrix();
 	{
-		//glTranslatef(0.0, -2.0, 0.0);
+		//1
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(1.0, 2.3, -0.2);
 			glRotatef(-10, 1.0, 0.0, 0.0);
@@ -1050,6 +1055,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			//glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-1.0, 2.3, -0.2);
 			glRotatef(-10, 1.0, 0.0, 0.0);
@@ -1057,8 +1063,10 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		//2
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			//glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(0.9, 1.0, -0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
@@ -1068,6 +1076,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			//glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-0.9, 1.0, -0.2);
 			glRotatef(20, 1.0, 0.0, 0.0);
@@ -1075,8 +1084,10 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		//connections
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(0.2, 2.3, 0.05);
 			glRotatef(-10, 1.0, 0.0, 0.0);
@@ -1087,6 +1098,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 0.0, 1.0);
 			glTranslatef(-0.2, 2.3, 0.05);
 			glRotatef(-10, 1.0, 0.0, 0.0);
@@ -1095,8 +1107,11 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		// trapezium second layer
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+			//glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glColor3f(1.0, 0.0, 0.0);
 			glTranslatef(0.9, 2.0, 0.5);
 			glRotatef(-10, 1.0, 0.0, 0.0);
@@ -1106,6 +1121,8 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+			//glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glColor3f(1.0, 0.0, 0.0);
 			glTranslatef(-0.9, 2.0, 0.5);
 			glRotatef(-10, 1.0, 0.0, 0.0);
@@ -1113,8 +1130,10 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		//scale
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glTranslatef(0.7, 2.5, 0.7);
 			glRotatef(-10, 1.0, 0.0, 0.0);
 			glRotatef(-90, 0.0, 1.0, 0.0);
@@ -1124,6 +1143,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glTranslatef(-0.7, 2.5, 0.7);
 			glRotatef(-10, 1.0, 0.0, 0.0);
 			glRotatef(-90, 0.0, 1.0, 0.0);
@@ -1131,8 +1151,10 @@ void drawTopBack() {
 		}
 		glPopMatrix();
 
+		//triangle side
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glColor3f(1.0, 1.0, 1.0);
 			glTranslatef(1.8, 1.5, -0.2);
 			renderTrapezoidWithoutGLU(1.2, 0.0, 0.3, 1.0, 0.8);
@@ -1141,6 +1163,7 @@ void drawTopBack() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glColor3f(1.0, 1.0, 1.0);
 			glTranslatef(-1.8, 1.5, -0.2);
 			renderTrapezoidWithoutGLU(1.2, 0.9, 1.2, 1.0, 0.8);
@@ -1180,6 +1203,7 @@ void drawHeart() {
 void drawChest() {
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(1.0, 1.0, 1.0);
 		glScalef(1.3, 0.7, 1.0);
 		glTranslatef(0.9, 3.5, -1.5);
@@ -1190,6 +1214,7 @@ void drawChest() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(1.0, 1.0, 1.0);
 		glScalef(1.3, 0.7, 1.0);
 		glTranslatef(-0.9, 3.5, -1.5);
@@ -1200,6 +1225,7 @@ void drawChest() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glColor3f(1.0, 1.0, 0.0);
 		glScalef(1.0, 0.4, 1.0);
 		glTranslatef(0.0, 7.5, -1.5);
@@ -1215,6 +1241,7 @@ void drawRibs() {
 	{
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glColor3f(1.0, 0.0, 1.0);
 			glTranslatef(0.8, 1.7, -0.8);
 			glRotatef(-27, 0.0, 0.0, 1.0);
@@ -1224,6 +1251,7 @@ void drawRibs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glColor3f(1.0, 0.0, 1.0);
 			glTranslatef(-0.8, 1.7, -0.8);
 			glRotatef(27, 0.0, 0.0, 1.0);
@@ -1233,6 +1261,7 @@ void drawRibs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 0.0);
 			glTranslatef(0.3, 1.3, -1.15);
 			glRotatef(-24, 0.0, 1.0, 0.0);
@@ -1243,6 +1272,7 @@ void drawRibs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 0.0);
 			glTranslatef(-0.3, 1.3, -1.15);
 			glRotatef(-156, 0.0, 1.0, 0.0);
@@ -1286,6 +1316,7 @@ void drawCore6Packs() {
 	{
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
 			glScalef(3.5, 1.5, 1.0);
 			glTranslatef(0.0, 0.6, -0.9);
@@ -1296,6 +1327,7 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(1.0, 1.0, 0.0);
 			glTranslatef(0.0, 0.0, -1.1);
 			glRotatef(180, 0.0, 1.0, 0.0);
@@ -1310,6 +1342,7 @@ void drawCore6Packs() {
 		//1
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(-0.7, 0.28, -0.5);
 			glRotatef(-16, 0.0, 0.0, 1.0);
@@ -1319,6 +1352,7 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(0.7, 0.28, -0.5);
 			glRotatef(180, 0.0, 1.0, 0.0);
@@ -1330,6 +1364,7 @@ void drawCore6Packs() {
 		//2
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(-0.6, -0.15, -0.5);
 			glRotatef(-16, 0.0, 0.0, 1.0);
@@ -1339,6 +1374,7 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(0.6, -0.15, -0.5);
 			glRotatef(180, 0.0, 1.0, 0.0);
@@ -1350,9 +1386,9 @@ void drawCore6Packs() {
 		//3
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(-0.5, -0.6, -0.5);
-			//glTranslatef(-1, -0.8, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
 			renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 1.0);
 		}
@@ -1360,8 +1396,8 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glColor3f(0.0, 1.0, 1.0);
-			//glTranslatef(1, -0.8, 0.0);
 			glTranslatef(0.5, -0.6, -0.5);
 			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
@@ -1371,6 +1407,7 @@ void drawCore6Packs() {
 
 		glPushMatrix();
 		{
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			glTranslatef(0.0, 0.15, -1.1);
 			drawCoreDetail1();
 		}
@@ -1383,6 +1420,7 @@ void drawPelvis() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(0.0, 0.0, 1.0);
 		glTranslatef(-0.75, -1.0, -0.45);
 		glRotatef(-16, 0.0, 0.0, 1.0);
@@ -1392,6 +1430,7 @@ void drawPelvis() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(0.0, 0.0, 1.0);
 		glTranslatef(0.75, -1.0, -0.45);
 		glRotatef(180, 0.0, 1.0, 0.0);
@@ -1402,6 +1441,7 @@ void drawPelvis() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(0.0, 0.0, 1.0);
 		glTranslatef(0.0, -1.6, -0.45);
 		renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
@@ -1410,6 +1450,7 @@ void drawPelvis() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glColor3f(0.2, 0.2, 0.2);
 		glTranslatef(1.0, -1.5, -0.5);
 		glRotatef(-90, 0.0, 1.0, 0.0);
@@ -1423,6 +1464,7 @@ void drawPelvis() {
 void drawShoulder() {
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(1.0, 0.0, 0.0);
 		glTranslatef(-2.0, 3.2, -0.5);
 		glRotatef(180, 1.0, 0.0, 0.0);
@@ -1432,6 +1474,7 @@ void drawShoulder() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(1.0, 0.0, 0.0);
 		glTranslatef(2.0, 3.2, -0.5);
 		glRotatef(180, 1.0, 0.0, 0.0);
@@ -1443,6 +1486,7 @@ void drawShoulder() {
 void drawNeck() {
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glTranslatef(0.0, 3.2, -0.5);
 		glRotatef(ny += 201, 0.0, 1.0, 0.0);
 		for (int i = 0; i <= 23; i++) {
@@ -1501,21 +1545,13 @@ void drawInnerBodyStructure() {
 }
 
 void drawStructureHead() {
-	//glPushMatrix();
-	//{
-	//	glColor3f(1.0, 0.0, 0.0);
-	//	//glTranslatef(0.0, 5.2, 0.0);
-	//	renderCubeWithoutGLU(0.55, 0.35, 0.55);
-	//}
-	//glPopMatrix();
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glColor3f(1.0, 0.0, 0.0);
-		//glTranslatef(0.0, -0.3, 0.0);
 		glRotatef(90, 0.0, 1.0, 0.0);
 		glRotatef(180, 1.0, 0.0, 0.0);
-		//renderPrismCylinder(0.75, 0.55, 0.7, 6);
 		renderTrapezoidWithoutGLU(1.1, 0.2, 0.9, 0.9, 1.1);
 	}
 	glPopMatrix();
@@ -1534,6 +1570,7 @@ void drawEye() {
 }
 
 void drawNoseAndMouth() {
+
 	glPushMatrix();
 	{
 		glColor3f(0.0, 1.0, 1.0);
@@ -1561,6 +1598,7 @@ void drawNoseAndMouth() {
 void drawEar() {
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(-0.63, 0.0, 0.0);
 		glRotatef(90, 0.0, 1.0, 0.0);
 		renderCylinder(0.15, 0.15, 1.3);
@@ -1569,6 +1607,7 @@ void drawEar() {
 
 	glPushMatrix();
 	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glColor3f(0.0, 0.0, 1.0);
 		glScalef(1.0, 1.0, 0.5);
 		glTranslatef(-0.6, 0.1, 0.0);
@@ -1616,7 +1655,7 @@ void drawHead() {
 			drawEar();
 			glDeleteTextures(1, &textureArrH[1]);
 
-			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+			//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			drawStructureHead();
 
 		}
@@ -1637,20 +1676,16 @@ void drawBody() {
 		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
 
-		//glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		drawInnerBody();
 		drawShoulder();
 		drawNeck();
-
-		//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawTopBack();
 		drawRibs();
 		drawPelvis();
 		drawCore6Packs();
-		//drawNeck();
 		drawSpine();
-		//drawInnerBodyStructure();
 		drawChest();
+		//drawInnerBodyStructure();
 
 	}
 	glPopMatrix();
@@ -2487,85 +2522,6 @@ void walkFront() {
 
 }
 
-void walkBackwards() {
-
-	// move left leg & (left arm back, right arm front)
-	if (moveLeftLeg) {
-
-		if (!leftLegAtFront) {
-
-			if (handRightAngle <= 40 && handRightAngle >= -40) {	// right hand moving up
-				handRightAngle -= wHandSpeed;
-				handLeftAngle += wHandSpeed;
-			}
-
-			if (legLeftUpperAngle <= 40 && legLeftUpperAngle >= -40) {
-				legLeftUpperAngle -= 1;
-				legLeftLowerAngle += 1.5;
-			}
-			else {
-				leftLegAtFront = true;
-			}
-		}
-		else {
-
-			if (!handRightAngle == 0) {		// right hand moving down
-				handRightAngle += wHandSpeed;
-				handLeftAngle -= wHandSpeed;
-			}
-
-			if (!legLeftUpperAngle == 0) {
-				legLeftUpperAngle += 1;
-				legLeftLowerAngle -= 1.5;
-				tZ += 0.01;
-			}
-			else {
-				leftLegAtFront = false;
-				moveLeftLeg = false;
-				moveRightLeg = true;
-			}
-		}
-	}
-	// move right leg & (right arm back, left arm front)
-	else {
-
-		if (!rightLegAtFront) {
-
-			if (handLeftAngle <= 40 && handLeftAngle >= -40) {	// left hand moving up
-				handLeftAngle -= wHandSpeed;
-				handRightAngle += wHandSpeed;
-			}
-
-			if (leftRightUpperAngle <= 40 && leftRightUpperAngle >= -40) {
-				leftRightUpperAngle -= 1;
-				legRightLowerAngle += 1.5;
-			}
-			else {
-				rightLegAtFront = true;
-			}
-		}
-		else {
-
-			if (!handLeftAngle == 0) {		// left hand moving down
-				handLeftAngle += wHandSpeed;
-				handRightAngle -= wHandSpeed;
-			}
-
-			if (!leftRightUpperAngle == 0) {
-				leftRightUpperAngle += 1;
-				legRightLowerAngle -= 1.5;
-				tZ += 0.01;
-			}
-			else {
-				rightLegAtFront = false;
-				moveRightLeg = false;
-				moveLeftLeg = true;
-			}
-		}
-	}
-
-}
-
 void drawLegInnerNerve(float r, float h) {
 
 	// 4 nerves
@@ -3173,24 +3129,30 @@ void summonGgBot() {
 		glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
 
 		glTranslatef(tX, tY, tZ);
-		//glRotatef(bodyAngle, 1, 0, 0);
-		//moveX++;
+		glRotatef(rY, 0, 1, 0);
+		//tY += tSpeed;					// press f again to start rotate
 
 		GLuint textureArr[3];
 
-		drawHead();
-		drawBody();
+		// rotate upper body
+		glPushMatrix();
+		{
+			glRotatef(rBody, 0, 1, 0);
+			rBody += rBodySpeed;
+			drawHead();
+			drawBody();
 
-		//GLuint textureArr[3];
-		//textureArrOuter[outerTextureNo];
-		//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
-		drawRightArm();
-		drawLeftArm();
+			//GLuint textureArr[3];
+			//textureArrOuter[outerTextureNo];
+			//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+			drawRightArm();
+			drawLeftArm();
+
+		}
+		glPopMatrix();
 
 		drawLeftLeg();
 		drawRightLeg();
-
-
 
 	}
 	glPopMatrix();
