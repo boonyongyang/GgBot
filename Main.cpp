@@ -3148,6 +3148,7 @@ void drawOcean() {
 void drawSkyBox() {
 	glPushMatrix();
 	{
+		perspecZoomLevel = 8;
 		GLuint textureArr[1];
 		textureArr[0] = loadTexture("textures/sky.bmp");
 		glColor3f(1.0, 1.0, 1.0);
@@ -3203,6 +3204,7 @@ void summonGgBot() {
 void scene1() {
 	glPushMatrix();
 	{
+		//drawSkyBox();
 		glColor3f(0.0, 1.0, 1.0);
 		//glTranslatef(tX, tY, tZ);
 		//glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
