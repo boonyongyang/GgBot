@@ -31,7 +31,6 @@ float perspecZoomLevel = -2.0f;
 // other (Seperate to your own sections too)
 
 // Hand
-float handLeftAngle, handRightAngle = 0, wHandSpeed = 0.5;	// for moving animation
 bool leftArmUpBool = false, leftArmDownBool = false;
 bool rightArmUpBool = false, rightArmDownBool = false;
 bool fingerUpBool = false, fingerDownBool = false;
@@ -47,6 +46,9 @@ float bullet = 0.0;
 //extra feature
 bool boolHI = false;//example
 bool boolWeapon = false;
+bool boolSword = false;
+
+float handLeftAngle, handRightAngle = 0, wHandSpeed = 0.5;	// for moving animation
 
 // Leg
 int r = 1;
@@ -59,11 +61,8 @@ bool rightLegAtFront = false, moveRightLeg = false;
 float moveX = 0, moveY = 0, moveZ = 0;
 bool bodyAngle = 0;	// need?
 
-void walk();
-
 // Environment
 float rCream = 0;
-
 
 // Lighting
 bool isLightOn = true;
@@ -79,10 +78,12 @@ float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
 float difM[] = { 0.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 
 // Texture
+bool isTextureOn = true;
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
 
 // function declarations
+void walk();
 void iceCream();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -336,29 +337,36 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				temp = wParam;
 			}
 		}
-		else if (wParam == 'B') {
-			//finger Down
-			armLeftBool = false;
-			if (wParam == temp) {
-				armRightBool = false;
-				temp = NULL;
-			}
-			else {
-				armRightBool = true;
-				temp = wParam;
-			}
-		}
+		//else if (wParam == 'B') {	// not in used
+		//	//finger Down
+		//	armLeftBool = false;
+		//	if (wParam == temp) {
+		//		armRightBool = false;
+		//		temp = NULL;
+		//	}
+		//	else {
+		//		armRightBool = true;
+		//		temp = wParam;
+		//	}
+		//}
 		else if (wParam == VK_F1) {
 			boolWeapon = false;
 			boolHI = false;
+			boolSword = false;
 		}
 		else if (wParam == VK_F2) {
 			boolWeapon = true;
 			boolHI = false;
+			boolSword = false;
+			leftArmUpBool = true;
+			rightArmUpBool = true;
+			leftArmRup = 0.01, leftArmRup1 = 0.01,
+				rightArmRup = 0.01, rightArmRup1 = 0.01;
 		}
 		else if (wParam == VK_F3) {
 			boolWeapon = false;
 			fingerUpBool = true;
+			boolSword = true;
 		}
 		else if (wParam == VK_F4) {
 			boolWeapon = false;
@@ -366,10 +374,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolHI = true;
 			fingerUpBool = true;
 		}
-		else if (wParam == 'E') {
+		else if (wParam == 'Q') {
 			walk();
 		}
-		else if (wParam == 'Q') {
+		else if (wParam == 'E') {
 			walk();	// not sure what to do yet, maybe reverse walking
 		}
 		else if (wParam == 'L') {
@@ -397,7 +405,7 @@ void projection() {
 	else {
 		gluPerspective(35, 1, -1, 1);
 		glFrustum(-10, 10, -10, 10, perspecNear, perspecFar);
-		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_DEPTH_TEST);
 	}
 }
 
@@ -1569,6 +1577,7 @@ void drawBody() {
 
 // ******************************************** ARM **********************************************//
 
+
 void drawLeftArm() {
 	if (leftArmUpBool) {
 		if (leftArmRup1 <= 50) {
@@ -1576,7 +1585,7 @@ void drawLeftArm() {
 
 		}
 		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (boolWeapon == false) {
+			if (boolWeapon == false || boolSword == true) {
 				if (leftArmRup <= 15) {
 					leftArmRup += armRSpeed / 2;
 					leftArmRup1 += armRSpeed / 2;
@@ -1623,24 +1632,22 @@ void drawLeftArm() {
 				fingerRup += armRSpeed;
 				fingerRup1 += armRSpeed;
 			}
-
 		}
 	}
 	else if (fingerDownBool) {
 		if (fingerRup1 >= 0) {
 			fingerRup1 -= armRSpeed;
+
 		}
 		if (fingerRup >= 0) {
 			fingerRup -= armRSpeed;
 		}
 	}
 
-	//if got time
+	//'V' atk action
 	if (armLeftBool) {
-		bool tempA = false;
 		if (leftArmRup1 <= 50) {
 			leftArmRup1 += armRSpeed;
-
 		}
 		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
 			if (leftArmRup <= 15) {
@@ -1651,13 +1658,11 @@ void drawLeftArm() {
 			else {
 				if (leftArmRup1 <= 110)
 					leftArmRup1 += armRSpeed / 2;
-
 			}
 		}
 		else if (armRsword <= 60) {
 			armRsword += armRSpeed * 2;
 			leftArmRup1 -= armRSpeed * 2;
-
 		}
 		else {
 			armLeftBool = false;
@@ -1683,8 +1688,9 @@ void drawLeftArm() {
 				else {
 					leftArmRup1 -= armRSpeed;
 				}
-
-
+			}
+			if (leftArmRup1 <= 0) {
+				armRightBool = false;
 			}
 		}
 
@@ -1796,9 +1802,12 @@ void drawLeftArm() {
 					if (boolHI) {
 						if (leftArmRup1 <= 90) {
 							glRotatef(leftArmRup1, 0, -1, 0);
+
+
 						}
 						else {
 							glRotatef(90, 0, -1, 0);
+
 						}
 					}
 					glTranslatef(1.85, 1.6, 0.1);
@@ -1920,28 +1929,72 @@ void drawLeftArm() {
 
 						}glPopMatrix();//finger push
 
-						//sword
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, -0.8);
-						renderCylinder(0.2, 0.2, 1.6);
-						glPopMatrix();
+						if (boolSword == true) {
+							//sword
+							//holder
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, -0.8);
+							renderCylinder(0.2, 0.2, 1.6);
+							glPopMatrix();
 
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, 0.8);
-						renderTrapezoid(0.2, 0.4, 0.2);
-						glPopMatrix();
+							//sword rear part
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, 0.8);
+							renderTrapezoid(0.2, 0.4, 0.2);
+							glPopMatrix();
 
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, 1.0);
-						renderTrapezoid(0.4, 0.2, 0.4);
-						glPopMatrix();
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, 1.0);
+							renderTrapezoid(0.4, 0.2, 0.4);
+							glPopMatrix();
+							//end sword rear part
 
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, -2.8);
-						renderPrism(0.2, 4.2, 3);
-						glPopMatrix();
+							//sword front part
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, -1.4);
+							renderTrapezoid(0.4, 0.8, 0.4);
+							glPopMatrix();
 
-						//end sword
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, -1.0);
+							renderTrapezoid(0.8, 0.4, 0.4);
+							glPopMatrix();
+
+							//sword blade
+							glPushMatrix();
+							glTranslatef(-1.75, -2.1, -5.6);
+							renderPrism(0.2, 4.2, 3);
+							glPopMatrix();
+
+							glPushMatrix();
+							glTranslatef(-1.75, -2.3, -5.6);
+							glRotatef(60, 0, 0, 1);
+							renderPrism(0.2, 4.2, 3);
+							glPopMatrix();
+
+							//sword sharp part
+							glPushMatrix();
+							glBegin(GL_TRIANGLES);
+							glVertex3f(-1.75, -1.9, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.6, -2.2, -5.6);
+
+							glVertex3f(-1.75, -1.9, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.9, -2.2, -5.6);
+
+							glVertex3f(-1.75, -2.5, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.6, -2.2, -5.6);
+
+							glVertex3f(-1.75, -2.5, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.9, -2.2, -5.6);
+
+							glEnd();
+							glPopMatrix();
+							//end sword
+						}
 					}
 					else {
 						// Arm Weapons
@@ -2102,7 +2155,7 @@ void drawRightArm() {
 
 				glPushMatrix();
 				{
-					if (boolWeapon == false) {
+					if (boolSword == false && boolWeapon == false) {
 						//palm
 						glPushMatrix();//palm push
 						{
@@ -2127,7 +2180,6 @@ void drawRightArm() {
 							glTranslatef(1.95, -2.6, -0.3);
 							glRotatef(fingerRup1, 0, 0, -1);
 							glTranslatef(-1.95, 2.6, 0.3);
-
 
 							//1st part finger
 							glPushMatrix();
@@ -2233,7 +2285,6 @@ void drawRightArm() {
 						renderSphere(0.28);
 						glPopMatrix();
 						//end Right hand
-
 					}
 				}
 				glPopMatrix();//right finger pop
@@ -2255,17 +2306,10 @@ void walk() {
 
 		if (!leftLegAtFront) {
 
-			//if (startWalk) {
-			//	if (handRightAngle <= 40 && handRightAngle >= -40) {	// right hand moving up
-			//		handRightAngle += wHandSpeed;
-			//	}
-			//}
-			//else {
 			if (handRightAngle <= 40 && handRightAngle >= -40) {	// right hand moving up
 				handRightAngle += wHandSpeed;
 				handLeftAngle -= wHandSpeed;
 			}
-			//}
 
 			if (legLeftUpperAngle <= 40 && legLeftUpperAngle >= -40) {
 				legLeftUpperAngle += 1;
@@ -2276,10 +2320,6 @@ void walk() {
 			}
 		}
 		else {
-
-			//if (legLeftLowerAngle != 40) {
-			//	legLeftLowerAngle += 1.5;
-			//}
 
 			if (!handRightAngle == 0) {		// right hand moving down
 				handRightAngle -= wHandSpeed;
@@ -2292,7 +2332,6 @@ void walk() {
 				moveZ -= 0.01;
 			}
 			else {
-				//startWalk = false;
 				leftLegAtFront = false;
 				moveLeftLeg = false;
 				moveRightLeg = true;
@@ -2744,7 +2783,6 @@ void drawLegFoot(float d) {
 	glPopMatrix();
 }
 
-
 void drawLeftLeg() {
 
 	// whole leg
@@ -2903,8 +2941,15 @@ void drawSea() {
 	glRotatef(90, 1, 0, 0);
 	glTranslatef(0, 0, 6);
 
+	GLuint textureArr[3];
+	glDeleteTextures(1, &textureArr[0]);
+	textureArr[1] = loadTexture("textures/darksteel32.bmp");
+	// add here la
+
 	renderDisk(0, 20, 50, 50);
 	//renderSphere(100);
+	glDeleteTextures(1, &textureArr[3]);
+
 	glPopMatrix();
 }
 
@@ -2924,20 +2969,20 @@ void summonGgBot() {
 		glPushMatrix();
 		{
 			//glRotatef(180, 0, 1, 0);
+
 			drawHead();
 			drawBody();
+
+			GLuint textureArr[3];
+			textureArr[0] = loadTexture("textures/metal2.bmp");
+			drawRightArm();
+			drawLeftArm();
+
+			drawLeftLeg();
+			drawRightLeg();
+			glDeleteTextures(1, &textureArr[0]);
 		}
 		glPopMatrix();
-
-		GLuint textureArr[3];
-		textureArr[0] = loadTexture("textures/metal2.bmp");
-		drawRightArm();
-		drawLeftArm();
-
-		drawLeftLeg();
-		drawRightLeg();
-		glDeleteTextures(1, &textureArr[0]);
-
 
 	}
 	glPopMatrix();
@@ -2964,6 +3009,60 @@ void scene1() {
 }
 
 void scene2() {
+	glColor3f(1.0, 0.0, 1.0);
+
+	glPushMatrix();
+
+	drawSea();
+	glPushMatrix();
+	{
+		glTranslatef(0, 3, -0.5);
+		glRotatef(rCream, 0, 1, 0);
+		rCream++;
+
+		glPushMatrix();
+		iceCream();
+		glTranslatef(1, 0, 0);
+		iceCream();
+		glTranslatef(0, 0, 1);
+		iceCream();
+		glTranslatef(-1, 0, 0);
+		glScalef(0.5, 0.5, 0.5);
+		iceCream();
+		glPopMatrix();
+	}
+
+	glPopMatrix();
+
+
+	glPushMatrix();
+	{
+		glTranslatef(3, 0, 8);
+		glScalef(0.8, 0.8, 0.8);
+		summonGgBot();
+	}
+	glPopMatrix();
+
+
+	glPopMatrix();
+}
+
+void scene3() {
+	glColor3f(1.0, 0.0, 1.0);
+
+	glPushMatrix();
+	//robotStructure();
+
+	drawRightArm();
+	drawLeftArm();
+
+	drawLeftLeg();
+	drawRightLeg();
+
+	glPopMatrix();
+}
+
+void scene4() {
 	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 0.0);
@@ -3008,58 +3107,9 @@ void scene2() {
 	}
 }
 
-void scene3() {
-	glColor3f(1.0, 0.0, 1.0);
-
-	glPushMatrix();
-	robotStructure();
-
-	//glScalef(3, 3, 3);
-
-	drawLeftArm();
-	drawLeftLeg();
-
-	glPopMatrix();
-}
-
-void scene4() {
-	glColor3f(1.0, 0.0, 1.0);
-
-	glPushMatrix();
-
-	drawSea();
-	glPushMatrix();
-	{
-		glTranslatef(0, 3, -0.5);
-		glRotatef(rCream, 0, 1, 0);
-		rCream++;
-
-		glPushMatrix();
-		iceCream();
-		glTranslatef(1, 0, 0);
-		iceCream();
-		glTranslatef(0, 0, 1);
-		iceCream();
-		glTranslatef(-1, 0, 0);
-		glScalef(0.5, 0.5, 0.5);
-		iceCream();
-		glPopMatrix();
-	}
-
-	glPopMatrix();
 
 
-	glPushMatrix();
-	{
-		glTranslatef(3, 0, 8);
-		glScalef(0.8, 0.8, 0.8);
-		summonGgBot();
-	}
-	glPopMatrix();
 
-
-	glPopMatrix();
-}
 
 void display()
 {
