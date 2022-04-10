@@ -1594,7 +1594,6 @@ void drawEar() {
 void drawHead() {
 	glPushMatrix();
 	{
-		//glTranslatef(hx, hy, hz);
 		glRotatef(hAngle, 0.0, 1.0, 0.0);
 
 		glPushMatrix();
@@ -1614,7 +1613,6 @@ void drawHead() {
 			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			drawStructureHead();
 
-			//glDisable(GL_TEXTURE_2D);
 		}
 		glPopMatrix();
 	}
@@ -1630,24 +1628,21 @@ void drawBody() {
 
 		GLuint textureArr[3];
 		textureArr[0] = loadTexture("textures/eyetest.bmp");
-
 		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
 
 		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		drawInnerBody();
 		drawShoulder();
-		drawCore6Packs();
 		drawNeck();
-		drawSpine();
 
 		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawTopBack();
 		drawRibs();
 		drawPelvis();
-		//drawCore6Packs();
+		drawCore6Packs();
 		//drawNeck();
-		//drawSpine();
+		drawSpine();
 		//drawInnerBodyStructure();
 		drawChest();
 
@@ -3301,7 +3296,7 @@ void display()
 
 	// texture for inner
 	textureArrInner[0] = loadTexture("textures/darksteel32.bmp");
-	textureArrInner[1] = loadTexture("textures/carbon.bmp");
+	textureArrInner[1] = loadTexture("textures/bronzepattern.bmp");
 	textureArrInner[2] = loadTexture("textures/armorseamless.bmp");
 
 	switch (qNo) {
