@@ -98,7 +98,7 @@ HBITMAP hBMP = NULL;	// bitmap handle
 
 // function declarations
 void walkFront();
-void rotateBody();
+void attack360();
 void iceCream();	// delete ba no ice cream already
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -402,7 +402,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			walkFront();
 		}
 		else if (wParam == 'E') {
-
+			attack360();
 		}
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
@@ -995,14 +995,14 @@ void drawSpine() {
 		glPopMatrix();
 
 		// end of the spine
-		glPushMatrix();
-		{
-			glTranslatef(0.0, -1.3, 0.0);
-			glRotatef(90, 1.0, 0.0, 0.0);
-			glColor3f(1.0, 0.0, 1.0);
-			renderTrapezoid(0.1, 0.025, 0.4);
-		}
-		glPopMatrix();
+		//glPushMatrix();
+		//{
+		//	glTranslatef(0.0, -1.3, 0.0);
+		//	glRotatef(90, 1.0, 0.0, 0.0);
+		//	glColor3f(1.0, 0.0, 1.0);
+		//	renderTrapezoid(0.1, 0.025, 0.4);
+		//}
+		//glPopMatrix();
 	}
 	glPopMatrix();
 }
@@ -1388,22 +1388,22 @@ void drawPelvis() {
 	}
 	glPopMatrix();
 
-	glPushMatrix();
-	{
-		glColor3f(0.0, 0.0, 1.0);
-		glTranslatef(0.0, -1.6, -0.45);
-		renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
-	}
-	glPopMatrix();
+	//glPushMatrix();
+	//{
+	//	glColor3f(0.0, 0.0, 1.0);
+	//	glTranslatef(0.0, -1.6, -0.45);
+	//	renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
+	//}
+	//glPopMatrix();
 
-	glPushMatrix();
-	{
-		glColor3f(0.2, 0.2, 0.2);
-		glTranslatef(1.0, -1.5, -0.5);
-		glRotatef(-90, 0.0, 1.0, 0.0);
-		renderCylinder(0.1, 0.1, 2.0);
-	}
-	glPopMatrix();
+	//glPushMatrix();
+	//{
+	//	glColor3f(0.2, 0.2, 0.2);
+	//	glTranslatef(1.0, -1.5, -0.5);
+	//	glRotatef(-90, 0.0, 1.0, 0.0);
+	//	renderCylinder(0.1, 0.1, 2.0);
+	//}
+	//glPopMatrix();
 
 
 }
@@ -2367,6 +2367,24 @@ void drawRightArm() {
 
 // ******************************************** LEG **********************************************//
 
+void attack360() {
+	if (rBodySpeed > 0) {
+		rBodySpeed = 0.0;
+
+	}
+	else {
+		rBodySpeed = 0.5;
+
+		boolWeapon = true;
+		boolHI = false;
+		boolSword = false;
+		leftArmUpBool = true;
+		rightArmUpBool = true;
+		leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
+			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
+	}
+}
+
 void walkFront() {
 
 	// move left leg & (left arm back, right arm front)
@@ -2932,6 +2950,29 @@ void drawLeftLeg() {
 
 void drawRightLeg() {
 
+	// connect leg with body
+	glPushMatrix();
+	{
+		glTranslatef(0.0, 1.0, 0.5);
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(0.0, -1.6, -0.45);
+			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.2, 0.2, 0.2);
+			glTranslatef(1.0, -1.5, -0.5);
+			glRotatef(-90, 0.0, 1.0, 0.0);
+			renderCylinder(0.1, 0.1, 2.0);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+
 	// whole leg
 	glPushMatrix();
 	{
@@ -3020,10 +3061,6 @@ void drawOcean() {
 	glPopMatrix();
 }
 
-void drawSky() {
-
-}
-
 // ******************************************** DISPLAY **********************************************//
 
 void summonGgBot() {
@@ -3035,7 +3072,6 @@ void summonGgBot() {
 
 		glTranslatef(tX, tY, tZ);
 		glRotatef(rY, 0, 1, 0);
-		//tY += tSpeed;					// press f again to start rotate
 
 		GLuint textureArr[3];
 
