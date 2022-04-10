@@ -30,6 +30,12 @@ float perspecZoomLevel = -2.0f;
 
 // other (Seperate to your own sections too)
 
+// head animation
+float hx = 0, hy = 0, hz = 0, hAngle = 0, hSpeed = 1;
+
+// neck
+float ny = 0;
+
 // Hand
 bool leftArmUpBool = false, leftArmDownBool = false;
 bool rightArmUpBool = false, rightArmDownBool = false;
@@ -136,6 +142,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			tX = 0, tY = 0, tZ = 0;
 			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, perspecZoomLevel = -2.0f;
 			ptX = 0, ptY = 0, prY = 0;
+
+			// head
+			hAngle = 0;
 
 			// arm 
 			leftArmRup = 0.01, leftArmRup1 = 0.01,
@@ -384,6 +393,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
+		}
+		else if (wParam == 'M') {
+		hAngle += hSpeed;
+		}
+		else if (wParam == 'N') {
+		hAngle -= hSpeed;
 		}
 		break;
 	default:
@@ -1361,6 +1376,7 @@ void drawNeck() {
 	glPushMatrix();
 	{
 		glTranslatef(0.0, 3.2, -0.5);
+		glRotatef(ny += 201, 0.0, 1.0, 0.0);
 		for (int i = 0; i <= 23; i++) {
 			glPushMatrix();
 			{
@@ -1516,19 +1532,27 @@ void drawEar() {
 void drawHead() {
 	glPushMatrix();
 	{
+		//glTranslatef(hx, hy, hz);
+		glRotatef(hAngle, 0.0, 1.0, 0.0);
 
-		GLuint textureArr[2];
-		textureArr[0] = loadTexture("textures/metal2.bmp");
-		//glScalef(4.0, 4.0, 4.0);
-		glTranslatef(0.0, 4.85, 0.1);
-		//glTranslatef(0.0, -0.5, 0.0);
-		drawStructureHead();
-		drawEye();
-		drawNoseAndMouth();
-		drawEar();
-		glDeleteTextures(1, &textureArr[0]);
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 4.85, 0.1);
 
-		//glDisable(GL_TEXTURE_2D);
+			GLuint textureArr[3];
+			textureArr[0] = loadTexture("textures/eyetest.bmp");
+			drawEye();
+			glDeleteTextures(1, &textureArr[0]);
+
+			textureArr[1] = loadTexture("textures/metal2.bmp");
+			drawNoseAndMouth();
+			drawStructureHead();
+			drawEar();
+			glDeleteTextures(1, &textureArr[1]);
+
+			glDisable(GL_TEXTURE_2D);
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
 }
