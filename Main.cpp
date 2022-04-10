@@ -14,11 +14,11 @@ float ptX, ptY, prY = 0;
 float ptSpeed = 0.1;
 
 // transformation for object
-float tX, tY, tZ = 0;
-float tSpeed = 0.5;
-float faceAngle = 0;
+float tX, tY, tZ = 0, tSpeed = 0.5;
+float rY = 0, rSpeed = 0.5;
+float faceAngle = 0;	// for WASD
 
-// set Perspective View as default
+// set Ortho View as default
 boolean isOrtho = true;
 float orthoNear = -20, orthoFar = 20.0;
 float perspecNear = 10, perspecFar = 20;
@@ -32,6 +32,9 @@ float perspecZoomLevel = -2.0f;
 
 // head animation
 float hx = 0, hy = 0, hz = 0, hAngle = 0, hSpeed = 1;
+
+// Body
+float rBody = 0, rBodySpeed = 0;
 
 // neck
 float ny = 0;
@@ -63,9 +66,6 @@ float leftRightUpperAngle, legRightLowerAngle = 0;
 float wLegSpeed = 1;
 bool leftLegAtFront = false, moveLeftLeg = true;
 bool rightLegAtFront = false, moveRightLeg = false;
-
-float moveX = 0, moveY = 0, moveZ = 0;
-bool bodyAngle = 0;	// need?
 
 // Environment
 float rCream = 0;
@@ -179,9 +179,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			leftRightUpperAngle = 0, legRightLowerAngle = 0;
 			leftLegAtFront = false, moveLeftLeg = false;
 			rightLegAtFront = false, moveRightLeg = false;
-			moveX = 0, moveY = 0, moveZ = 0;
 
-			//walkSpeed = 0.5;
 		}
 		else if (wParam == VK_UP) {
 			if (isOrtho) {
@@ -1631,12 +1629,12 @@ void drawBody() {
 		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
 
-		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+		//glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		drawInnerBody();
 		drawShoulder();
 		drawNeck();
 
-		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+		//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawTopBack();
 		drawRibs();
 		drawPelvis();
@@ -2405,7 +2403,7 @@ void walkFront() {
 			if (!legLeftUpperAngle == 0) {
 				legLeftUpperAngle -= 1;
 				legLeftLowerAngle += 1.5;
-				moveZ -= 0.01;
+				tZ -= 0.01;
 			}
 			else {
 				leftLegAtFront = false;
@@ -2442,7 +2440,7 @@ void walkFront() {
 			if (!leftRightUpperAngle == 0) {
 				leftRightUpperAngle -= 1;
 				legRightLowerAngle += 1.5;
-				moveZ -= 0.01;
+				tZ -= 0.01;
 			}
 			else {
 				rightLegAtFront = false;
@@ -2484,7 +2482,7 @@ void walkBackwards() {
 			if (!legLeftUpperAngle == 0) {
 				legLeftUpperAngle += 1;
 				legLeftLowerAngle -= 1.5;
-				moveZ += 0.01;
+				tZ += 0.01;
 			}
 			else {
 				leftLegAtFront = false;
@@ -2521,7 +2519,7 @@ void walkBackwards() {
 			if (!leftRightUpperAngle == 0) {
 				leftRightUpperAngle += 1;
 				legRightLowerAngle -= 1.5;
-				moveZ += 0.01;
+				tZ += 0.01;
 			}
 			else {
 				rightLegAtFront = false;
@@ -2954,8 +2952,11 @@ void drawLeftLeg() {
 			glPushMatrix();
 			{
 				glTranslatef(-0.65, -2, 0);	// move to left leg position
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 				drawLegInner(10);
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				drawLegUpperArmor(-1);
+	
 			}
 			glPopMatrix();
 		}
@@ -2972,6 +2973,7 @@ void drawLeftLeg() {
 			glPushMatrix();
 			{
 				glTranslatef(-0.39, -3.8, -0.3);	// knee with 3 joints
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 				drawLegKnee();
 				//drawLegKneeArmor();
 			}
@@ -2983,7 +2985,9 @@ void drawLeftLeg() {
 			{
 				glTranslatef(-0.65, -5, 0);	// move to left leg position
 				//glRotatef(legLeftLowerAngle, 1, 0, 0);
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 				drawLegInner(7);
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				drawLegLowerArmor(8);
 			}
 			glPopMatrix();
@@ -2994,6 +2998,7 @@ void drawLeftLeg() {
 				glTranslatef(-0.45, -6.3, -0.25);	// move to left leg position
 				//glRotatef(legLeftLowerAngle, 1, 0, 0);
 				glScalef(0.8, 0.8, 0.8);
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 				drawLegKnee();
 			}
 			glPopMatrix();
@@ -3003,6 +3008,7 @@ void drawLeftLeg() {
 			{
 				glTranslatef(-0.65, -6.8, 0);	// move to left leg position
 				//glRotatef(legLeftLowerAngle, 1, 0, 0);
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				drawLegFoot(1);
 			}
 			glPopMatrix();
@@ -3022,17 +3028,21 @@ void drawRightLeg() {
 	// whole leg
 	glPushMatrix();
 	{
-		//GLuint textureArr[2];
-
-		//textureArr[0] = loadTexture("textures/steel32.bmp");
 		glRotatef(leftRightUpperAngle, 1, 0, 0);
 
 		// right leg upper nerve (thigh)
 		glPushMatrix();
 		{
 			glTranslatef(0.65, -2, 0);	// move to right leg position
-			drawLegInner(10);
-			drawLegUpperArmor(1);
+
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+
+				drawLegInner(10);
+
+
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+				drawLegUpperArmor(1);
+
 		}
 		glPopMatrix();
 
@@ -3047,7 +3057,10 @@ void drawRightLeg() {
 			glPushMatrix();
 			{
 				glTranslatef(0.91, -3.8, -0.3);	// knee with 3 joints
-				drawLegKnee();
+
+					glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+					drawLegKnee();
+
 			}
 			glPopMatrix();
 
@@ -3055,8 +3068,12 @@ void drawRightLeg() {
 			glPushMatrix();
 			{
 				glTranslatef(0.65, -5, 0);	// move to right leg position
+
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 				drawLegInner(7);
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				drawLegLowerArmor(8);
+
 			}
 			glPopMatrix();
 
@@ -3065,6 +3082,7 @@ void drawRightLeg() {
 			{
 				glTranslatef(0.85, -6.3, -0.25);	// move to right leg position
 				glScalef(0.8, 0.8, 0.8);
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 				drawLegKnee();
 			}
 			glPopMatrix();
@@ -3073,6 +3091,7 @@ void drawRightLeg() {
 			glPushMatrix();
 			{
 				glTranslatef(0.65, -6.8, 0);	// move to right leg position
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				drawLegFoot(-1);
 			}
 			glPopMatrix();
@@ -3118,7 +3137,7 @@ void summonGgBot() {
 			glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
 			glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
 
-		glTranslatef(tX, tY, moveZ);
+		glTranslatef(tX, tY, tZ);
 		//glRotatef(bodyAngle, 1, 0, 0);
 		//moveX++;
 
@@ -3129,7 +3148,7 @@ void summonGgBot() {
 
 		//GLuint textureArr[3];
 		//textureArrOuter[outerTextureNo];
-		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+		//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawRightArm();
 		drawLeftArm();
 
