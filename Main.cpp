@@ -1788,7 +1788,6 @@ void drawLeftArm() {
 			}
 			else if (armRsword <= 60) {
 				armRsword += armRSpeed * 2;
-				leftArmRup1 -= armRSpeed * 2;
 			}
 			else {
 				armLeftBool = false;
