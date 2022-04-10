@@ -30,16 +30,16 @@ float perspecZoomLevel = -2.0f;
 // other (Seperate to your own sections too)
 
 //Hand
-bool leftArmUpBool = false,leftArmDownBool = false;
-bool rightArmUpBool = false,rightArmDownBool = false;
-bool fingerUpBool = false,fingerDownBool=false;
-bool armLeftBool = false,armRightBool = false;
+bool leftArmUpBool = false, leftArmDownBool = false;
+bool rightArmUpBool = false, rightArmDownBool = false;
+bool fingerUpBool = false, fingerDownBool = false;
+bool armLeftBool = false, armRightBool = false;
 bool shootBullet = false;
 float armRSpeed = 0.1;
-float	leftArmRup = 0.01, leftArmRup1 = 0.01, 
-		rightArmRup = 0.01, rightArmRup1 = 0.01, 
-		fingerRup =0.01, fingerRup1=0.01,
-	armRsword = 0.01; //arm rotation variable, need reset for space
+float	leftArmRup = 0.01, leftArmRup1 = 0.01,
+rightArmRup = 0.01, rightArmRup1 = 0.01,
+fingerRup = 0.01, fingerRup1 = 0.01,
+armRsword = 0.01; //arm rotation variable, need reset for space
 char temp = 'A';
 float bullet = 0.0;
 //extra feature
@@ -96,9 +96,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, perspecZoomLevel = -2.0f;
 			ptX = 0, ptY = 0, prY = 0;
 			leftArmRup = 0.01, leftArmRup1 = 0.01,
-			rightArmRup = 0.01, rightArmRup1 = 0.01,
-			fingerRup = 0.01, fingerRup1 = 0.01,
-			armRsword = 0.01;
+				rightArmRup = 0.01, rightArmRup1 = 0.01,
+				fingerRup = 0.01, fingerRup1 = 0.01,
+				armRsword = 0.01;
 			leftArmUpBool = false, leftArmDownBool = false;
 			rightArmUpBool = false, rightArmDownBool = false;
 			fingerUpBool = false, fingerDownBool = false;
@@ -260,18 +260,18 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 		}
 		else if (wParam == 'X') {
-		//finger Down
-		fingerUpBool = false;
-		if (wParam == temp) {
-			fingerDownBool = false;
-			temp = NULL;
+			//finger Down
+			fingerUpBool = false;
+			if (wParam == temp) {
+				fingerDownBool = false;
+				temp = NULL;
 
-		}
-		else {
-			fingerDownBool = true;
-			temp = wParam;
+			}
+			else {
+				fingerDownBool = true;
+				temp = wParam;
 
-		}
+			}
 		}
 		else if (wParam == 'C') {
 			//right arm Up
@@ -289,21 +289,21 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 		}
 		else if (wParam == 'V') {
-		//finger Up
-		armRightBool = false;
-		if (wParam == temp) {
-			armLeftBool = false;
-			temp = NULL;
+			//finger Up
+			armRightBool = false;
+			if (wParam == temp) {
+				armLeftBool = false;
+				temp = NULL;
+
+			}
+			else {
+				armLeftBool = true;
+				temp = wParam;
+
+			}
 
 		}
-		else {
-			armLeftBool = true;
-			temp = wParam;
-
-		}
-
-		}
-		else if (wParam== VK_F1) {
+		else if (wParam == VK_F1) {
 			boolWeapon = false;
 			boolHI = false;
 			boolSword = false;
@@ -315,19 +315,19 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolSword = false;
 			leftArmUpBool = true;
 			rightArmUpBool = true;
-			leftArmRup = 0.01, leftArmRup1 = 0.01,
-				rightArmRup = 0.01, rightArmRup1 = 0.01;
 		}
 		else if (wParam == VK_F3) {
-		boolWeapon = false;
-		fingerUpBool = true;
-		boolSword = true;
+			boolWeapon = false;
+			fingerUpBool = true;
+			boolSword = true;
+			fingerRup = 90;
+			fingerRup1 = 90;
 		}
 		else if (wParam == VK_F4) {
-		boolWeapon = false;
-		//boolSword
-		boolHI = true;
-		fingerUpBool = true;
+			boolWeapon = false;
+			//boolSword
+			boolHI = true;
+			fingerUpBool = true;
 		}
 		break;
 	default:
@@ -610,7 +610,7 @@ void drawLeftArm() {
 
 		}
 		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (boolWeapon == false || boolSword==true) {
+			if (boolWeapon == false) {
 				if (leftArmRup <= 15) {
 					leftArmRup += armRSpeed / 2;
 					leftArmRup1 += armRSpeed / 2;
@@ -656,7 +656,7 @@ void drawLeftArm() {
 	}
 
 	if (fingerUpBool) {
-		if (fingerRup1 <= 90 && fingerRup <=90) {
+		if (fingerRup1 <= 90 && fingerRup <= 90) {
 			if (boolHI) {
 				fingerRup += armRSpeed;
 
@@ -682,12 +682,13 @@ void drawLeftArm() {
 
 	//'V' atk action
 	if (armLeftBool) {
-		if (leftArmRup1 <= 50) {
-			leftArmRup1 += armRSpeed;
+		if (boolSword) {
+			if (leftArmRup1 <= 50) {
+				leftArmRup1 += armRSpeed;
 
-		}
-		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (leftArmRup <= 15) {
+			}
+			else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
+				if (leftArmRup <= 15) {
 					leftArmRup += armRSpeed / 2;
 					if (leftArmRup1 <= 110)
 						leftArmRup1 += armRSpeed / 2;
@@ -697,48 +698,50 @@ void drawLeftArm() {
 						leftArmRup1 += armRSpeed / 2;
 
 				}
-			}else if (armRsword <= 60) {
-				armRsword += armRSpeed*2;
-				leftArmRup1 -= armRSpeed*2;
+			}
+			else if (armRsword <= 60) {
+				armRsword += armRSpeed * 2;
+				leftArmRup1 -= armRSpeed * 2;
 
 			}
-		else {
-			armLeftBool = false;
-			armRightBool = true;
+			else {
+				armLeftBool = false;
+				armRightBool = true;
+			}
+
+		}
+		else if (armRightBool) {
+			if (armRsword >= 0) {
+				armRsword -= armRSpeed;
+
+			}
+			else {
+				if (leftArmRup1 >= 50) {
+					leftArmRup1 -= armRSpeed;
+
+				}
+				else if (leftArmRup1 >= 0) {
+					if (leftArmRup >= 0) {
+						leftArmRup -= armRSpeed / 2;
+						leftArmRup1 -= armRSpeed / 2;
+					}
+					else {
+						leftArmRup1 -= armRSpeed;
+					}
+
+
+				}
+				if (leftArmRup1 <= 0) {
+					armRightBool = false;
+
+				}
+			}
 		}
 		
 	}
-	else if (armRightBool) {
-		if (armRsword >= 0) {
-			armRsword -= armRSpeed;
-
-		}
-		else {
-			if (leftArmRup1 >= 50) {
-				leftArmRup1 -= armRSpeed;
-
-			}
-			else if (leftArmRup1 >= 0) {
-				if (leftArmRup >= 0) {
-					leftArmRup -= armRSpeed / 2;
-					leftArmRup1 -= armRSpeed / 2;
-				}
-				else {
-					leftArmRup1 -= armRSpeed;
-				}
-
-
-			}
-			if (leftArmRup1 <= 0) {
-				armRightBool = false;
-
-			}
-		}
-
-	}
 
 	if (shootBullet) {
-		bullet -= armRSpeed/2;
+		bullet -= armRSpeed / 2;
 		if (bullet >= 10) {
 			shootBullet = false;
 			bullet = 0;
@@ -748,7 +751,7 @@ void drawLeftArm() {
 		bullet = 0;
 	}
 
-	
+
 	//left hand
 	glPushMatrix();
 	glTranslatef(0, 2, 0);	// move to centre on window
@@ -852,7 +855,7 @@ void drawLeftArm() {
 					}
 					glTranslatef(1.85, 1.6, 0.1);
 
-					if (boolWeapon == false){
+					if (boolWeapon == false) {
 						//palm
 						glPushMatrix();
 						glTranslatef(-2.25, -2.2, 0);
@@ -968,7 +971,7 @@ void drawLeftArm() {
 							glPopMatrix();
 
 						}glPopMatrix();//finger push
-						
+
 						if (boolSword == true) {
 							//sword
 							//holder
@@ -1035,7 +1038,8 @@ void drawLeftArm() {
 							glPopMatrix();
 							//end sword
 						}
-						}else {
+					}
+					else {
 						// Arm Weapons
 						//gun
 						glPushMatrix();
@@ -1153,8 +1157,8 @@ void drawRightArm() {
 		renderCylinder(0.2, 0.2, 1.5);
 		glPopMatrix();
 
-			glPushMatrix(); //push upper arm
-			{
+		glPushMatrix(); //push upper arm
+		{
 			glTranslatef(1.85, 1.4, 0);
 			glRotatef(rightArmRup, 1, 0, 0);
 			glTranslatef(-1.85, -1.4, 0);
@@ -1200,7 +1204,7 @@ void drawRightArm() {
 
 				glPushMatrix();
 				{
-					if (boolSword ==false && boolWeapon==false) {
+					if (boolSword == false && boolWeapon == false) {
 						//palm
 						glPushMatrix();//palm push
 						{
@@ -1314,24 +1318,25 @@ void drawRightArm() {
 							glPopMatrix();
 						}glPopMatrix();
 
-					}else{
-							// Arm Weapons
-							//gun
-							glPushMatrix();
-							glTranslatef(1.85, -1.8, 0);
-							glRotatef(90, 1, 0, 0);
-							renderCylinder(0.3, 0.3, 0.7);
-							glPopMatrix();
+					}
+					else {
+						// Arm Weapons
+						//gun
+						glPushMatrix();
+						glTranslatef(1.85, -1.8, 0);
+						glRotatef(90, 1, 0, 0);
+						renderCylinder(0.3, 0.3, 0.7);
+						glPopMatrix();
 
-							//bullet
-							glColor3f(1, 0, 0);
-							glPushMatrix();
-							glTranslatef(1.85, -1.8+bullet, 0);
-							renderSphere(0.28);
-							glPopMatrix();
-							//end Right hand
-							
-						
+						//bullet
+						glColor3f(1, 0, 0);
+						glPushMatrix();
+						glTranslatef(1.85, -1.8 + bullet, 0);
+						renderSphere(0.28);
+						glPopMatrix();
+						//end Right hand
+
+
 					}
 				}
 				glPopMatrix();//right finger pop
