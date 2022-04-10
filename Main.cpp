@@ -199,7 +199,7 @@ void renderDisk(float inR, float outR, float slices, float loops) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
 	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL		// GLU_LINE, GLU_SILHOUETTE, GLU_POINT
-	//gluQuadricTexture(obj, true);
+	gluQuadricTexture(obj, true);
 	gluDisk(obj, inR, outR, slices, loops);
 	gluDeleteQuadric(obj);
 }
@@ -216,7 +216,7 @@ void renderPolygon(float baseR, float topR, float h, float slices) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
 	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL
-	//gluQuadricTexture(obj, true);
+	gluQuadricTexture(obj, true);
 	gluCylinder(obj, baseR, topR, h, slices, 50);
 	gluDeleteQuadric(obj);
 }
@@ -1332,13 +1332,14 @@ void drawBody() {
 		drawNeck();
 		//drawInnerBodyStructure();
 		drawHeart();
-		drawChest();
-		drawInnerBody();
 		drawSpine();
-
-
+		drawChest();
 
 		glDeleteTextures(1, &textureArr[0]);
+		textureArr[1] = loadTexture("textures/darksteel32.bmp");
+		drawInnerBody();
+		glDeleteTextures(1, &textureArr[1]);
+
 
 		glDisable(GL_TEXTURE_2D);
 
@@ -1530,8 +1531,9 @@ void display()
 
 	switch (qNo) {
 	case 1:
-		drawBody();
-		drawHead();
+		//drawBody();
+		//drawHead();
+		summonGgBot();
 		break;
 	case 2:
 		test1();	// main robot structure here for ref
