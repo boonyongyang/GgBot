@@ -28,6 +28,9 @@ float mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f;
 float perspecZoomLevel = -2.0f;
 
 // other (Seperate to your own sections too)
+// head animation
+float hx = 0, hy = 0, hz = 0, hAngle = 0, hSpeed = 1;
+
 //texture
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
@@ -93,7 +96,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == VK_SPACE) {
 			tX = 0, tY = 0, tZ = 0;
 			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, perspecZoomLevel = -2.0f;
-			ptX = 0, ptY = 0, prY = 0;
+			ptX = 0, ptY = 0, prY = 0, hAngle = 0;
 
 		}
 		else if (wParam == VK_UP) {
@@ -178,6 +181,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
+		}
+		else if (wParam == 'M') {
+			hAngle += hSpeed;
+		}
+		else if (wParam == 'N') {
+			hAngle -= hSpeed;
 		}
 		break;
 	default:
@@ -1332,24 +1341,33 @@ void drawEar() {
 }
 
 void drawHead() {
-	glPushMatrix(); 
+
+	glPushMatrix();
 	{
-		glTranslatef(0.0, 4.85, 0.1);
+		//glTranslatef(hx, hy, hz);
+		glRotatef(hAngle, 0.0, 1.0, 0.0);
 
-		GLuint textureArr[3];
-		textureArr[0] = loadTexture("textures/eyetest.bmp");
-		drawEye(); 
-		glDeleteTextures(1, &textureArr[0]);
+		glPushMatrix();
+		{
+			glTranslatef(0.0, 4.85, 0.1);
 
-		textureArr[1] = loadTexture("textures/metal2.bmp");
-		drawNoseAndMouth();
-		drawStructureHead();
-		drawEar();
-		glDeleteTextures(1, &textureArr[1]);
+			GLuint textureArr[3];
+			textureArr[0] = loadTexture("textures/eyetest.bmp");
+			drawEye();
+			glDeleteTextures(1, &textureArr[0]);
 
-		glDisable(GL_TEXTURE_2D);
+			textureArr[1] = loadTexture("textures/metal2.bmp");
+			drawNoseAndMouth();
+			drawStructureHead();
+			drawEar();
+			glDeleteTextures(1, &textureArr[1]);
+
+			glDisable(GL_TEXTURE_2D);
+		}
+		glPopMatrix();
 	}
 	glPopMatrix();
+	
 }
 
 void drawBody() {
