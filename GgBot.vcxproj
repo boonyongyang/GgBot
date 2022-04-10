@@ -146,6 +146,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="textures\armorseamless.bmp" />
     <Image Include="textures\army.bmp" />
     <Image Include="textures\camo.bmp" />
     <Image Include="textures\camo128.bmp" />
@@ -153,6 +154,7 @@
     <Image Include="textures\camoblue32.bmp" />
     <Image Include="textures\camoyellow128.bmp" />
     <Image Include="textures\camoyellow32.bmp" />
+    <Image Include="textures\carbon.bmp" />
     <Image Include="textures\darksteel32.bmp" />
     <Image Include="textures\eyes_texture.bmp" />
     <Image Include="textures\eyetest.bmp" />

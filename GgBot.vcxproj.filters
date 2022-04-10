@@ -65,5 +65,11 @@
     <Image Include="textures\camo128.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\carbon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\armorseamless.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -1634,22 +1634,13 @@ void drawBody() {
 		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
 
-		//textureArrInner[1] = loadTexture("textures/darksteel32.bmp");
 		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		drawInnerBody();
 		drawShoulder();
 		drawCore6Packs();
 		drawNeck();
 		drawSpine();
-		//glDeleteTextures(1, &textureArrInner[1]);
 
-		//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo+1]);
-
-		drawCore6Packs();
-		drawNeck();
-		drawSpine();
-
-		//textureArrOuter[outerTextureNo];
 		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawTopBack();
 		drawRibs();
@@ -1660,9 +1651,6 @@ void drawBody() {
 		//drawInnerBodyStructure();
 		drawChest();
 
-		//glDeleteTextures(1, &textureArrOuter[outerTextureNo]);
-
-		// Step5: Remove texture info.
 	}
 	glPopMatrix();
 
@@ -3313,6 +3301,8 @@ void display()
 
 	// texture for inner
 	textureArrInner[0] = loadTexture("textures/darksteel32.bmp");
+	textureArrInner[1] = loadTexture("textures/carbon.bmp");
+	textureArrInner[2] = loadTexture("textures/armorseamless.bmp");
 
 	switch (qNo) {
 	case 1:
