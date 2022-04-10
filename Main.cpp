@@ -549,6 +549,7 @@ void renderSphere(float r) {
 	sphere = gluNewQuadric();
 	//gluQuadricDrawStyle(sphere, GLU_SILHOUETTE);	// will change to GLU_FILL
 	gluQuadricDrawStyle(sphere, GLU_FILL);
+	gluQuadricTexture(sphere, true);
 	gluSphere(sphere, r, 50, 50);
 	gluDeleteQuadric(sphere);
 }
@@ -2446,6 +2447,7 @@ void drawRightArm() {
 }
 // ******************************************** LEG **********************************************//
 
+
 void walkFront() {
 
 	// move left leg & (left arm back, right arm front)
@@ -3149,6 +3151,7 @@ void drawSkyBox() {
 		GLuint textureArr[1];
 		textureArr[0] = loadTexture("textures/sky.bmp");
 		glColor3f(1.0, 1.0, 1.0);
+		glRotatef(90, 1.0, 0.0, 0.0);
 		renderSphere(20);
 		glDeleteTextures(1, &textureArr[0]);
 	}
@@ -3222,7 +3225,7 @@ void scene2() {
 
 	glPushMatrix();
 
-	drawOcean();
+	//drawOcean();
 	drawSkyBox();
 	glPushMatrix();
 	{
