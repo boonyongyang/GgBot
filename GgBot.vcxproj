@@ -147,9 +147,13 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\darksteel32.bmp" />
+    <Image Include="textures\eyes_texture.bmp" />
+    <Image Include="textures\eyetest.bmp" />
     <Image Include="textures\metal2.bmp" />
     <Image Include="textures\ocean.bmp" />
+    <Image Include="textures\orange.bmp" />
     <Image Include="textures\steel32.bmp" />
+    <Image Include="textures\wood.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
