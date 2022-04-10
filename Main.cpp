@@ -514,7 +514,9 @@ void lighting() {
 	else {
 		glDisable(GL_LIGHT2);
 	}
-
+	//glLightfv(GL_LIGHT3, GL_AMBIENT, amb);
+	//glLightfv(GL_LIGHT3, GL_POSITION, posA);	// set the position of the light
+	//glEnable(GL_LIGHT3);
 
 }
 
@@ -545,8 +547,8 @@ GLuint loadTexture(LPCSTR filename) {
 void renderSphere(float r) {
 	GLUquadricObj* sphere = NULL;
 	sphere = gluNewQuadric();
-	gluQuadricDrawStyle(sphere, GLU_SILHOUETTE);	// will change to GLU_FILL
-	//gluQuadricDrawStyle(sphere, GLU_FILL);
+	//gluQuadricDrawStyle(sphere, GLU_SILHOUETTE);	// will change to GLU_FILL
+	gluQuadricDrawStyle(sphere, GLU_FILL);
 	gluSphere(sphere, r, 50, 50);
 	gluDeleteQuadric(sphere);
 }
@@ -3016,6 +3018,29 @@ void drawLeftLeg() {
 
 void drawRightLeg() {
 
+	// connect leg with body
+	glPushMatrix();
+	{
+		glTranslatef(0.0, 1.0, 0.5);
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(0.0, -1.6, -0.45);
+			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.2, 0.2, 0.2);
+			glTranslatef(1.0, -1.5, -0.5);
+			glRotatef(-90, 0.0, 1.0, 0.0);
+			renderCylinder(0.1, 0.1, 2.0);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+
 	// whole leg
 	glPushMatrix();
 	{
@@ -3118,6 +3143,18 @@ void drawOcean() {
 	glPopMatrix();
 }
 
+void drawSkyBox() {
+	glPushMatrix();
+	{
+		GLuint textureArr[1];
+		textureArr[0] = loadTexture("textures/sky.bmp");
+		glColor3f(1.0, 1.0, 1.0);
+		renderSphere(20);
+		glDeleteTextures(1, &textureArr[0]);
+	}
+	glPopMatrix();
+}
+
 
 // ******************************************** DISPLAY **********************************************//
 
@@ -3127,6 +3164,8 @@ void summonGgBot() {
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
+		glMaterialfv(GL_BACK, GL_AMBIENT, ambM);
+
 
 		glTranslatef(tX, tY, tZ);
 		glRotatef(rY, 0, 1, 0);
@@ -3184,6 +3223,7 @@ void scene2() {
 	glPushMatrix();
 
 	drawOcean();
+	drawSkyBox();
 	glPushMatrix();
 	{
 		glTranslatef(0, 3, -0.5);

@@ -156,6 +156,7 @@
     <Image Include="textures\eyetest.bmp" />
     <Image Include="textures\metal2.bmp" />
     <Image Include="textures\ocean.bmp" />
+    <Image Include="textures\sky.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

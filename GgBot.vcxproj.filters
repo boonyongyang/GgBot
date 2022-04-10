@@ -50,5 +50,8 @@
     <Image Include="textures\complexTexture.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\sky.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
