@@ -31,20 +31,23 @@ float perspecZoomLevel = -2.0f;
 // head animation
 float hx = 0, hy = 0, hz = 0, hAngle = 0, hSpeed = 1;
 
+//neck
+float ny = 0; 
+
 //texture
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
 
 // Lighting
-float lax = 0, lay = -1, laz = 0;
+float lax = 0, lay = 1, laz = 0;
 float ldx = 0, ldy = 1, ldz = 0;
 float amb[] = { 1.0, 1.0, 1.0 ,1.0};			// red color ambient light 
 // light0 position (0,6,0) above 
 float posA[] = { lax, lay, laz };			// position of the light0 {x,y,z} - position 0,0,0 is actually inside the sphere 
-float dif[] ={ 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
+float dif[] ={ 1.0, 1.0, 1.0 ,1.0 };		// green color diffuse light
 float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
 
-float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
+float ambM[] = { 0.0, 0.0, 1.0 ,1.0 };		// red color ambient material
 float difM[] = { 1.0, 1.0, 1.0 ,1.0 };		// blue color diffuse material
 
 boolean isLightOn = true;
@@ -922,8 +925,15 @@ void drawHeart() {
 }
 
 void drawChest() {
+
+
 	glPushMatrix();
 	{
+		float ambMc[] = { 1.0, 0.0, 0.0 ,1.0 };
+		float difMc[] = { 1.0, 1.0, 1.0 ,1.0 };
+
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambMc);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, difMc);
 		glColor3f(1.0, 1.0, 1.0);
 		glScalef(1.3, 0.7, 1.0);
 		glTranslatef(0.9, 3.5, -1.5);
@@ -1188,6 +1198,7 @@ void drawNeck() {
 	glPushMatrix();
 	{
 		glTranslatef(0.0, 3.2, -0.5);
+		glRotatef(ny+= 201, 0.0, 1.0, 0.0);
 		for (int i = 0; i <= 23; i++) {
 			glPushMatrix();
 			{
@@ -1614,8 +1625,9 @@ void display()
 	case 1:
 		//drawBody();
 		//drawHead();
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
-		glMaterialfv(GL_FRONT_FACE, GL_DIFFUSE, difM);
+		//glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+		//glMaterialfv(GL_FRONT_FACE, GL_DIFFUSE, difM);
 		summonGgBot();
 		break;
 	case 2:
