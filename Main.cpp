@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int qNo = 3;
 float stacks = 30;
 
 // transformation for projection matrix
@@ -32,6 +32,19 @@ float perspecZoomLevel = -2.0f;
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
 
+// Lighting
+float lax = 0, lay = -1, laz = 0;
+float ldx = 0, ldy = 1, ldz = 0;
+float amb[] = { 1.0, 1.0, 1.0 ,1.0};			// red color ambient light 
+// light0 position (0,6,0) above 
+float posA[] = { lax, lay, laz };			// position of the light0 {x,y,z} - position 0,0,0 is actually inside the sphere 
+float dif[] ={ 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
+float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
+
+float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
+float difM[] = { 1.0, 0.0, 0.0 ,1.0 };		// blue color diffuse material
+
+boolean isLightOn = true;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -163,6 +176,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				tSpeed = 0.5;
 			}
 		}
+		else if (wParam == 'L') {
+			isLightOn = !isLightOn;
+		}
 		break;
 	default:
 		break;
@@ -216,6 +232,7 @@ void renderPolygon(float baseR, float topR, float h, float slices) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
 	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL
+	gluQuadricNormals(obj, GLU_SMOOTH);
 	gluQuadricTexture(obj, true);
 	gluCylinder(obj, baseR, topR, h, slices, 50);
 	gluDeleteQuadric(obj);
@@ -324,7 +341,7 @@ void renderCubeWithoutGLU(float x, float y, float z) {
 
 	glPushMatrix();
 	{
-		glColor3f(1.0, 1.0, 1.0);
+		//glColor3f(1.0, 1.0, 1.0);
 
 		glBegin(GL_QUADS);
 
@@ -429,7 +446,8 @@ void renderCuboid(float x, float y, float z) {
 
 void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float z) {
 	glPushMatrix(); {
-		glColor3f(1.0, 1.0, 1.0);
+		glNormal3f(top, y, z);
+		//glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(-top / 2, -y / 2, -z / 2);
 		glBegin(GL_QUADS);
 
@@ -513,6 +531,25 @@ GLuint loadTexture(LPCSTR filename) {
 	//Take from step 5
 	DeleteObject(hBMP);
 	return texture;
+}
+
+void lighting() {
+	if (isLightOn) {
+		glEnable(GL_LIGHTING);
+	}
+	else {
+		glDisable(GL_LIGHTING);
+	}
+
+	// Light 0: Red Color Ambient Light at pos (0,6,0)
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_POSITION, posA);	// set the position of the light
+	glEnable(GL_LIGHT0);			// turn light 0 on
+
+	// Light 1: Green Color Diffuse Light at pos (6,0,0)
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT1, GL_POSITION, posD);	// set the position of the light
+	glEnable(GL_LIGHT1);			// turn light 1 on
 }
 
 void drawInnerBody() {
@@ -1298,8 +1335,12 @@ void drawHead() {
 	glPushMatrix(); 
 	{
 
-		GLuint textureArr[2];
+		GLuint textureArr[3];
 		textureArr[0] = loadTexture("textures/steel32.bmp");
+
+		glDeleteTextures(1, &textureArr[0]);
+
+		textureArr[2] = loadTexture("textures/metal2.bmp");
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
@@ -1307,7 +1348,7 @@ void drawHead() {
 		drawEye(); 
 		drawNoseAndMouth();
 		drawEar();
-		glDeleteTextures(1, &textureArr[0]);
+		glDeleteTextures(1, &textureArr[2]);
 
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -1343,9 +1384,10 @@ void drawBody() {
 		drawSpine();
 		drawChest();
 
-		glDeleteTextures(1, &textureArr[2]);
 
-		glDisable(GL_TEXTURE_2D);
+		//glDeleteTextures(1, &textureArr[2]);
+
+		//glDisable(GL_TEXTURE_2D);
 
 
 
@@ -1509,6 +1551,11 @@ void test3() {	// delete all if u want to test here
 	//drawScale();
 	//drawCoreDetail1();
 	////drawNeck();
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+	//glMaterialfv(GL_FRONT, GL_SHININESS, difM);
+	//glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
+	//glMaterialfv(GL_FRONT, GL_EMISSION, difM);
 	renderTrapezoidWithoutGLU(3, 1.1, 1.9, 5, 1);
 }
 
@@ -1522,6 +1569,7 @@ void display()
 		glEnable(GL_DEPTH_TEST);
 
 		projection();
+		lighting();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -1531,12 +1579,27 @@ void display()
 		glRotatef(mouseYRotate, 0.0, 1.0, 0.0);
 		glRotatef(mouseZRotate, 0.0, 0.0, 1.0);
 		//*****mouse movement end*****
+
+		glPushMatrix();
+		{
+			glTranslatef(lax, lay, laz);
+			renderSphere(0.2);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glTranslatef(ldx, ldy, ldz);
+			renderSphere(0.2);
+		}
+		glPopMatrix();
 	}
 
 	switch (qNo) {
 	case 1:
 		//drawBody();
 		//drawHead();
+		//glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
 		summonGgBot();
 		break;
 	case 2:
