@@ -148,6 +148,7 @@
   <ItemGroup>
     <Image Include="textures\army.bmp" />
     <Image Include="textures\camo.bmp" />
+    <Image Include="textures\camo128.bmp" />
     <Image Include="textures\camoblue128.bmp" />
     <Image Include="textures\camoblue32.bmp" />
     <Image Include="textures\camoyellow128.bmp" />

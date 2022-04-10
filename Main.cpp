@@ -3287,7 +3287,7 @@ void display()
 	glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
 
 	textureArrOuter[0] = loadTexture("textures/metal2.bmp");
-	textureArrOuter[1] = loadTexture("textures/army.bmp");
+	textureArrOuter[1] = loadTexture("textures/camo128.bmp");
 	textureArrOuter[2] = loadTexture("textures/wood.bmp");
 	textureArrOuter[3] = loadTexture("textures/camoyellow32.bmp");
 	textureArrOuter[4] = loadTexture("textures/camoyellow128.bmp");
