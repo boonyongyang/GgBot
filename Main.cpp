@@ -45,6 +45,7 @@ float bullet = 0.0;
 //extra feature
 bool boolHI = false;//example
 bool boolWeapon = false;
+bool boolSword = false;
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -302,32 +303,25 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 
 		}
-		else if (wParam == 'B') {
-		//finger Down
-		armLeftBool = false;
-		if (wParam == temp) {
-			armRightBool = false;
-			temp = NULL;
-
-		}
-		else {
-			armRightBool = true;
-			temp = wParam;
-
-		}
-		}
 		else if (wParam== VK_F1) {
 			boolWeapon = false;
 			boolHI = false;
+			boolSword = false;
+
 		}
 		else if (wParam == VK_F2) {
 			boolWeapon = true;
 			boolHI = false;
-
+			boolSword = false;
+			leftArmUpBool = true;
+			rightArmUpBool = true;
+			leftArmRup = 0.01, leftArmRup1 = 0.01,
+				rightArmRup = 0.01, rightArmRup1 = 0.01;
 		}
 		else if (wParam == VK_F3) {
 		boolWeapon = false;
 		fingerUpBool = true;
+		boolSword = true;
 		}
 		else if (wParam == VK_F4) {
 		boolWeapon = false;
@@ -616,7 +610,7 @@ void drawLeftArm() {
 
 		}
 		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (boolWeapon == false) {
+			if (boolWeapon == false || boolSword==true) {
 				if (leftArmRup <= 15) {
 					leftArmRup += armRSpeed / 2;
 					leftArmRup1 += armRSpeed / 2;
@@ -686,9 +680,8 @@ void drawLeftArm() {
 		}
 	}
 
-	//if got time
+	//'V' atk action
 	if (armLeftBool) {
-		bool tempA = false;
 		if (leftArmRup1 <= 50) {
 			leftArmRup1 += armRSpeed;
 
@@ -734,6 +727,10 @@ void drawLeftArm() {
 					leftArmRup1 -= armRSpeed;
 				}
 
+
+			}
+			if (leftArmRup1 <= 0) {
+				armRightBool = false;
 
 			}
 		}
@@ -972,28 +969,72 @@ void drawLeftArm() {
 
 						}glPopMatrix();//finger push
 						
-						//sword
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, -0.8);
-						renderCylinder(0.2,0.2,1.6);
-						glPopMatrix();
+						if (boolSword == true) {
+							//sword
+							//holder
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, -0.8);
+							renderCylinder(0.2, 0.2, 1.6);
+							glPopMatrix();
 
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, 0.8);
-						renderTrapezoid(0.2, 0.4, 0.2);
-						glPopMatrix();
+							//sword rear part
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, 0.8);
+							renderTrapezoid(0.2, 0.4, 0.2);
+							glPopMatrix();
 
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, 1.0);
-						renderTrapezoid(0.4, 0.2, 0.4);
-						glPopMatrix();
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, 1.0);
+							renderTrapezoid(0.4, 0.2, 0.4);
+							glPopMatrix();
+							//end sword rear part
 
-						glPushMatrix();
-						glTranslatef(-1.75, -2.2, -2.8);
-						renderPrism(0.2, 4.2, 3);
-						glPopMatrix();
+							//sword front part
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, -1.4);
+							renderTrapezoid(0.4, 0.8, 0.4);
+							glPopMatrix();
 
-						//end sword
+							glPushMatrix();
+							glTranslatef(-1.75, -2.2, -1.0);
+							renderTrapezoid(0.8, 0.4, 0.4);
+							glPopMatrix();
+
+							//sword blade
+							glPushMatrix();
+							glTranslatef(-1.75, -2.1, -5.6);
+							renderPrism(0.2, 4.2, 3);
+							glPopMatrix();
+
+							glPushMatrix();
+							glTranslatef(-1.75, -2.3, -5.6);
+							glRotatef(60, 0, 0, 1);
+							renderPrism(0.2, 4.2, 3);
+							glPopMatrix();
+
+							//sword sharp part
+							glPushMatrix();
+							glBegin(GL_TRIANGLES);
+							glVertex3f(-1.75, -1.9, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.6, -2.2, -5.6);
+
+							glVertex3f(-1.75, -1.9, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.9, -2.2, -5.6);
+
+							glVertex3f(-1.75, -2.5, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.6, -2.2, -5.6);
+
+							glVertex3f(-1.75, -2.5, -5.6);
+							glVertex3f(-1.75, -2.2, -6.0);
+							glVertex3f(-1.9, -2.2, -5.6);
+
+							glEnd();
+							glPopMatrix();
+							//end sword
+						}
 						}else {
 						// Arm Weapons
 						//gun
@@ -1159,7 +1200,7 @@ void drawRightArm() {
 
 				glPushMatrix();
 				{
-					if (boolWeapon==false) {
+					if (boolSword ==false && boolWeapon==false) {
 						//palm
 						glPushMatrix();//palm push
 						{
@@ -1273,7 +1314,7 @@ void drawRightArm() {
 							glPopMatrix();
 						}glPopMatrix();
 
-					}else {
+					}else{
 							// Arm Weapons
 							//gun
 							glPushMatrix();
