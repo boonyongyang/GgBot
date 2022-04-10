@@ -1125,27 +1125,29 @@ void drawTopBack() {
 }
 
 void drawHeart() {
-	glPushMatrix();
-	{
-		glColor3f(1.0, 0.0, 0.0);
-		glTranslatef(0.0, 1.9, -1.5);
-		glScalef(2.3, 0.7, 1.0);
-		//glRotatef(180, 0.0, 0.0, 1.0);
-		renderPrism(0.25, 0.5, 3);
-		//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
-	}
-	glPopMatrix();
 
-	glPushMatrix();
-	{
-		glColor3f(1.0, 0.0, 0.0);
-		glTranslatef(0.0, 1.72, -1.5);
-		glScalef(2.3, 0.7, 1.0);
-		glRotatef(180, 0.0, 0.0, 1.0);
-		renderPrism(0.25, 0.5, 3);
-		//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
-	}
-	glPopMatrix();
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(0.0, 1.9, -1.5);
+			glScalef(2.3, 0.7, 1.0);
+			//glRotatef(180, 0.0, 0.0, 1.0);
+			renderPrism(0.25, 0.5, 3);
+			//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(1.0, 0.0, 0.0);
+			glTranslatef(0.0, 1.72, -1.5);
+			glScalef(2.3, 0.7, 1.0);
+			glRotatef(180, 0.0, 0.0, 1.0);
+			renderPrism(0.25, 0.5, 3);
+			//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+		}
+		glPopMatrix();
+
 }
 
 void drawChest() {
@@ -1600,21 +1602,20 @@ void drawBody() {
 
 	glPushMatrix();
 	{
-		GLuint textureArr[3];
-		textureArr[0] = loadTexture("textures/steel32.bmp");
 
-		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
-		////glTranslatef(0.0, -5.0, 0.0);
 
+		GLuint textureArr[3];
+		textureArr[0] = loadTexture("textures/eyetest.bmp");
 
+		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
+
 		textureArr[1] = loadTexture("textures/darksteel32.bmp");
-		// add here la
+		drawInnerBody();
 		glDeleteTextures(1, &textureArr[1]);
 
 		textureArr[2] = loadTexture("textures/metal2.bmp");
-		drawInnerBody();
 		drawCore6Packs();
 		drawTopBack();
 		drawRibs();
@@ -1622,13 +1623,10 @@ void drawBody() {
 		drawShoulder();
 		drawNeck();
 		//drawInnerBodyStructure();
-		drawHeart();
 		drawSpine();
 		drawChest();
 
-
 		glDeleteTextures(1, &textureArr[2]);
-
 		glDisable(GL_TEXTURE_2D);
 
 		// Step5: Remove texture info.
