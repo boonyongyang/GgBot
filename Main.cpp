@@ -91,7 +91,8 @@ float difM[] = { 1.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 bool isTextureOn = true;
 GLuint textureArrInner[3];
 GLuint textureArrOuter[7];
-int TextureNo = 0;
+int outerTextureNo = 0;
+int innerTextureNo = 0;
 
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
@@ -408,10 +409,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
 		}
-		else if (wParam == 'M') {
+		else if (wParam == 'N') {
 		hAngle += hSpeed;
 		}
-		else if (wParam == 'N') {
+		else if (wParam == 'B') {
 		hAngle -= hSpeed;
 		}
 		else if (wParam == 'G') {
@@ -424,12 +425,20 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		isSpecularOn = !isSpecularOn;
 		}
 		else if (wParam == 'K') {
-			if (TextureNo <= 5) {
-				TextureNo++;
+			if (outerTextureNo <= 3) {
+				outerTextureNo++;
 			}
 			else {
-				TextureNo = 0;
+				outerTextureNo = 0;
 			}
+		}
+		else if (wParam == 'M') {
+		if (innerTextureNo <= 1) {
+			innerTextureNo++;
+		}
+		else {
+			innerTextureNo = 0;
+		}
 		}
 		break;
 	default:
@@ -1599,11 +1608,10 @@ void drawHead() {
 
 			textureArrH[1] = loadTexture("textures/metal2.bmp");
 			drawNoseAndMouth();
-
 			drawEar();
 			glDeleteTextures(1, &textureArrH[1]);
 
-			glBindTexture(GL_TEXTURE_2D, textureArrOuter[TextureNo]);
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			drawStructureHead();
 
 			//glDisable(GL_TEXTURE_2D);
@@ -1626,23 +1634,33 @@ void drawBody() {
 		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
 
-		textureArrInner[1] = loadTexture("textures/darksteel32.bmp");
+		//textureArrInner[1] = loadTexture("textures/darksteel32.bmp");
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		drawInnerBody();
-		glDeleteTextures(1, &textureArrInner[1]);
-
-		//textureArrOuter[TextureNo];
-		glBindTexture(GL_TEXTURE_2D, textureArrOuter[TextureNo]);
+		drawShoulder();
 		drawCore6Packs();
+		drawNeck();
+		drawSpine();
+		//glDeleteTextures(1, &textureArrInner[1]);
+
+		//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo+1]);
+
+		drawCore6Packs();
+		drawNeck();
+		drawSpine();
+
+		//textureArrOuter[outerTextureNo];
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawTopBack();
 		drawRibs();
 		drawPelvis();
-		drawShoulder();
-		drawNeck();
+		//drawCore6Packs();
+		//drawNeck();
+		//drawSpine();
 		//drawInnerBodyStructure();
-		drawSpine();
 		drawChest();
 
-		//glDeleteTextures(1, &textureArrOuter[TextureNo]);
+		//glDeleteTextures(1, &textureArrOuter[outerTextureNo]);
 
 		// Step5: Remove texture info.
 	}
@@ -3127,8 +3145,8 @@ void summonGgBot() {
 		drawBody();
 
 		//GLuint textureArr[3];
-		//textureArrOuter[TextureNo];
-		glBindTexture(GL_TEXTURE_2D, textureArrOuter[TextureNo]);
+		//textureArrOuter[outerTextureNo];
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		drawRightArm();
 		drawLeftArm();
 
@@ -3286,14 +3304,15 @@ void display()
 	}
 	glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
 
+	// texture for outer
 	textureArrOuter[0] = loadTexture("textures/metal2.bmp");
 	textureArrOuter[1] = loadTexture("textures/camo128.bmp");
 	textureArrOuter[2] = loadTexture("textures/wood.bmp");
-	textureArrOuter[3] = loadTexture("textures/camoyellow32.bmp");
-	textureArrOuter[4] = loadTexture("textures/camoyellow128.bmp");
-	textureArrOuter[5] = loadTexture("textures/camoblue32.bmp");
-	textureArrOuter[6] = loadTexture("textures/camoblue128.bmp");
-	//textureArrOuter[2] = loadTexture("textures/camo.bmp");
+	textureArrOuter[3] = loadTexture("textures/camoyellow128.bmp");
+	textureArrOuter[4] = loadTexture("textures/camoblue128.bmp");
+
+	// texture for inner
+	textureArrInner[0] = loadTexture("textures/darksteel32.bmp");
 
 	switch (qNo) {
 	case 1:
