@@ -1644,6 +1644,26 @@ void drawEar() {
 	glPopMatrix();
 }
 
+void drawHat() {
+	glPushMatrix();
+	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+		glTranslatef(0.0, 1.5, 0.0);
+		glRotatef(90, 1.0, 0.0, 0.0);
+		renderCone(0.3, 1);
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	{
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+		glTranslatef(0.0, 0.5, 0.0);
+		glRotatef(90, 1.0, 0.0, 0.0);
+		renderDisk(0, 0.5, 50, 50);
+	}
+	glPopMatrix();
+}
+
 void drawHead() {
 	glPushMatrix();
 	{
@@ -1665,6 +1685,7 @@ void drawHead() {
 
 			//glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 			drawStructureHead();
+			drawHat();
 
 		}
 		glPopMatrix();
