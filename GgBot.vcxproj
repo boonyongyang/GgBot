@@ -148,24 +148,14 @@
   <ItemGroup>
     <Image Include="textures\armorMetal.bmp" />
     <Image Include="textures\armorPattern.bmp" />
-    <Image Include="textures\armorseamless.bmp" />
-    <Image Include="textures\army.bmp" />
-    <Image Include="textures\bronzepattern.bmp" />
-    <Image Include="textures\camo.bmp" />
-    <Image Include="textures\camo128.bmp" />
-    <Image Include="textures\camoblue128.bmp" />
-    <Image Include="textures\camoblue32.bmp" />
-    <Image Include="textures\camoyellow128.bmp" />
-    <Image Include="textures\camoyellow32.bmp" />
-    <Image Include="textures\carbon.bmp" />
+    <Image Include="textures\armorPattern2.bmp" />
+    <Image Include="textures\armorPattern3.bmp" />
+    <Image Include="textures\camoTexture.bmp" />
+    <Image Include="textures\complexTexture.bmp" />
     <Image Include="textures\darksteel32.bmp" />
-    <Image Include="textures\eyes_texture.bmp" />
     <Image Include="textures\eyetest.bmp" />
     <Image Include="textures\metal2.bmp" />
     <Image Include="textures\ocean.bmp" />
-    <Image Include="textures\orange.bmp" />
-    <Image Include="textures\steel32.bmp" />
-    <Image Include="textures\wood.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

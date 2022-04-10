@@ -20,9 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\steel32.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="textures\metal2.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -32,52 +29,25 @@
     <Image Include="textures\ocean.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="textures\eyes_texture.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="textures\eyetest.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\orange.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\wood.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\army.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\camo.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\camoblue32.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\camoblue128.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\camoyellow32.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\camoyellow128.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\camo128.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\carbon.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\armorseamless.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="textures\bronzepattern.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\armorMetal.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\armorPattern.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\armorPattern2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\armorPattern3.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\camoTexture.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\complexTexture.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

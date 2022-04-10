@@ -45,7 +45,7 @@ bool rightArmUpBool = false, rightArmDownBool = false;
 bool fingerUpBool = false, fingerDownBool = false;
 bool armLeftBool = false, armRightBool = false;
 bool shootBullet = false;
-float armRSpeed = 0.1;
+float armRSpeed = 0.5;	// 0.1, but can be faster
 float	leftArmRup = 0.01, leftArmRup1 = 0.01,
 rightArmRup = 0.01, rightArmRup1 = 0.01,
 fingerRup = 0.01, fingerRup1 = 0.01,
@@ -99,7 +99,6 @@ HBITMAP hBMP = NULL;	// bitmap handle
 
 // function declarations
 void walkFront();
-void rotateBody();
 void iceCream();	// delete ba no ice cream already
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -159,8 +158,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, perspecZoomLevel = -2.0f;
 			ptX = 0, ptY = 0, prY = 0;
 
-			// head
+			// head angle
 			hAngle = 0;
+
+			// body angle
+			rY = 0, rSpeed = 0.5;
+			rBody = 0, rBodySpeed = 0;
 
 			// arm 
 			leftArmRup = 0.01, leftArmRup1 = 0.01,
@@ -173,9 +176,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			armLeftBool = false, armRightBool = false;
 			boolHI = false;
 
-			handRightAngle = false, handLeftAngle = false;
 
-			// leg angles
+			// walking angles
+			handRightAngle = false, handLeftAngle = false;
 			legLeftUpperAngle = 0, legLeftLowerAngle = 0;
 			leftRightUpperAngle = 0, legRightLowerAngle = 0;
 			leftLegAtFront = false, moveLeftLeg = false;
@@ -385,8 +388,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			rightArmUpBool = true;
 			leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
 				rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
-			//rightArmRup = 15;
-			//rightArmRup1 = 75;
+			//rightArmRup = 15;		// instant ready
+			//rightArmRup1 = 75;	// instant ready
 			//leftArmRup = 15;
 			//leftArmRup1 = 75;
 		}
@@ -399,6 +402,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			//rightArmRup = 15;		// instant ready
 			//rightArmRup1 = 75;	// instant ready
 			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed; // lift arm animation
+			leftArmUpBool = false;
+			rightArmUpBool = false;
 		}
 		else if (wParam == VK_F4) {
 			boolWeapon = false;
@@ -1762,55 +1767,54 @@ void drawLeftArm() {
 	}
 
 	//'V' atk action
-	if (armLeftBool) {
-		if (leftArmRup1 <= 50) {
-			leftArmRup1 += armRSpeed;
-		}
-		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (leftArmRup <= 15) {
-				leftArmRup += armRSpeed / 2;
-				if (leftArmRup1 <= 110)
-					leftArmRup1 += armRSpeed / 2;
+	if (boolSword) {
+		if (armLeftBool) {
+			if (leftArmRup1 <= 50) {
+				leftArmRup1 += armRSpeed;
 			}
-			else {
-				if (leftArmRup1 <= 110)
-					leftArmRup1 += armRSpeed / 2;
-			}
-		}
-		else if (armRsword <= 60) {
-			armRsword += armRSpeed * 2;
-			leftArmRup1 -= armRSpeed * 2;
-		}
-		else {
-			armLeftBool = false;
-			armRightBool = true;
-		}
-
-	}
-	else if (armRightBool) {
-		if (armRsword >= 0) {
-			armRsword -= armRSpeed;
-
-		}
-		else {
-			if (leftArmRup1 >= 50) {
-				leftArmRup1 -= armRSpeed;
-
-			}
-			else if (leftArmRup1 >= 0) {
-				if (leftArmRup >= 0) {
-					leftArmRup -= armRSpeed / 2;
-					leftArmRup1 -= armRSpeed / 2;
+			else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
+				if (leftArmRup <= 15) {
+					leftArmRup += armRSpeed / 2;
+					if (leftArmRup1 <= 110)
+						leftArmRup1 += armRSpeed / 2;
 				}
 				else {
-					leftArmRup1 -= armRSpeed;
+					if (leftArmRup1 <= 110)
+						leftArmRup1 += armRSpeed / 2;
 				}
 			}
-			if (leftArmRup1 <= 0) {
-				armRightBool = false;
+			else if (armRsword <= 60) {
+				armRsword += armRSpeed * 2;
+				leftArmRup1 -= armRSpeed * 2;
+			}
+			else {
+				armLeftBool = false;
+				armRightBool = true;
 			}
 		}
+		else if (armRightBool) {
+			if (armRsword >= 0) {
+				armRsword -= armRSpeed;
+			}
+			else {
+				if (leftArmRup1 >= 50) {
+					leftArmRup1 -= armRSpeed;
 
+				}
+				else if (leftArmRup1 >= 0) {
+					if (leftArmRup >= 0) {
+						leftArmRup -= armRSpeed / 2;
+						leftArmRup1 -= armRSpeed / 2;
+					}
+					else {
+						leftArmRup1 -= armRSpeed;
+					}
+				}
+				if (leftArmRup1 <= 0) {
+					armRightBool = false;
+				}
+			}
+		}
 	}
 
 	if (shootBullet) {
@@ -2152,9 +2156,8 @@ void drawLeftArm() {
 		glPopMatrix(); //left upperarm pop
 
 	}
-	glPopMatrix(); // translate up 2 via y-axis
+	glPopMatrix(); // translate up 2 via y-axis}
 }
-
 void drawRightArm() {
 	if (rightArmUpBool) {
 		if (rightArmRup1 <= 50) {
@@ -2437,10 +2440,8 @@ void drawRightArm() {
 		}
 		glPopMatrix(); //right upper arm pop
 	}
-	glPopMatrix(); // translate up 2 via y-axis
-
+	glPopMatrix(); // translate up 2 via y-axis}
 }
-
 // ******************************************** LEG **********************************************//
 
 void walkFront() {
@@ -2519,7 +2520,6 @@ void walkFront() {
 			}
 		}
 	}
-
 }
 
 void drawLegInnerNerve(float r, float h) {
@@ -3305,14 +3305,14 @@ void display()
 
 	// texture for outer
 	textureArrOuter[0] = loadTexture("textures/metal2.bmp");
-	textureArrOuter[1] = loadTexture("textures/camo128.bmp");
+	textureArrOuter[1] = loadTexture("textures/camoTexture.bmp");
 	textureArrOuter[2] = loadTexture("textures/armorMetal.bmp");
-	textureArrOuter[3] = loadTexture("textures/camoyellow128.bmp");
-	textureArrOuter[4] = loadTexture("textures/camoblue128.bmp");
+	textureArrOuter[3] = loadTexture("textures/armorPattern3.bmp");
+	textureArrOuter[4] = loadTexture("textures/complexTexture.bmp");
 
 	// texture for inner
 	textureArrInner[0] = loadTexture("textures/darksteel32.bmp");
-	textureArrInner[1] = loadTexture("textures/bronzepattern.bmp");
+	textureArrInner[1] = loadTexture("textures/armorPattern2.bmp");
 	textureArrInner[2] = loadTexture("textures/armorPattern.bmp");
 
 	switch (scane) {
