@@ -23,5 +23,11 @@
     <Image Include="textures\steel32.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\metal2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\darksteel32.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

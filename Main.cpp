@@ -67,15 +67,16 @@ float rCream = 0;
 
 // Lighting
 bool isLightOn = true;
-float amb[] = { 1.0, 1.0, 1.0 };	// ambient light
-float dif[] = { 1.0, 1.0, 1.0 };	// diffuse light
-float ambM1[] = { 1.0, 0.0, 0.0 };	// ambient material 1
-float ambM2[] = { 0.0, 1.0, 0.0 };	// ambient material 2
-float difM1[] = { 0.0, 0.0, 1.0 };	// diffuse material 1
-float difM2[] = { 0.0, 0.0, 1.0 };	// diffuse material 2
+float lax = 0, lay = -1, laz = 0;
+float ldx = 0, ldy = 3, ldz = 0;
+float amb[] = { 1.0, 1.0, 1.0 ,1.0 };			// red color ambient light 
+// light0 position (0,6,0) above 
+float posA[] = { lax, lay, laz };			// position of the light0 {x,y,z} - position 0,0,0 is actually inside the sphere 
+float dif[] = { 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
+float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
 
-float pos1[] = { 0.0, 10.0, 0.0 };	// light 0 pos
-float pos2[] = { -10.0, 0.0, 0.0 };	// light 1 pos
+float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
+float difM[] = { 0.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 
 // Texture
 BITMAP BMP;				// bitmap structure
@@ -184,44 +185,44 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				tX += tSpeed;
 		}
 		else if (wParam == 'A') {
-			//if (isOrtho) {
-			//	if (ptX < 1.1)
-			//		ptX += ptSpeed;
-			//}
-			//else {
-			//	prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
-			//}
-			faceAngle = 270;
+			if (isOrtho) {
+				if (ptX < 1.1)
+					ptX += ptSpeed;
+			}
+			else {
+				prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
+			}
+			//faceAngle = 270;
 		}
 		else if (wParam == 'D') {
-			//if (isOrtho) {
-			//	if (ptX > -1.1)
-			//		ptX -= ptSpeed;
-			//}
-			//else {
-			//	prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
-			//}
-			faceAngle = 90;
+			if (isOrtho) {
+				if (ptX > -1.1)
+					ptX -= ptSpeed;
+			}
+			else {
+				prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
+			}
+			//faceAngle = 90;
 		}
 		else if (wParam == 'W') {
-			//if (isOrtho) {
-			//	if (ptY > -1.3)
-			//		ptY -= ptSpeed;
-			//}
-			//else {
-			//	perspecZoomLevel -= 1;
-			//}
-			faceAngle = 0;
+			if (isOrtho) {
+				if (ptY > -1.3)
+					ptY -= ptSpeed;
+			}
+			else {
+				perspecZoomLevel -= 1;
+			}
+			//faceAngle = 0;
 		}
 		else if (wParam == 'S') {
-			//if (isOrtho) {
-			//	if (ptY < 1.3)
-			//		ptY += ptSpeed;
-			//}
-			//else {
-			//	perspecZoomLevel += 1;
-			//}
-			faceAngle = 180;
+			if (isOrtho) {
+				if (ptY < 1.3)
+					ptY += ptSpeed;
+			}
+			else {
+				perspecZoomLevel += 1;
+			}
+			//faceAngle = 180;
 		}
 		else if (wParam == 'O') {
 			isOrtho = true;
@@ -381,6 +382,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+// ***************************************** PROJECTION *******************************************//
+
 void projection() {
 	glMatrixMode(GL_PROJECTION);		// refer to Projection Matrix
 	glLoadIdentity();					// reset the projection matrix
@@ -398,6 +401,8 @@ void projection() {
 	}
 }
 
+// ***************************************** LIGHTING *******************************************//
+
 void lighting() {
 	if (isLightOn) {
 		glEnable(GL_LIGHTING);
@@ -406,16 +411,39 @@ void lighting() {
 		glDisable(GL_LIGHTING);
 	}
 
-	// glLight 0 : Ambient
+	// Light 0: Red Color Ambient Light at pos (0,6,0)
 	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-	glLightfv(GL_LIGHT0, GL_POSITION, pos1);
-	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_POSITION, posA);	// set the position of the light
+	glEnable(GL_LIGHT0);			// turn light 0 on
 
-	// glLight 1 : Diffuse
+	// Light 1: Green Color Diffuse Light at pos (6,0,0)
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
-	glLightfv(GL_LIGHT1, GL_POSITION, pos2);
-	glEnable(GL_LIGHT1);
+	glLightfv(GL_LIGHT1, GL_POSITION, posD);	// set the position of the light
+	glEnable(GL_LIGHT1);			// turn light 1 on
+}
 
+// ***************************************** TEXTURES *******************************************//
+
+GLuint loadTexture(LPCSTR filename) {
+	//take from step 1
+	GLuint texture = 0;		//texture name
+
+	// Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	// Step 4: Assign texture to polygon.
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//Take from step 5
+	DeleteObject(hBMP);
+	return texture;
 }
 
 void renderSphere(float r) {
@@ -643,29 +671,8 @@ void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float
 
 }
 
-// ***************************************** TEXTURES *******************************************//
 
-GLuint loadTexture(LPCSTR filename) {
-	//take from step 1
-	GLuint texture = 0;		//texture name
-
-	// Step 3: Initialize texture info
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-	GetObject(hBMP, sizeof(BMP), &BMP);
-
-	// Step 4: Assign texture to polygon.
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
-
-	//Take from step 5
-	DeleteObject(hBMP);
-	return texture;
-}
+// ***************************************** HEAD & BODY *******************************************//
 
 void robotStructure() {
 	glPushMatrix();
@@ -718,7 +725,6 @@ void robotStructure() {
 	renderSphere(0.1);	// bottom sphere middle
 	glPopMatrix();
 }
-// ***************************************** HEAD & BODY *******************************************//
 
 void drawInnerBody() {
 
@@ -726,9 +732,9 @@ void drawInnerBody() {
 	{
 		glColor3f(1.0, 1.0, 1.0);
 		glTranslatef(0.0, -1, -0.5);
-		glScalef(1.0, 1.0, 0.5);
+		glScalef(1.0, 1.0, 0.4);
 		glRotatef(-90, 1.0, 0.0, 0.0);
-		renderCylinder(0.5, 2.0, 4.0);
+		renderCylinder(0.5, 1.8, 4.0);
 	}
 	glPopMatrix();
 }
@@ -1216,7 +1222,7 @@ void drawCore6Packs() {
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(-0.7, 0.28, -0.5);
 			glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(1.3, 0.2, 1.4, 0.3, 1.1);
+			renderTrapezoidWithoutGLU(1.3, 0.2, 1.4, 0.3, 1.0);
 		}
 		glPopMatrix();
 
@@ -1226,7 +1232,7 @@ void drawCore6Packs() {
 			glTranslatef(0.7, 0.28, -0.5);
 			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(1.3, 0.2, 1.4, 0.3, 1.1);
+			renderTrapezoidWithoutGLU(1.3, 0.2, 1.4, 0.3, 1.0);
 		}
 		glPopMatrix();
 
@@ -1236,7 +1242,7 @@ void drawCore6Packs() {
 			glColor3f(0.0, 1.0, 1.0);
 			glTranslatef(-0.6, -0.15, -0.5);
 			glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(1.2, 0.2, 1.3, 0.3, 1.1);
+			renderTrapezoidWithoutGLU(1.2, 0.2, 1.3, 0.3, 1.0);
 		}
 		glPopMatrix();
 
@@ -1246,7 +1252,7 @@ void drawCore6Packs() {
 			glTranslatef(0.6, -0.15, -0.5);
 			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(1.2, 0.2, 1.3, 0.3, 1.1);
+			renderTrapezoidWithoutGLU(1.2, 0.2, 1.3, 0.3, 1.0);
 		}
 		glPopMatrix();
 
@@ -1257,7 +1263,7 @@ void drawCore6Packs() {
 			glTranslatef(-0.5, -0.6, -0.5);
 			//glTranslatef(-1, -0.8, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 1.1);
+			renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 1.0);
 		}
 		glPopMatrix();
 
@@ -1268,7 +1274,7 @@ void drawCore6Packs() {
 			glTranslatef(0.5, -0.6, -0.5);
 			glRotatef(180, 0.0, 1.0, 0.0);
 			glRotatef(-16, 0.0, 0.0, 1.0);
-			renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 1.1);
+			renderTrapezoidWithoutGLU(1.1, 0.4, 1.2, 0.3, 1.0);
 		}
 		glPopMatrix();
 
@@ -1503,9 +1509,8 @@ void drawHead() {
 	glPushMatrix();
 	{
 
-		//GLuint textureArr[2];
-		//textureArr[0] = loadTexture("textures/steel32.bmp");
-		//textureArr[0] = loadTexture("textures/green-camouflage.bmp");
+		GLuint textureArr[2];
+		textureArr[0] = loadTexture("textures/metal2.bmp");
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
@@ -1513,7 +1518,7 @@ void drawHead() {
 		drawEye();
 		drawNoseAndMouth();
 		drawEar();
-		//glDeleteTextures(1, &textureArr[0]);
+		glDeleteTextures(1, &textureArr[0]);
 
 		//glDisable(GL_TEXTURE_2D);
 	}
@@ -1524,32 +1529,36 @@ void drawBody() {
 
 	glPushMatrix();
 	{
-		//GLuint textureArr[2];
-		//textureArr[0] = loadTexture("textures/steel32.bmp");
+		GLuint textureArr[3];
+		textureArr[0] = loadTexture("textures/steel32.bmp");
+
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
 		////glTranslatef(0.0, -5.0, 0.0);
+
+
+		glDeleteTextures(1, &textureArr[0]);
+		textureArr[1] = loadTexture("textures/darksteel32.bmp");
+		// add here la
+		glDeleteTextures(1, &textureArr[1]);
+
+		textureArr[2] = loadTexture("textures/metal2.bmp");
+		drawInnerBody();
+		drawCore6Packs();
 		drawTopBack();
 		drawRibs();
-		drawCore6Packs();
 		drawPelvis();
 		drawShoulder();
 		drawNeck();
 		//drawInnerBodyStructure();
 		drawHeart();
-		drawChest();
-		drawInnerBody();
 		drawSpine();
+		drawChest();
 
 
+		glDeleteTextures(1, &textureArr[2]);
 
-		//glDeleteTextures(1, &textureArr[0]);
-
-		//glDisable(GL_TEXTURE_2D);
-
-
-
-
+		glDisable(GL_TEXTURE_2D);
 
 		// Step5: Remove texture info.
 	}
@@ -2905,6 +2914,8 @@ void drawSea() {
 void summonGgBot() {
 	glPushMatrix();
 	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+
 
 		glTranslatef(tX, tY, moveZ);
 		//glRotatef(bodyAngle, 1, 0, 0);
@@ -2913,18 +2924,19 @@ void summonGgBot() {
 		glPushMatrix();
 		{
 			//glRotatef(180, 0, 1, 0);
-			//glMaterialfv(GL_FRONT, GL_AMBIENT, difM1);	// different material can have different material
 			drawHead();
 			drawBody();
 		}
 		glPopMatrix();
 
-		//glMaterialfv(GL_FRONT, GL_AMBIENT, ambM2);	// different material can have different material
+		GLuint textureArr[3];
+		textureArr[0] = loadTexture("textures/metal2.bmp");
 		drawRightArm();
 		drawLeftArm();
 
 		drawLeftLeg();
 		drawRightLeg();
+		glDeleteTextures(1, &textureArr[0]);
 
 
 	}
