@@ -29,5 +29,17 @@
     <Image Include="textures\metal2.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\orange.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\eyes_texture.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\eyetest.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\wood.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

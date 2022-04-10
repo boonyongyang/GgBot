@@ -42,7 +42,7 @@ float dif[] ={ 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
 float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
 
 float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
-float difM[] = { 1.0, 0.0, 0.0 ,1.0 };		// blue color diffuse material
+float difM[] = { 1.0, 1.0, 1.0 ,1.0 };		// blue color diffuse material
 
 boolean isLightOn = true;
 
@@ -1334,21 +1334,18 @@ void drawEar() {
 void drawHead() {
 	glPushMatrix(); 
 	{
+		glTranslatef(0.0, 4.85, 0.1);
 
 		GLuint textureArr[3];
-		textureArr[0] = loadTexture("textures/steel32.bmp");
-
+		textureArr[0] = loadTexture("textures/eyetest.bmp");
+		drawEye(); 
 		glDeleteTextures(1, &textureArr[0]);
 
-		textureArr[2] = loadTexture("textures/metal2.bmp");
-		//glScalef(4.0, 4.0, 4.0);
-		glTranslatef(0.0, 4.85, 0.1);
-		//glTranslatef(0.0, -0.5, 0.0);
-		drawStructureHead();
-		drawEye(); 
+		textureArr[1] = loadTexture("textures/metal2.bmp");
 		drawNoseAndMouth();
+		drawStructureHead();
 		drawEar();
-		glDeleteTextures(1, &textureArr[2]);
+		glDeleteTextures(1, &textureArr[1]);
 
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -1369,10 +1366,10 @@ void drawBody() {
 
 		glDeleteTextures(1, &textureArr[0]);
 		textureArr[1] = loadTexture("textures/darksteel32.bmp");
+		drawInnerBody();
 		glDeleteTextures(1, &textureArr[1]);
 
 		textureArr[2] = loadTexture("textures/metal2.bmp");
-		drawInnerBody();
 		drawCore6Packs();
 		drawTopBack();
 		drawRibs();
@@ -1552,7 +1549,7 @@ void test3() {	// delete all if u want to test here
 	//drawCoreDetail1();
 	////drawNeck();
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
 	//glMaterialfv(GL_FRONT, GL_SHININESS, difM);
 	//glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
 	//glMaterialfv(GL_FRONT, GL_EMISSION, difM);
@@ -1599,7 +1596,8 @@ void display()
 	case 1:
 		//drawBody();
 		//drawHead();
-		//glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
+		glMaterialfv(GL_FRONT_FACE, GL_DIFFUSE, difM);
 		summonGgBot();
 		break;
 	case 2:
