@@ -251,10 +251,43 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			//}
 			faceAngle = 180;
 		}
-		//else if (wParam == 'O') {
-		//	isOrtho = true;
-		//	tZ = 0.0;
-		//}
+		else if (wParam == 0x35) {
+		if (isOrtho) {
+			if (ptX < 1.1)
+				ptX += ptSpeed;
+		}
+		else {
+			prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
+		}
+
+		}
+		else if (wParam == 0x36) {
+		if (isOrtho) {
+			if (ptX > -1.1)
+				ptX -= ptSpeed;
+		}
+		else {
+			prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
+		}
+		}
+		else if (wParam == 0x37) {
+		if (isOrtho) {
+			if (ptY > -1.3)
+				ptY -= ptSpeed;
+		}
+		else {
+			perspecZoomLevel -= 1;
+		}
+		}
+		else if (wParam == 0x38) {
+		if (isOrtho) {
+			if (ptY < 1.3)
+				ptY += ptSpeed;
+		}
+		else {
+			perspecZoomLevel += 1;
+		}
+		}
 		else if (wParam == 'P') {
 			isOrtho = !isOrtho;	// toggle perspective/ortho view
 			tZ = 0.0;
