@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int scane = 1;
 float stacks = 10;
 
 // transformation for projection matrix
@@ -57,6 +57,7 @@ bool boolHI = false;//example
 bool boolWeapon = false;
 bool boolSword = false;
 
+float raiseArmSpeed = 0.5;
 float handLeftAngle, handRightAngle = 0, wHandSpeed = 0.5;	// for moving animation
 
 // Leg
@@ -88,7 +89,6 @@ float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
 float difM[] = { 1.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 
 // Texture
-bool isTextureOn = true;
 GLuint textureArrInner[3];
 GLuint textureArrOuter[7];
 int outerTextureNo = 0;
@@ -99,7 +99,8 @@ HBITMAP hBMP = NULL;	// bitmap handle
 
 // function declarations
 void walkFront();
-void iceCream();
+void rotateBody();
+void iceCream();	// delete ba no ice cream already
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -136,13 +137,13 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		if (wParam == VK_ESCAPE)
 			PostQuitMessage(0);
 		else if (wParam == 0x31) {	// press key '1'
-			qNo = 1;
+			scane = 1;
 		}
 		else if (wParam == 0x32) {
-			qNo = 2;
+			scane = 2;
 		}
-		else if (wParam == 0x33) { 
-			dif[0] = 0.0, dif[1] = 0.0; 
+		else if (wParam == 0x33) {
+			dif[0] = 0.0, dif[1] = 0.0;
 			amb[0] = 1.0, amb[1] = 1.0;
 			difM[1] = 0.0;
 			materialFv = 1;
@@ -247,20 +248,20 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			//}
 			faceAngle = 180;
 		}
-		else if (wParam == 'O') {
-			isOrtho = true;
-			tZ = 0.0;
-		}
+		//else if (wParam == 'O') {
+		//	isOrtho = true;
+		//	tZ = 0.0;
+		//}
 		else if (wParam == 'P') {
-			isOrtho = false;
+			isOrtho = !isOrtho;	// toggle perspective/ortho view
 			tZ = 0.0;
 		}
 		else if (wParam == 'F') {
-			if (tSpeed > 0) {
-				tSpeed = 0.0;
+			if (rBodySpeed > 0) {
+				rBodySpeed = 0.0;
 			}
 			else {
-				tSpeed = 0.5;
+				rBodySpeed = 0.5;
 			}
 		}
 		else if (wParam == 'U') {
@@ -382,8 +383,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolSword = false;
 			leftArmUpBool = true;
 			rightArmUpBool = true;
-			leftArmRup = 0.01, leftArmRup1 = 0.01,
-				rightArmRup = 0.01, rightArmRup1 = 0.01;
+			leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
+				rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
+			//rightArmRup = 15;
+			//rightArmRup1 = 75;
+			//leftArmRup = 15;
+			//leftArmRup1 = 75;
 		}
 		else if (wParam == VK_F3) {
 			boolWeapon = false;
@@ -391,6 +396,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolSword = true;
 			fingerRup1 = 90;
 			fingerRup = 90;
+			//rightArmRup = 15;		// instant ready
+			//rightArmRup1 = 75;	// instant ready
+			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed; // lift arm animation
 		}
 		else if (wParam == VK_F4) {
 			boolWeapon = false;
@@ -408,19 +416,19 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			isLightOn = !isLightOn;
 		}
 		else if (wParam == 'N') {
-		hAngle += hSpeed;
+			hAngle += hSpeed;
 		}
 		else if (wParam == 'B') {
-		hAngle -= hSpeed;
+			hAngle -= hSpeed;
 		}
 		else if (wParam == 'G') {
-		isAmbientOn = !isAmbientOn;
+			isAmbientOn = !isAmbientOn;
 		}
 		else if (wParam == 'H') {
-		isDiffuseOn = !isDiffuseOn;
+			isDiffuseOn = !isDiffuseOn;
 		}
 		else if (wParam == 'J') {
-		isSpecularOn = !isSpecularOn;
+			isSpecularOn = !isSpecularOn;
 		}
 		else if (wParam == 'K') {
 			if (outerTextureNo <= 3) {
@@ -431,12 +439,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			}
 		}
 		else if (wParam == 'M') {
-		if (innerTextureNo <= 1) {
-			innerTextureNo++;
-		}
-		else {
-			innerTextureNo = 0;
-		}
+			if (innerTextureNo <= 1) {
+				innerTextureNo++;
+			}
+			else {
+				innerTextureNo = 0;
+			}
 		}
 		break;
 	default:
@@ -1145,27 +1153,27 @@ void drawTopBack() {
 
 void drawHeart() {
 
-		glPushMatrix();
-		{
-			glColor3f(1.0, 0.0, 0.0);
-			glTranslatef(0.0, 1.9, -1.5);
-			glScalef(2.3, 0.7, 1.0);
-			//glRotatef(180, 0.0, 0.0, 1.0);
-			renderPrism(0.25, 0.5, 3);
-			//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
-		}
-		glPopMatrix();
+	glPushMatrix();
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(0.0, 1.9, -1.5);
+		glScalef(2.3, 0.7, 1.0);
+		//glRotatef(180, 0.0, 0.0, 1.0);
+		renderPrism(0.25, 0.5, 3);
+		//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+	}
+	glPopMatrix();
 
-		glPushMatrix();
-		{
-			glColor3f(1.0, 0.0, 0.0);
-			glTranslatef(0.0, 1.72, -1.5);
-			glScalef(2.3, 0.7, 1.0);
-			glRotatef(180, 0.0, 0.0, 1.0);
-			renderPrism(0.25, 0.5, 3);
-			//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
-		}
-		glPopMatrix();
+	glPushMatrix();
+	{
+		glColor3f(1.0, 0.0, 0.0);
+		glTranslatef(0.0, 1.72, -1.5);
+		glScalef(2.3, 0.7, 1.0);
+		glRotatef(180, 0.0, 0.0, 1.0);
+		renderPrism(0.25, 0.5, 3);
+		//renderTrapezoidWithoutGLU(0.5, 0.08, 0.42, 0.3, 0.4);
+	}
+	glPopMatrix();
 
 }
 
@@ -1790,12 +1798,14 @@ void drawLeftArm() {
 
 		//white
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glTranslatef(-1.85, 1.8, 0);
 		renderCubeWithoutGLU(0.8, 0.4, 0.80);
 		glPopMatrix();
 
 		//below white
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(-1.85, 1.2, -0.6);
 		renderCubeWithoutGLU(0.8, 0.2, 0.2);
 		glPopMatrix();
@@ -1806,6 +1816,7 @@ void drawLeftArm() {
 
 		//black
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(-2.55, 1.8, 0);
 		renderCubeWithoutGLU(0.3, 0.2, 1);
 		glPopMatrix();
@@ -1817,6 +1828,7 @@ void drawLeftArm() {
 
 		//Connection
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glTranslatef(-2.15, 1.4, 0);
 		glRotatef(90, 0, 1, 0);
 		renderCylinder(0.2, 0.2, 1.5);
@@ -1830,6 +1842,7 @@ void drawLeftArm() {
 			glTranslatef(1.85, -1.4, 0);
 			//white inner hand
 			glPushMatrix();
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glTranslatef(-1.85, 1.4, 0);
 			glRotatef(90, 1, 0, 0);
 			renderTrapezoid(0.4, 0.2, 1.6);
@@ -1839,6 +1852,7 @@ void drawLeftArm() {
 			glPushMatrix();
 			{
 				glTranslatef(-1.85, 0.0, 0);
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glRotatef(leftArmRup1, 1, 0, 0);
 				glRotatef(armRsword, -1, 0, 1);	// a
 				glTranslatef(1.85, 0.0, 0);
@@ -1850,12 +1864,14 @@ void drawLeftArm() {
 				glPopMatrix();
 
 				glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(-1.85, -1.2, 0);
 				glRotatef(90, 1, 0, 0);
 				renderTrapezoid(0.6, 0.8, 0.2);
 				glPopMatrix();
 
 				glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(-1.85, -1.4, 0);
 				glRotatef(90, 1, 0, 0);
 				renderTrapezoid(0.8, 0.6, 0.6);
@@ -1865,6 +1881,7 @@ void drawLeftArm() {
 
 				//yellow part
 				glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(-2, -0.6, 0);
 				glRotatef(90, -1, -0.5, 0);
 				renderTrapezoid(0.3, 0.02, 0.8);
@@ -1889,6 +1906,7 @@ void drawLeftArm() {
 					if (boolWeapon == false) {
 						//palm
 						glPushMatrix();
+						glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 						glTranslatef(-2.25, -2.2, 0);
 						glRotatef(90, 0, 1, 0);
 						renderTrapezoid(0.2, 0.6, 0.2);
@@ -2007,6 +2025,7 @@ void drawLeftArm() {
 							//sword
 							//holder
 							glPushMatrix();
+							glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 							glTranslatef(-1.75, -2.2, -0.8);
 							renderCylinder(0.2, 0.2, 1.6);
 							glPopMatrix();
@@ -2036,6 +2055,7 @@ void drawLeftArm() {
 
 							//sword blade
 							glPushMatrix();
+							glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 							glTranslatef(-1.75, -2.1, -5.6);
 							renderPrism(0.2, 4.2, 3);
 							glPopMatrix();
@@ -2145,38 +2165,45 @@ void drawRightArm() {
 	}
 	//right hand
 	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 	glTranslatef(0.5, 2, 0);	// move to centre on window
 	glRotatef(handRightAngle, 1, 0, 0);
 	{
 		//white
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glTranslatef(1.85, 1.8, 0);
 		renderCubeWithoutGLU(0.8, 0.4, 0.80);
 		glPopMatrix();
 
 		//below white
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(1.85, 1.2, -0.6);
 		renderCubeWithoutGLU(0.8, 0.2, 0.2);
 		glPopMatrix();
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(1.85, 1.2, 0.6);
 		renderCubeWithoutGLU(0.8, 0.2, 0.2);
 		glPopMatrix();
 
 		//black
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(2.55, 1.8, 0);
 		renderCubeWithoutGLU(0.3, 0.2, 1);
 		glPopMatrix();
 
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 		glTranslatef(1.65, 1.8, 0);
 		renderCubeWithoutGLU(0.6, 0.2, 1);
 		glPopMatrix();
 
 		//Connection
 		glPushMatrix();
+		glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 		glTranslatef(0.65, 1.4, 0);
 		glRotatef(90, 0, 1, 0);
 		renderCylinder(0.2, 0.2, 1.5);
@@ -2189,6 +2216,7 @@ void drawRightArm() {
 			glTranslatef(-1.85, -1.4, 0);
 			//white inner hand
 			glPushMatrix();
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 			glTranslatef(1.85, 1.4, 0);
 			glRotatef(90, 1, 0, 0);
 			renderTrapezoid(0.4, 0.2, 1.6);
@@ -2202,18 +2230,22 @@ void drawRightArm() {
 				glTranslatef(1.85, 0.0, 0);
 				//black inner hand
 				glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(1.85, 0.0, 0);
 				glRotatef(90, 1, 0, 0);
 				renderTrapezoid(0.4, 0.6, 1.6);
 				glPopMatrix();
 
 				glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(1.85, -1.2, 0);
 				glRotatef(90, 1, 0, 0);
 				renderTrapezoid(0.6, 0.8, 0.2);
 				glPopMatrix();
 
 				glPushMatrix();
+
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(1.85, -1.4, 0);
 				glRotatef(90, 1, 0, 0);
 				renderTrapezoid(0.8, 0.6, 0.6);
@@ -2222,6 +2254,7 @@ void drawRightArm() {
 
 				//yellow part
 				glPushMatrix();
+				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				glTranslatef(2, -0.6, 0);
 				glRotatef(90, -1, 0.5, 0);
 				renderTrapezoid(0.3, 0.02, 0.8);
@@ -2229,11 +2262,13 @@ void drawRightArm() {
 
 				glPushMatrix();
 				{
+
 					if (boolSword == false && boolWeapon == false) {
 						//palm
 						glPushMatrix();//palm push
 						{
-							glTranslatef(2.25, -2.2, 0);
+							glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+							glTranslatef(2.05, -2.2, 0);
 							glRotatef(90, 0, 1, 0);
 							renderTrapezoid(0.6, 0.2, 0.2);
 							glPopMatrix();
@@ -2956,7 +2991,7 @@ void drawLeftLeg() {
 				drawLegInner(10);
 				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
 				drawLegUpperArmor(-1);
-	
+
 			}
 			glPopMatrix();
 		}
@@ -3035,13 +3070,13 @@ void drawRightLeg() {
 		{
 			glTranslatef(0.65, -2, 0);	// move to right leg position
 
-				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+			glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
 
-				drawLegInner(10);
+			drawLegInner(10);
 
 
-				glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
-				drawLegUpperArmor(1);
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[outerTextureNo]);
+			drawLegUpperArmor(1);
 
 		}
 		glPopMatrix();
@@ -3058,8 +3093,8 @@ void drawRightLeg() {
 			{
 				glTranslatef(0.91, -3.8, -0.3);	// knee with 3 joints
 
-					glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
-					drawLegKnee();
+				glBindTexture(GL_TEXTURE_2D, textureArrInner[innerTextureNo]);
+				drawLegKnee();
 
 			}
 			glPopMatrix();
@@ -3133,9 +3168,9 @@ void drawOcean() {
 void summonGgBot() {
 	glPushMatrix();
 	{
-			glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
-			glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
 
 		glTranslatef(tX, tY, tZ);
 		//glRotatef(bodyAngle, 1, 0, 0);
@@ -3155,7 +3190,7 @@ void summonGgBot() {
 		drawLeftLeg();
 		drawRightLeg();
 
-		
+
 
 	}
 	glPopMatrix();
@@ -3318,7 +3353,7 @@ void display()
 	textureArrInner[1] = loadTexture("textures/bronzepattern.bmp");
 	textureArrInner[2] = loadTexture("textures/armorseamless.bmp");
 
-	switch (qNo) {
+	switch (scane) {
 	case 1:
 		scene1();	// main robot structure here for ref
 		break;
