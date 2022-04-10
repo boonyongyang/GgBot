@@ -146,6 +146,8 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="textures\armorMetal.bmp" />
+    <Image Include="textures\armorPattern.bmp" />
     <Image Include="textures\armorseamless.bmp" />
     <Image Include="textures\army.bmp" />
     <Image Include="textures\bronzepattern.bmp" />

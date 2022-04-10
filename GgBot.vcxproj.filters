@@ -74,5 +74,11 @@
     <Image Include="textures\bronzepattern.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\armorMetal.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\armorPattern.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
