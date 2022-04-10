@@ -199,7 +199,7 @@ void renderDisk(float inR, float outR, float slices, float loops) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
 	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL		// GLU_LINE, GLU_SILHOUETTE, GLU_POINT
-	gluQuadricTexture(obj, true);
+	//gluQuadricTexture(obj, true);
 	gluDisk(obj, inR, outR, slices, loops);
 	gluDeleteQuadric(obj);
 }
@@ -216,7 +216,7 @@ void renderPolygon(float baseR, float topR, float h, float slices) {
 	GLUquadricObj* obj = NULL;
 	obj = gluNewQuadric();
 	gluQuadricDrawStyle(obj, GLU_FILL);	// will change to GLU_FILL
-	gluQuadricTexture(obj, true);
+	//gluQuadricTexture(obj, true);
 	gluCylinder(obj, baseR, topR, h, slices, 50);
 	gluDeleteQuadric(obj);
 }
@@ -1299,10 +1299,10 @@ void drawHead() {
 	{
 
 		GLuint textureArr[2];
+		textureArr[0] = loadTexture("textures/steel32.bmp");
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
-		textureArr[0] = loadTexture("textures/steel32.bmp");
 		drawStructureHead();
 		drawEye(); 
 		drawNoseAndMouth();
@@ -1319,11 +1319,11 @@ void drawBody() {
 	glPushMatrix();
 	{
 		GLuint textureArr[2];
+		textureArr[0] = loadTexture("textures/steel32.bmp");
 
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 1.0, 0.5);
 		////glTranslatef(0.0, -5.0, 0.0);
-		textureArr[0] = loadTexture("textures/steel32.bmp");
 		drawTopBack();
 		drawRibs();
 		drawCore6Packs();
@@ -1362,8 +1362,14 @@ void drawRightLeg() {}
 void summonGgBot() {
 	glPushMatrix();
 	{
-		drawHead();
-		drawBody();
+		glPushMatrix();
+		{
+			glRotatef(180, 0.0, 1.0, 0.0);
+			drawHead();
+			drawBody();
+		}
+		glPopMatrix();
+
 
 		drawLeftArm();
 		drawRightArm();
@@ -1439,7 +1445,7 @@ void test1() {
 		//glRotatef(tX, 0, 1, 0);	// test rotation, look cool mah
 		//tX += tSpeed;			// press f to stop rotate, press s again to start rotate
 
-		robotStructure();
+		//robotStructure();
 
 		glColor3f(1.0, 1.0, 0.0);
 		summonGgBot();
@@ -1497,7 +1503,8 @@ void test2() {	// delete all if u want to test here
 void test3() {	// delete all if u want to test here 
 	//drawScale();
 	//drawCoreDetail1();
-	drawNeck();
+	////drawNeck();
+	renderTrapezoidWithoutGLU(3, 1.1, 1.9, 5, 1);
 }
 
 void display()
