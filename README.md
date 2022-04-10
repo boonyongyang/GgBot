@@ -19,7 +19,6 @@ O - orthographic view
 S - toggle to rotate robot structure
 
 
-UP Arrow - nothing yet (can change)
-DOWN Arrow - nothing yet (can change)
-LEFT Arrow - nothing yet (can change)
-RIGHT Arrow - nothing yet (can change)
+UP/DOWN 	- nothing yet (can change)
+LEFT/RIGHT 	- nothing yet (can change)
+

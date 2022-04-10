@@ -803,6 +803,10 @@ void robotStructure() {
 	glPopMatrix();
 }
 
+void rotateBody() {
+
+}
+
 void drawInnerBody() {
 
 	glPushMatrix();
