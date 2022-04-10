@@ -375,8 +375,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			rightArmUpBool = true;
 			leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
 				rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
-			//rightArmRup = 15;
-			//rightArmRup1 = 75;
+			//rightArmRup = 15;		// instant ready
+			//rightArmRup1 = 75;	// instant ready
 			//leftArmRup = 15;
 			//leftArmRup1 = 75;
 		}
@@ -389,6 +389,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			//rightArmRup = 15;		// instant ready
 			//rightArmRup1 = 75;	// instant ready
 			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed; // lift arm animation
+			leftArmUpBool = false;
+			rightArmUpBool = false;
 		}
 		else if (wParam == VK_F4) {
 			boolWeapon = false;
@@ -1650,7 +1652,6 @@ void drawLeftArm() {
 	if (leftArmUpBool) {
 		if (leftArmRup1 <= 50) {
 			leftArmRup1 += armRSpeed;
-
 		}
 		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
 			if (boolWeapon == false || boolSword == true) {
@@ -1713,55 +1714,54 @@ void drawLeftArm() {
 	}
 
 	//'V' atk action
-	if (armLeftBool) {
-		if (leftArmRup1 <= 50) {
-			leftArmRup1 += armRSpeed;
-		}
-		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (leftArmRup <= 15) {
-				leftArmRup += armRSpeed / 2;
-				if (leftArmRup1 <= 110)
-					leftArmRup1 += armRSpeed / 2;
+	if (boolSword) {
+		if (armLeftBool) {
+			if (leftArmRup1 <= 50) {
+				leftArmRup1 += armRSpeed;
 			}
-			else {
-				if (leftArmRup1 <= 110)
-					leftArmRup1 += armRSpeed / 2;
-			}
-		}
-		else if (armRsword <= 60) {
-			armRsword += armRSpeed * 2;
-			leftArmRup1 -= armRSpeed * 2;
-		}
-		else {
-			armLeftBool = false;
-			armRightBool = true;
-		}
-
-	}
-	else if (armRightBool) {
-		if (armRsword >= 0) {
-			armRsword -= armRSpeed;
-
-		}
-		else {
-			if (leftArmRup1 >= 50) {
-				leftArmRup1 -= armRSpeed;
-
-			}
-			else if (leftArmRup1 >= 0) {
-				if (leftArmRup >= 0) {
-					leftArmRup -= armRSpeed / 2;
-					leftArmRup1 -= armRSpeed / 2;
+			else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
+				if (leftArmRup <= 15) {
+					leftArmRup += armRSpeed / 2;
+					if (leftArmRup1 <= 110)
+						leftArmRup1 += armRSpeed / 2;
 				}
 				else {
-					leftArmRup1 -= armRSpeed;
+					if (leftArmRup1 <= 110)
+						leftArmRup1 += armRSpeed / 2;
 				}
 			}
-			if (leftArmRup1 <= 0) {
-				armRightBool = false;
+			else if (armRsword <= 60) {
+				armRsword += armRSpeed * 2;
+				leftArmRup1 -= armRSpeed * 2;
+			}
+			else {
+				armLeftBool = false;
+				armRightBool = true;
 			}
 		}
+		else if (armRightBool) {
+			if (armRsword >= 0) {
+				armRsword -= armRSpeed;
+			}
+			else {
+				if (leftArmRup1 >= 50) {
+					leftArmRup1 -= armRSpeed;
 
+				}
+				else if (leftArmRup1 >= 0) {
+					if (leftArmRup >= 0) {
+						leftArmRup -= armRSpeed / 2;
+						leftArmRup1 -= armRSpeed / 2;
+					}
+					else {
+						leftArmRup1 -= armRSpeed;
+					}
+				}
+				if (leftArmRup1 <= 0) {
+					armRightBool = false;
+				}
+			}
+		}
 	}
 
 	if (shootBullet) {
@@ -3020,6 +3020,9 @@ void drawOcean() {
 	glPopMatrix();
 }
 
+void drawSky() {
+
+}
 
 // ******************************************** DISPLAY **********************************************//
 
