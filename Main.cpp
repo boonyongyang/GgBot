@@ -83,7 +83,7 @@ BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
 
 // function declarations
-void walk();
+void walkFront();
 void iceCream();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -156,6 +156,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			leftLegAtFront = false, moveLeftLeg = false;
 			rightLegAtFront = false, moveRightLeg = false;
 			moveX = 0, moveY = 0, moveZ = 0;
+
 			//walkSpeed = 0.5;
 		}
 		else if (wParam == VK_UP) {
@@ -165,7 +166,6 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			}
 			else {
 				perspecZoomLevel += 1;	// temporary solution, need to change to tZ and make robot won't dissapear 
-
 			}
 		}
 		else if (wParam == VK_DOWN) {
@@ -186,44 +186,44 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				tX += tSpeed;
 		}
 		else if (wParam == 'A') {
-			if (isOrtho) {
-				if (ptX < 1.1)
-					ptX += ptSpeed;
-			}
-			else {
-				prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
-			}
-			//faceAngle = 270;
+			//if (isOrtho) {
+			//	if (ptX < 1.1)
+			//		ptX += ptSpeed;
+			//}
+			//else {
+			//	prY -= ptSpeed * 15;	// perspective rotate y-axis, object look flat
+			//}
+			faceAngle = 270;
 		}
 		else if (wParam == 'D') {
-			if (isOrtho) {
-				if (ptX > -1.1)
-					ptX -= ptSpeed;
-			}
-			else {
-				prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
-			}
-			//faceAngle = 90;
+			//if (isOrtho) {
+			//	if (ptX > -1.1)
+			//		ptX -= ptSpeed;
+			//}
+			//else {
+			//	prY += ptSpeed * 15;	// perspective rotate y-axis, object look flat
+			//}
+			faceAngle = 90;
 		}
 		else if (wParam == 'W') {
-			if (isOrtho) {
-				if (ptY > -1.3)
-					ptY -= ptSpeed;
-			}
-			else {
-				perspecZoomLevel -= 1;
-			}
-			//faceAngle = 0;
+			//if (isOrtho) {
+			//	if (ptY > -1.3)
+			//		ptY -= ptSpeed;
+			//}
+			//else {
+			//	perspecZoomLevel -= 1;
+			//}
+			faceAngle = 0;
 		}
 		else if (wParam == 'S') {
-			if (isOrtho) {
-				if (ptY < 1.3)
-					ptY += ptSpeed;
-			}
-			else {
-				perspecZoomLevel += 1;
-			}
-			//faceAngle = 180;
+			//if (isOrtho) {
+			//	if (ptY < 1.3)
+			//		ptY += ptSpeed;
+			//}
+			//else {
+			//	perspecZoomLevel += 1;
+			//}
+			faceAngle = 180;
 		}
 		else if (wParam == 'O') {
 			isOrtho = true;
@@ -367,6 +367,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolWeapon = false;
 			fingerUpBool = true;
 			boolSword = true;
+			fingerRup1 = 90;
+			fingerRup = 90;
 		}
 		else if (wParam == VK_F4) {
 			boolWeapon = false;
@@ -375,10 +377,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			fingerUpBool = true;
 		}
 		else if (wParam == 'Q') {
-			walk();
+			walkFront();
 		}
 		else if (wParam == 'E') {
-			walk();	// not sure what to do yet, maybe reverse walking
+			//walkBackwards();	// not sure what to do yet, maybe reverse walking
 		}
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
@@ -565,7 +567,6 @@ void renderTrapezoid(float baseL, float topL, float h) {
 	glPopMatrix();
 }
 
-
 void renderSphereWithoutGLU(float radius)
 {
 	const float PI = 3.141592f;
@@ -678,7 +679,6 @@ void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float
 	glPopMatrix();
 
 }
-
 
 // ***************************************** HEAD & BODY *******************************************//
 
@@ -1577,7 +1577,6 @@ void drawBody() {
 
 // ******************************************** ARM **********************************************//
 
-
 void drawLeftArm() {
 	if (leftArmUpBool) {
 		if (leftArmRup1 <= 50) {
@@ -2032,7 +2031,7 @@ void drawRightArm() {
 			rightArmRup1 += armRSpeed;
 		}
 		else if (rightArmRup <= 15 || rightArmRup1 <= 110) {
-			if (boolWeapon == false) {
+			if (boolWeapon == false && boolSword == false) {
 				if (rightArmRup <= 15) {
 					rightArmRup += armRSpeed / 2;
 					rightArmRup1 += armRSpeed / 2;
@@ -2299,7 +2298,7 @@ void drawRightArm() {
 
 // ******************************************** LEG **********************************************//
 
-void walk() {
+void walkFront() {
 
 	// move left leg & (left arm back, right arm front)
 	if (moveLeftLeg) {
@@ -2367,6 +2366,85 @@ void walk() {
 				leftRightUpperAngle -= 1;
 				legRightLowerAngle += 1.5;
 				moveZ -= 0.01;
+			}
+			else {
+				rightLegAtFront = false;
+				moveRightLeg = false;
+				moveLeftLeg = true;
+			}
+		}
+	}
+
+}
+
+void walkBackwards() {
+
+	// move left leg & (left arm back, right arm front)
+	if (moveLeftLeg) {
+
+		if (!leftLegAtFront) {
+
+			if (handRightAngle <= 40 && handRightAngle >= -40) {	// right hand moving up
+				handRightAngle -= wHandSpeed;
+				handLeftAngle += wHandSpeed;
+			}
+
+			if (legLeftUpperAngle <= 40 && legLeftUpperAngle >= -40) {
+				legLeftUpperAngle -= 1;
+				legLeftLowerAngle += 1.5;
+			}
+			else {
+				leftLegAtFront = true;
+			}
+		}
+		else {
+
+			if (!handRightAngle == 0) {		// right hand moving down
+				handRightAngle += wHandSpeed;
+				handLeftAngle -= wHandSpeed;
+			}
+
+			if (!legLeftUpperAngle == 0) {
+				legLeftUpperAngle += 1;
+				legLeftLowerAngle -= 1.5;
+				moveZ += 0.01;
+			}
+			else {
+				leftLegAtFront = false;
+				moveLeftLeg = false;
+				moveRightLeg = true;
+			}
+		}
+	}
+	// move right leg & (right arm back, left arm front)
+	else {
+
+		if (!rightLegAtFront) {
+
+			if (handLeftAngle <= 40 && handLeftAngle >= -40) {	// left hand moving up
+				handLeftAngle -= wHandSpeed;
+				handRightAngle += wHandSpeed;
+			}
+
+			if (leftRightUpperAngle <= 40 && leftRightUpperAngle >= -40) {
+				leftRightUpperAngle -= 1;
+				legRightLowerAngle += 1.5;
+			}
+			else {
+				rightLegAtFront = true;
+			}
+		}
+		else {
+
+			if (!handLeftAngle == 0) {		// left hand moving down
+				handLeftAngle += wHandSpeed;
+				handRightAngle -= wHandSpeed;
+			}
+
+			if (!leftRightUpperAngle == 0) {
+				leftRightUpperAngle += 1;
+				legRightLowerAngle -= 1.5;
+				moveZ += 0.01;
 			}
 			else {
 				rightLegAtFront = false;
@@ -2935,7 +3013,7 @@ void drawRightLeg() {
 
 // ******************************************** ENVIRONMENT **********************************************//
 
-void drawSea() {
+void drawOcean() {
 	glPushMatrix();
 
 	glRotatef(90, 1, 0, 0);
@@ -2943,7 +3021,7 @@ void drawSea() {
 
 	GLuint textureArr[3];
 	glDeleteTextures(1, &textureArr[0]);
-	textureArr[1] = loadTexture("textures/darksteel32.bmp");
+	textureArr[1] = loadTexture("textures/ocean.bmp");
 	// add here la
 
 	renderDisk(0, 20, 50, 50);
@@ -2961,28 +3039,25 @@ void summonGgBot() {
 	{
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
 
-
 		glTranslatef(tX, tY, moveZ);
 		//glRotatef(bodyAngle, 1, 0, 0);
 		//moveX++;
 
-		glPushMatrix();
-		{
-			//glRotatef(180, 0, 1, 0);
+		GLuint textureArr[3];
 
-			drawHead();
-			drawBody();
+		drawHead();
+		drawBody();
 
-			GLuint textureArr[3];
-			textureArr[0] = loadTexture("textures/metal2.bmp");
-			drawRightArm();
-			drawLeftArm();
+		//GLuint textureArr[3];
+		textureArr[0] = loadTexture("textures/metal2.bmp");
 
-			drawLeftLeg();
-			drawRightLeg();
-			glDeleteTextures(1, &textureArr[0]);
-		}
-		glPopMatrix();
+		drawRightArm();
+		drawLeftArm();
+
+		drawLeftLeg();
+		drawRightLeg();
+
+		glDeleteTextures(1, &textureArr[0]);
 
 	}
 	glPopMatrix();
@@ -3013,7 +3088,7 @@ void scene2() {
 
 	glPushMatrix();
 
-	drawSea();
+	drawOcean();
 	glPushMatrix();
 	{
 		glTranslatef(0, 3, -0.5);
@@ -3051,13 +3126,13 @@ void scene3() {
 	glColor3f(1.0, 0.0, 1.0);
 
 	glPushMatrix();
-	//robotStructure();
+	robotStructure();
 
-	drawRightArm();
-	drawLeftArm();
+	//drawRightArm();
+	//drawLeftArm();
 
-	drawLeftLeg();
-	drawRightLeg();
+	//drawLeftLeg();
+	//drawRightLeg();
 
 	glPopMatrix();
 }
@@ -3115,7 +3190,7 @@ void display()
 {
 	// project initialization
 	{
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
