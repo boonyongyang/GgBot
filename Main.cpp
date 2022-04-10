@@ -6,9 +6,6 @@
 
 #define WINDOW_TITLE "GgBot"
 
-//GLUquadricObj* obj = NULL;
-//GLUquadricObj* obj = gluNewQuadric();
-
 int qNo = 1;
 float stacks = 10;
 
@@ -33,7 +30,7 @@ float perspecZoomLevel = -2.0f;
 
 // other (Seperate to your own sections too)
 
-//Hand
+// Hand
 float handLeftAngle, handRightAngle = 0, wHandSpeed = 0.5;	// for moving animation
 bool leftArmUpBool = false, leftArmDownBool = false;
 bool rightArmUpBool = false, rightArmDownBool = false;
@@ -51,22 +48,41 @@ float bullet = 0.0;
 bool boolHI = false;//example
 bool boolWeapon = false;
 
-//Leg
+// Leg
 int r = 1;
 float legLeftUpperAngle, legLeftLowerAngle = 0;
 float leftRightUpperAngle, legRightLowerAngle = 0;
 float wLegSpeed = 1;
-bool leftAtFront = false, moveLeftLeg = true;
-bool rightAtFront = false, moveRightLeg = false;
+bool leftLegAtFront = false, moveLeftLeg = true;
+bool rightLegAtFront = false, moveRightLeg = false;
 
 float moveX = 0, moveY = 0, moveZ = 0;
 bool bodyAngle = 0;	// need?
 
 void walk();
 
-//texture
-//BITMAP BMP;				// bitmap structure
-//HBITMAP hBMP = NULL;	// bitmap handle
+// Environment
+float rCream = 0;
+
+
+// Lighting
+bool isLightOn = true;
+float amb[] = { 1.0, 1.0, 1.0 };	// ambient light
+float dif[] = { 1.0, 1.0, 1.0 };	// diffuse light
+float ambM1[] = { 1.0, 0.0, 0.0 };	// ambient material 1
+float ambM2[] = { 0.0, 1.0, 0.0 };	// ambient material 2
+float difM1[] = { 0.0, 0.0, 1.0 };	// diffuse material 1
+float difM2[] = { 0.0, 0.0, 1.0 };	// diffuse material 2
+
+float pos1[] = { 0.0, 10.0, 0.0 };	// light 0 pos
+float pos2[] = { -10.0, 0.0, 0.0 };	// light 1 pos
+
+// Texture
+BITMAP BMP;				// bitmap structure
+HBITMAP hBMP = NULL;	// bitmap handle
+
+// function declarations
+void iceCream();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -135,8 +151,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			// leg angles
 			legLeftUpperAngle = 0, legLeftLowerAngle = 0;
 			leftRightUpperAngle = 0, legRightLowerAngle = 0;
-			leftAtFront = false, moveLeftLeg = false;
-			rightAtFront = false, moveRightLeg = false;
+			leftLegAtFront = false, moveLeftLeg = false;
+			rightLegAtFront = false, moveRightLeg = false;
 			moveX = 0, moveY = 0, moveZ = 0;
 			//walkSpeed = 0.5;
 		}
@@ -355,6 +371,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'Q') {
 			walk();	// not sure what to do yet, maybe reverse walking
 		}
+		else if (wParam == 'L') {
+			isLightOn = !isLightOn;
+		}
 		break;
 	default:
 		break;
@@ -377,7 +396,25 @@ void projection() {
 		glFrustum(-10, 10, -10, 10, perspecNear, perspecFar);
 		glEnable(GL_DEPTH_TEST);
 	}
+}
 
+void lighting() {
+	if (isLightOn) {
+		glEnable(GL_LIGHTING);
+	}
+	else {
+		glDisable(GL_LIGHTING);
+	}
+
+	// glLight 0 : Ambient
+	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT0, GL_POSITION, pos1);
+	glEnable(GL_LIGHT0);
+
+	// glLight 1 : Diffuse
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT1, GL_POSITION, pos2);
+	glEnable(GL_LIGHT1);
 
 }
 
@@ -523,7 +560,7 @@ void renderCubeWithoutGLU(float x, float y, float z) {
 
 	glPushMatrix();
 	{
-		glColor3f(1.0, 1.0, 1.0);
+		//glColor3f(1.0, 1.0, 1.0);
 
 		glBegin(GL_QUADS);
 
@@ -565,7 +602,7 @@ void renderCubeWithoutGLU(float x, float y, float z) {
 void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float z) {
 	glPushMatrix();
 	glTranslatef(-top / 2, -y / 2, -z / 2);
-	glColor3f(1.0, 1.0, 1.0);
+	//glColor3f(1.0, 1.0, 1.0);
 
 
 	glBegin(GL_QUADS);
@@ -608,31 +645,31 @@ void renderTrapezoidWithoutGLU(float top, float bot1, float bot2, float y, float
 
 // ***************************************** TEXTURES *******************************************//
 
-//GLuint loadTexture(LPCSTR filename) {
-//	//take from step 1
-//	GLuint texture = 0;		//texture name
-//
-//	// Step 3: Initialize texture info
-//	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-//	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-//	GetObject(hBMP, sizeof(BMP), &BMP);
-//
-//	// Step 4: Assign texture to polygon.
-//	glEnable(GL_TEXTURE_2D);
-//	glGenTextures(1, &texture);
-//	glBindTexture(GL_TEXTURE_2D, texture);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
-//
-//	//Take from step 5
-//	DeleteObject(hBMP);
-//	return texture;
-//}
+GLuint loadTexture(LPCSTR filename) {
+	//take from step 1
+	GLuint texture = 0;		//texture name
+
+	// Step 3: Initialize texture info
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	HBITMAP hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), filename, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+
+	// Step 4: Assign texture to polygon.
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//Take from step 5
+	DeleteObject(hBMP);
+	return texture;
+}
 
 void robotStructure() {
 	glPushMatrix();
-	glTranslatef(0, 2, 0);	// move to centre on window
+	glTranslatef(0, 2.5, 0);	// move to centre on window
 	{
 		//glScalef(0.10, 0.10, 0.10);
 
@@ -670,18 +707,6 @@ void robotStructure() {
 		glTranslatef(0.65, -5.5, 0);
 		renderCubeWithoutGLU(0.5, 3.5, 0.75);
 		glPopMatrix();
-
-		//// left hand connection point
-		//glPushMatrix();
-		//glTranslatef(-1.2, 1.5, 0);
-		//renderSphere(0.25);
-		//glPopMatrix();
-
-		//// right hand connection point
-		//glPushMatrix();
-		//glTranslatef(1.2, 1.5, 0);
-		//renderSphere(0.25);
-		//glPopMatrix();
 	}
 	glPopMatrix();
 
@@ -692,15 +717,6 @@ void robotStructure() {
 	glTranslatef(0, -7, 0);
 	renderSphere(0.1);	// bottom sphere middle
 	glPopMatrix();
-	//glPushMatrix();
-	//glTranslatef(-1.1, 0, 0);
-	//renderSphere(0.1);	// left sphere 
-	//glPopMatrix();
-	//glPushMatrix();
-	//glTranslatef(1.1, 0, 0);
-	//renderSphere(0.1);	// right sphere 
-	//glPopMatrix();
-
 }
 // ***************************************** HEAD & BODY *******************************************//
 
@@ -1489,6 +1505,7 @@ void drawHead() {
 
 		//GLuint textureArr[2];
 		//textureArr[0] = loadTexture("textures/steel32.bmp");
+		//textureArr[0] = loadTexture("textures/green-camouflage.bmp");
 		//glScalef(4.0, 4.0, 4.0);
 		glTranslatef(0.0, 4.85, 0.1);
 		//glTranslatef(0.0, -0.5, 0.0);
@@ -1540,9 +1557,6 @@ void drawBody() {
 
 
 }
-
-
-
 
 // ******************************************** ARM **********************************************//
 
@@ -1681,7 +1695,7 @@ void drawLeftArm() {
 
 	//left hand
 	glPushMatrix();
-	glTranslatef(0, 2, 0);	// move to centre on window
+	glTranslatef(-0.5, 2, 0);	// move to centre on window
 	glRotatef(handLeftAngle, 1, 0, 0);
 	{
 
@@ -1995,7 +2009,7 @@ void drawRightArm() {
 	}
 	//right hand
 	glPushMatrix();
-	glTranslatef(0, 2, 0);	// move to centre on window
+	glTranslatef(0.5, 2, 0);	// move to centre on window
 	glRotatef(handRightAngle, 1, 0, 0);
 	{
 		//white
@@ -2230,7 +2244,7 @@ void walk() {
 	// move left leg & (left arm back, right arm front)
 	if (moveLeftLeg) {
 
-		if (!leftAtFront) {
+		if (!leftLegAtFront) {
 
 			//if (startWalk) {
 			//	if (handRightAngle <= 40 && handRightAngle >= -40) {	// right hand moving up
@@ -2249,10 +2263,14 @@ void walk() {
 				legLeftLowerAngle -= 1.5;
 			}
 			else {
-				leftAtFront = true;
+				leftLegAtFront = true;
 			}
 		}
 		else {
+
+			//if (legLeftLowerAngle != 40) {
+			//	legLeftLowerAngle += 1.5;
+			//}
 
 			if (!handRightAngle == 0) {		// right hand moving down
 				handRightAngle -= wHandSpeed;
@@ -2266,7 +2284,7 @@ void walk() {
 			}
 			else {
 				//startWalk = false;
-				leftAtFront = false;
+				leftLegAtFront = false;
 				moveLeftLeg = false;
 				moveRightLeg = true;
 			}
@@ -2275,7 +2293,7 @@ void walk() {
 	// move right leg & (right arm back, left arm front)
 	else {
 
-		if (!rightAtFront) {
+		if (!rightLegAtFront) {
 
 			if (handLeftAngle <= 40 && handLeftAngle >= -40) {	// left hand moving up
 				handLeftAngle += wHandSpeed;
@@ -2287,7 +2305,7 @@ void walk() {
 				legRightLowerAngle -= 1.5;
 			}
 			else {
-				rightAtFront = true;
+				rightLegAtFront = true;
 			}
 		}
 		else {
@@ -2303,7 +2321,7 @@ void walk() {
 				moveZ -= 0.01;
 			}
 			else {
-				rightAtFront = false;
+				rightLegAtFront = false;
 				moveRightLeg = false;
 				moveLeftLeg = true;
 			}
@@ -2416,6 +2434,148 @@ void drawLegInner(float h) {
 				glPopMatrix();
 			}
 			glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void drawLegUpperArmor(float d) {
+
+	glPushMatrix();
+	{
+		glScalef(0.3, 0.3, 0.3);
+
+		// upper armor plates
+		glPushMatrix();
+		{
+			glTranslatef(0, 0, -2);
+			glRotatef(-90, 1, 0, 0);
+			glScalef(0.8, 1, 0.8);
+
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 9);
+
+			glPushMatrix();
+			glTranslatef(2, -1, 0);
+			glRotatef(-45, 0, 0, 1);
+			glScalef(0.8, 0.9, 0.8);
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(-2, -1, 0);
+			glRotatef(45, 0, 0, 1);
+			glScalef(0.8, 0.9, 0.8);
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(1, -1, -1);
+			glRotatef(-45, 0, 0, 1);
+			glScalef(0.7, 1, 0.8);
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(-1, -1, -1);
+			glRotatef(45, 0, 0, 1);
+			glScalef(0.7, 1, 0.8);
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(1.5, -2, -1);
+			glRotatef(-45, 0, 0, 1);
+			glScalef(0.7, 1, 0.8);
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
+			glPopMatrix();
+
+			glPushMatrix();
+			glTranslatef(-1.5, -2, -1);
+			glRotatef(45, 0, 0, 1);
+			glScalef(0.7, 1, 0.8);
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
+			glPopMatrix();
+		}
+		glPopMatrix();
+
+		// big side plate
+		glPushMatrix();
+		{
+			glTranslatef(d * 2.5, 0, 0);
+			glRotatef(-90, 0, 1, 0);
+			glRotatef(-15, 0, 0, 1);
+			glPushMatrix();
+			glRotatef(-d * 90, 1, 0, 0);	// -ve is right side plate, +ve is left side plate
+			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 7);
+			glPopMatrix();
+		}
+		glPopMatrix();
+
+		// cylinders behind thigh 1
+		glPushMatrix();
+		{
+			glTranslatef(0, -4, 1.3);
+
+			glPushMatrix();
+			glRotatef(-90, 1, 0, 0);
+			renderCylinder(0.3, 0.3, 7.5);
+			glPopMatrix();
+		}
+		glPopMatrix();
+
+		// cylinders behind thigh 2
+		glPushMatrix();
+		{
+			glTranslatef(-0.5, -4, 1.3);
+
+			glPushMatrix();
+			glRotatef(-90, 1, 0, 0);
+			renderCylinder(0.3, 0.3, 7.5);
+			glPopMatrix();
+		}
+		glPopMatrix();
+
+		// cylinders behind thigh 3
+		glPushMatrix();
+		{
+			glTranslatef(0.5, -4, 1.3);
+
+			glPushMatrix();
+			glRotatef(-90, 1, 0, 0);
+			renderCylinder(0.3, 0.3, 7.5);
+			glPopMatrix();
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void drawLegLowerArmor(float n) {
+	float r = 0.2;
+	glPushMatrix();
+	{
+		glScalef(0.3, 0.3, 0.3);
+		glPushMatrix();
+		{
+			if (n <= 4) {
+				glTranslatef(1.5, 0, 1.5);
+			}
+			if (n >= 8) {
+				glTranslatef(0.5, 0, 1.2);
+				//glTranslatef(1, 0, 2.4);
+			}
+			//glRotatef(90, 1, 0, 0);
+
+			for (int i = 0; i <= n; i++) {
+				glRotatef(360 / n, 0, 1, 0);
+				glTranslatef(1, 0, 0);
+				//glTranslatef(20 / n, 0, 0);
+				//glTranslatef(1 / (2 * n), 0, 1 / (2 * n));
+				//r += 0.1;
+				glColor3f(0.2, 0.3, r);
+				renderCubeWithoutGLU(1, 4, 0.2);
+			}
 		}
 		glPopMatrix();
 	}
@@ -2575,147 +2735,6 @@ void drawLegFoot(float d) {
 	glPopMatrix();
 }
 
-void drawLegUpperArmor(float d) {
-
-	glPushMatrix();
-	{
-		glScalef(0.3, 0.3, 0.3);
-
-		// upper armor plates
-		glPushMatrix();
-		{
-			glTranslatef(0, 0, -2);
-			glRotatef(-90, 1, 0, 0);
-			glScalef(0.8, 1, 0.8);
-
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 9);
-
-			glPushMatrix();
-			glTranslatef(2, -1, 0);
-			glRotatef(-45, 0, 0, 1);
-			glScalef(0.8, 0.9, 0.8);
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(-2, -1, 0);
-			glRotatef(45, 0, 0, 1);
-			glScalef(0.8, 0.9, 0.8);
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(1, -1, -1);
-			glRotatef(-45, 0, 0, 1);
-			glScalef(0.7, 1, 0.8);
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(-1, -1, -1);
-			glRotatef(45, 0, 0, 1);
-			glScalef(0.7, 1, 0.8);
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(1.5, -2, -1);
-			glRotatef(-45, 0, 0, 1);
-			glScalef(0.7, 1, 0.8);
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
-			glPopMatrix();
-
-			glPushMatrix();
-			glTranslatef(-1.5, -2, -1);
-			glRotatef(45, 0, 0, 1);
-			glScalef(0.7, 1, 0.8);
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 11);
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		// big side plate
-		glPushMatrix();
-		{
-			glTranslatef(d * 2.5, 0, 0);
-			glRotatef(-90, 0, 1, 0);
-			glRotatef(-15, 0, 0, 1);
-			glPushMatrix();
-			glRotatef(-d * 90, 1, 0, 0);	// -ve is right side plate, +ve is left side plate
-			renderTrapezoidWithoutGLU(1.5, -0.25, 1.75, 0.5, 7);
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		// cylinders behind thigh 1
-		glPushMatrix();
-		{
-			glTranslatef(0, -4, 1.3);
-
-			glPushMatrix();
-			glRotatef(-90, 1, 0, 0);
-			renderCylinder(0.3, 0.3, 7.5);
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		// cylinders behind thigh 2
-		glPushMatrix();
-		{
-			glTranslatef(-0.5, -4, 1.3);
-
-			glPushMatrix();
-			glRotatef(-90, 1, 0, 0);
-			renderCylinder(0.3, 0.3, 7.5);
-			glPopMatrix();
-		}
-		glPopMatrix();
-
-		// cylinders behind thigh 3
-		glPushMatrix();
-		{
-			glTranslatef(0.5, -4, 1.3);
-
-			glPushMatrix();
-			glRotatef(-90, 1, 0, 0);
-			renderCylinder(0.3, 0.3, 7.5);
-			glPopMatrix();
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-//void drawLegKneeArmor() {}
-
-void drawLegLowerArmor(float n) {
-	glPushMatrix();
-	{
-		glScalef(0.3, 0.3, 0.3);
-		glPushMatrix();
-		{
-			if (n <= 4) {
-				glTranslatef(1.5, 0, 1.5);
-			}
-			if (n >= 8) {
-				glTranslatef(0.5, 0, 1.2);
-				//glTranslatef(1, 0, 2.4);
-			}
-			//glRotatef(90, 1, 0, 0);
-
-			for (int i = 0; i <= n; i++) {
-				glRotatef(360 / n, 0, 1, 0);
-				glTranslatef(1, 0, 0);
-				//glTranslatef(20 / n, 0, 0);
-				//glTranslatef(1 / (2 * n), 0, 1 / (2 * n));
-				renderCubeWithoutGLU(1, 4, 0.2);
-				glColor3f(0.2, 0.5, 0.2);
-			}
-		}
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
 
 void drawLeftLeg() {
 
@@ -2867,6 +2886,20 @@ void drawRightLeg() {
 
 }
 
+// ******************************************** ENVIRONMENT **********************************************//
+
+void drawSea() {
+	glPushMatrix();
+
+	glRotatef(90, 1, 0, 0);
+	glTranslatef(0, 0, 6);
+
+	renderDisk(0, 20, 50, 50);
+	//renderSphere(100);
+	glPopMatrix();
+}
+
+
 // ******************************************** DISPLAY **********************************************//
 
 void summonGgBot() {
@@ -2877,11 +2910,18 @@ void summonGgBot() {
 		//glRotatef(bodyAngle, 1, 0, 0);
 		//moveX++;
 
-		drawHead();
-		drawBody();
+		glPushMatrix();
+		{
+			//glRotatef(180, 0, 1, 0);
+			//glMaterialfv(GL_FRONT, GL_AMBIENT, difM1);	// different material can have different material
+			drawHead();
+			drawBody();
+		}
+		glPopMatrix();
 
-		drawLeftArm();
+		//glMaterialfv(GL_FRONT, GL_AMBIENT, ambM2);	// different material can have different material
 		drawRightArm();
+		drawLeftArm();
 
 		drawLeftLeg();
 		drawRightLeg();
@@ -2891,7 +2931,7 @@ void summonGgBot() {
 	glPopMatrix();
 }
 
-void test1() {
+void scene1() {
 	glPushMatrix();
 	{
 		glColor3f(0.0, 1.0, 1.0);
@@ -2904,12 +2944,14 @@ void test1() {
 		//robotStructure();
 
 		glColor3f(1.0, 1.0, 0.0);
+		glTranslatef(0, 0.8, 0);
+		//glMaterialfv(GL_FRONT, GL_AMBIENT, ambM1);	// different material can have different material
 		summonGgBot();
 	}
 	glPopMatrix();
 }
 
-void test2() {
+void scene2() {
 	glPushMatrix();
 	{
 		glColor3f(1.0, 1.0, 0.0);
@@ -2954,7 +2996,7 @@ void test2() {
 	}
 }
 
-void test3() {
+void scene3() {
 	glColor3f(1.0, 0.0, 1.0);
 
 	glPushMatrix();
@@ -2968,20 +3010,41 @@ void test3() {
 	glPopMatrix();
 }
 
-void test4() {
+void scene4() {
 	glColor3f(1.0, 0.0, 1.0);
 
 	glPushMatrix();
 
-	//for (int i = 0; i <= 1000; i++) {
-	//	renderCylinder(1, 1, 1);
-	//	//renderCubeWithoutGLU(1, 1, 1);
-	//}
+	drawSea();
+	glPushMatrix();
+	{
+		glTranslatef(0, 3, -0.5);
+		glRotatef(rCream, 0, 1, 0);
+		rCream++;
 
-	//drawLeftArm();
-	//drawRightArm();
-	drawLeftLeg();
-	//drawRightLeg();
+		glPushMatrix();
+		iceCream();
+		glTranslatef(1, 0, 0);
+		iceCream();
+		glTranslatef(0, 0, 1);
+		iceCream();
+		glTranslatef(-1, 0, 0);
+		glScalef(0.5, 0.5, 0.5);
+		iceCream();
+		glPopMatrix();
+	}
+
+	glPopMatrix();
+
+
+	glPushMatrix();
+	{
+		glTranslatef(3, 0, 8);
+		glScalef(0.8, 0.8, 0.8);
+		summonGgBot();
+	}
+	glPopMatrix();
+
 
 	glPopMatrix();
 }
@@ -2995,6 +3058,7 @@ void display()
 		glEnable(GL_DEPTH_TEST);
 
 		projection();
+		lighting();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
@@ -3010,19 +3074,19 @@ void display()
 
 	switch (qNo) {
 	case 1:
-		test1();	// main robot structure here for ref
+		scene1();	// main robot structure here for ref
 		break;
 	case 2:
-		test2();	// change to what u want for test
+		scene2();	// change to what u want for test
 		break;
 	case 3:
-		test3();	// change to what u want for test
+		scene3();	// change to what u want for test
 		break;
 	case 4:
-		test4();	// change to what u want for test
+		scene4();	// change to what u want for test
 		break;
 	default:
-		test1();
+		scene1();
 		break;
 	}
 
@@ -3106,4 +3170,139 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	UnregisterClass(WINDOW_TITLE, wc.hInstance);
 
 	return true;
+}
+
+void iceCream() {
+	//glScalef(0.1,0.1,0.1);
+	glRotatef(0.2, 0.0, 1.0, 0.1);	// rotate the whole ice cream
+	// ICE CREAM CONE
+	glPushMatrix();
+	glColor3f(0.6, 0.4, 0.2);
+	glTranslatef(0.0, -0.95, 0.0);
+	glRotatef(-90, 1.0, 0.0, 0.0);
+	renderCylinder(0.0, 0.3, 0.6);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glTranslatef(0.0, -0.95, 0.0);
+	glRotatef(-90, 1.0, 0.0, 0.0);
+	renderCylinder(0.0, 0.3, 0.6);
+	glPopMatrix();
+
+	// FIRST SCOOP
+	glPushMatrix();
+	glTranslatef(0.0, -0.2, 0.0);
+	glColor3f(0.88, 0.58, 0.62);	// rgb(225, 147, 157)
+	renderSphere(0.33);
+	glPopMatrix();
+
+	// SECOND SCOOP
+	glPushMatrix();
+	glTranslatef(0.0, 0.3, 0.0);
+	glColor3f(0.57, 0.35, 0.28);		// rgb(145, 89, 72)
+	renderSphere(0.33);
+	glPopMatrix();
+
+	// LOVE LETTER BISCUIT
+	glPushMatrix();
+	glTranslatef(-0.1, 0.45, 0.0);
+	glRotatef(-75, 1.0, 0.0, 0.0);
+	glColor3f(0.4, 0.21, 0.11);			// rgb(129, 56, 29)
+	renderCylinder(0.05, 0.05, 0.4);
+	glPopMatrix();
+
+	// CHEERY
+	glPushMatrix();
+	glTranslatef(0.1, 0.65, 0.0);
+	glColor3f(0.8, 0.0, 0.2);
+	renderSphere(0.1);
+	glPopMatrix();
+
+	// OREO BISCUIT
+	glPushMatrix();		// black biscuit
+	glTranslatef(0.0, 0.5, 0.3);
+	glRotatef(-90, 0.0, 1.0, 0.0);
+	glColor3f(0, 0, 0);
+	renderCylinder(0.18, 0.18, 0.02);
+	glPopMatrix();
+
+	glPushMatrix();		// white filling
+	glTranslatef(0.025, 0.5, 0.3);
+	glRotatef(-90, 0.0, 1.0, 0.0);
+	glColor3f(1, 1, 1);
+	renderCylinder(0.18, 0.18, 0.02);
+	glPopMatrix();
+
+	glPushMatrix();		// black biscuit
+	glTranslatef(0.05, 0.5, 0.3);
+	glRotatef(-90, 0.0, 1.0, 0.0);
+	glColor3f(0, 0, 0);
+	renderCylinder(0.18, 0.18, 0.02);
+	glPopMatrix();
+
+	// SPRINKLES 
+	glPushMatrix();
+	glTranslatef(0.25, 0.52, 0.03);
+	glRotatef(-60, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(1.0, 1.0, 0.0); // yellow
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0.25, 0.52, 0.05);
+	glRotatef(-90, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(1.0, 1.0, 1.0); // white
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0.25, 0.52, 0.04);
+	glRotatef(-90, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(1.0, 0.0, 1.0); // purple
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0.25, 0.52, 0.03);
+	glRotatef(-90, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(0.0, 1.0, 1.0); // green
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-0.25, 0.52, 0.03);
+	glRotatef(60, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(1.0, 1.0, 0.0); // yellow
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-0.25, 0.52, 0.05);
+	glRotatef(70, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(1.0, 1.0, 1.0); // white
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-0.25, 0.52, 0.04);
+	glRotatef(80, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(1.0, 0.0, 1.0); // purple
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-0.25, 0.52, 0.03);
+	glRotatef(90, 1.0, 0.0, 0.0);
+	glRotatef(-40, 0.0, 1.0, 0.0);
+	glColor3f(0.0, 1.0, 1.0); // green
+	renderCylinder(0.005, 0.005, 0.05);
+	glPopMatrix();
 }
