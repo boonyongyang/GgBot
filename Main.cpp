@@ -89,6 +89,10 @@ float difM[] = { 1.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 
 // Texture
 bool isTextureOn = true;
+GLuint textureArrInner[3];
+GLuint textureArrOuter[7];
+int TextureNo = 0;
+
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
 
@@ -418,6 +422,14 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'J') {
 		isSpecularOn = !isSpecularOn;
+		}
+		else if (wParam == 'K') {
+			if (TextureNo <= 5) {
+				TextureNo++;
+			}
+			else {
+				TextureNo = 0;
+			}
 		}
 		break;
 	default:
@@ -1580,18 +1592,21 @@ void drawHead() {
 		{
 			glTranslatef(0.0, 4.85, 0.1);
 
-			GLuint textureArr[3];
-			textureArr[0] = loadTexture("textures/eyetest.bmp");
+			GLuint textureArrH[3];
+			textureArrH[0] = loadTexture("textures/eyetest.bmp");
 			drawEye();
-			glDeleteTextures(1, &textureArr[0]);
+			glDeleteTextures(1, &textureArrH[0]);
 
-			textureArr[1] = loadTexture("textures/metal2.bmp");
+			textureArrH[1] = loadTexture("textures/metal2.bmp");
 			drawNoseAndMouth();
-			drawStructureHead();
-			drawEar();
-			glDeleteTextures(1, &textureArr[1]);
 
-			glDisable(GL_TEXTURE_2D);
+			drawEar();
+			glDeleteTextures(1, &textureArrH[1]);
+
+			glBindTexture(GL_TEXTURE_2D, textureArrOuter[TextureNo]);
+			drawStructureHead();
+
+			//glDisable(GL_TEXTURE_2D);
 		}
 		glPopMatrix();
 	}
@@ -1611,11 +1626,12 @@ void drawBody() {
 		drawHeart();
 		glDeleteTextures(1, &textureArr[0]);
 
-		textureArr[1] = loadTexture("textures/darksteel32.bmp");
+		textureArrInner[1] = loadTexture("textures/darksteel32.bmp");
 		drawInnerBody();
-		glDeleteTextures(1, &textureArr[1]);
+		glDeleteTextures(1, &textureArrInner[1]);
 
-		textureArr[2] = loadTexture("textures/metal2.bmp");
+		//textureArrOuter[TextureNo];
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[TextureNo]);
 		drawCore6Packs();
 		drawTopBack();
 		drawRibs();
@@ -1626,8 +1642,7 @@ void drawBody() {
 		drawSpine();
 		drawChest();
 
-		glDeleteTextures(1, &textureArr[2]);
-		glDisable(GL_TEXTURE_2D);
+		//glDeleteTextures(1, &textureArrOuter[TextureNo]);
 
 		// Step5: Remove texture info.
 	}
@@ -3112,15 +3127,15 @@ void summonGgBot() {
 		drawBody();
 
 		//GLuint textureArr[3];
-		textureArr[0] = loadTexture("textures/metal2.bmp");
-
+		//textureArrOuter[TextureNo];
+		glBindTexture(GL_TEXTURE_2D, textureArrOuter[TextureNo]);
 		drawRightArm();
 		drawLeftArm();
 
 		drawLeftLeg();
 		drawRightLeg();
 
-		glDeleteTextures(1, &textureArr[0]);
+		
 
 	}
 	glPopMatrix();
@@ -3271,6 +3286,14 @@ void display()
 	}
 	glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
 
+	textureArrOuter[0] = loadTexture("textures/metal2.bmp");
+	textureArrOuter[1] = loadTexture("textures/army.bmp");
+	textureArrOuter[2] = loadTexture("textures/wood.bmp");
+	textureArrOuter[3] = loadTexture("textures/camoyellow32.bmp");
+	textureArrOuter[4] = loadTexture("textures/camoyellow128.bmp");
+	textureArrOuter[5] = loadTexture("textures/camoblue32.bmp");
+	textureArrOuter[6] = loadTexture("textures/camoblue128.bmp");
+	//textureArrOuter[2] = loadTexture("textures/camo.bmp");
 
 	switch (qNo) {
 	case 1:
@@ -3289,6 +3312,10 @@ void display()
 		scene1();
 		break;
 	}
+	glDeleteTextures(1, &textureArrInner[0]);
+	glDeleteTextures(1, &textureArrOuter[0]);
+	glDisable(GL_TEXTURE_2D);
+
 
 }
 

@@ -44,5 +44,23 @@
     <Image Include="textures\wood.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\army.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\camo.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\camoblue32.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\camoblue128.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\camoyellow32.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\camoyellow128.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
