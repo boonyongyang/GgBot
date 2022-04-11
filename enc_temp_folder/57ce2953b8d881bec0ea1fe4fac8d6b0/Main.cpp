@@ -3246,6 +3246,13 @@ void scene1() {
 			drawSkyBox();
 		}
 		glColor3f(0.0, 1.0, 1.0);
+		//glTranslatef(tX, tY, tZ);
+		//glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
+		//glRotatef(tX, 0, 1, 0);		// test rotation, look cool mah
+		//tX += tSpeed;					// press s to stop rotate, press f again to start rotate
+
+		//glTranslatef(tX, tY, tZ);           
+		//robotStructure();
 
 		glColor3f(1.0, 1.0, 0.0);
 		glTranslatef(0, 0.8, 0);
@@ -3254,6 +3261,47 @@ void scene1() {
 	}
 	glPopMatrix();
 }
+
+void scene2() {
+	glColor3f(1.0, 0.0, 1.0);
+
+	glPushMatrix();
+
+	//drawOcean();
+	drawSkyBox();
+	glPushMatrix();
+	{
+		glTranslatef(0, 3, -0.5);
+		glRotatef(rCream, 0, 1, 0);
+		rCream++;
+
+		glPushMatrix();
+		iceCream();
+		glTranslatef(1, 0, 0);
+		iceCream();
+		glTranslatef(0, 0, 1);
+		iceCream();
+		glTranslatef(-1, 0, 0);
+		glScalef(0.5, 0.5, 0.5);
+		iceCream();
+		glPopMatrix();
+	}
+
+	glPopMatrix();
+
+
+	glPushMatrix();
+	{
+		glTranslatef(3, 0, 8);
+		glScalef(0.8, 0.8, 0.8);
+		summonGgBot();
+	}
+	glPopMatrix();
+
+	glPopMatrix();
+}
+
+
 
 void display()
 {
