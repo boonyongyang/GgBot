@@ -77,14 +77,13 @@ bool isSpecularOn = false;
 float materialFv = 1;
 float lax = 0, lay = -1, laz = 0;
 float ldx = 0, ldy = 3, ldz = 0;
-float amb[] = { 1.0, 1.0, 1.0 ,1.0 };			// red color ambient light 
-// light0 position (0,6,0) above 
-float posA[] = { lax, lay, laz };			// position of the light0 {x,y,z} - position 0,0,0 is actually inside the sphere 
-float dif[] = { 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
-float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
+float amb[] = { 1.0, 1.0, 1.0 ,1.0 };	
+float posA[] = { lax, lay, laz };		 
+float dif[] = { 0.0, 0.0, 1.0 ,1.0 };	
+float posD[] = { ldx, ldy, ldz };		
 
-float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
-float difM[] = { 1.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
+float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };	
+float difM[] = { 1.0, 0.0, 1.0 ,1.0 };	
 
 // texture
 GLuint textureArrInner[3];
@@ -3291,10 +3290,7 @@ void display()
 
 	switch (scane) {
 	case 1:
-		scene1();	// main robot structure here for ref
-		break;
-	case 2:
-		scene2();	// change to what u want for test
+		scene1();	// main robot 
 		break;
 	default:
 		scene1();
@@ -3383,138 +3379,4 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	UnregisterClass(WINDOW_TITLE, wc.hInstance);
 
 	return true;
-}
-void iceCream() {
-	//glScalef(0.1,0.1,0.1);
-	glRotatef(0.2, 0.0, 1.0, 0.1);	// rotate the whole ice cream
-	// ICE CREAM CONE
-	glPushMatrix();
-	glColor3f(0.6, 0.4, 0.2);
-	glTranslatef(0.0, -0.95, 0.0);
-	glRotatef(-90, 1.0, 0.0, 0.0);
-	renderCylinder(0.0, 0.3, 0.6);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor3f(1.0, 1.0, 1.0);
-	glTranslatef(0.0, -0.95, 0.0);
-	glRotatef(-90, 1.0, 0.0, 0.0);
-	renderCylinder(0.0, 0.3, 0.6);
-	glPopMatrix();
-
-	// FIRST SCOOP
-	glPushMatrix();
-	glTranslatef(0.0, -0.2, 0.0);
-	glColor3f(0.88, 0.58, 0.62);	// rgb(225, 147, 157)
-	renderSphere(0.33);
-	glPopMatrix();
-
-	// SECOND SCOOP
-	glPushMatrix();
-	glTranslatef(0.0, 0.3, 0.0);
-	glColor3f(0.57, 0.35, 0.28);		// rgb(145, 89, 72)
-	renderSphere(0.33);
-	glPopMatrix();
-
-	// LOVE LETTER BISCUIT
-	glPushMatrix();
-	glTranslatef(-0.1, 0.45, 0.0);
-	glRotatef(-75, 1.0, 0.0, 0.0);
-	glColor3f(0.4, 0.21, 0.11);			// rgb(129, 56, 29)
-	renderCylinder(0.05, 0.05, 0.4);
-	glPopMatrix();
-
-	// CHEERY
-	glPushMatrix();
-	glTranslatef(0.1, 0.65, 0.0);
-	glColor3f(0.8, 0.0, 0.2);
-	renderSphere(0.1);
-	glPopMatrix();
-
-	// OREO BISCUIT
-	glPushMatrix();		// black biscuit
-	glTranslatef(0.0, 0.5, 0.3);
-	glRotatef(-90, 0.0, 1.0, 0.0);
-	glColor3f(0, 0, 0);
-	renderCylinder(0.18, 0.18, 0.02);
-	glPopMatrix();
-
-	glPushMatrix();		// white filling
-	glTranslatef(0.025, 0.5, 0.3);
-	glRotatef(-90, 0.0, 1.0, 0.0);
-	glColor3f(1, 1, 1);
-	renderCylinder(0.18, 0.18, 0.02);
-	glPopMatrix();
-
-	glPushMatrix();		// black biscuit
-	glTranslatef(0.05, 0.5, 0.3);
-	glRotatef(-90, 0.0, 1.0, 0.0);
-	glColor3f(0, 0, 0);
-	renderCylinder(0.18, 0.18, 0.02);
-	glPopMatrix();
-
-	// SPRINKLES 
-	glPushMatrix();
-	glTranslatef(0.25, 0.52, 0.03);
-	glRotatef(-60, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(1.0, 1.0, 0.0); // yellow
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0.25, 0.52, 0.05);
-	glRotatef(-90, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(1.0, 1.0, 1.0); // white
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0.25, 0.52, 0.04);
-	glRotatef(-90, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(1.0, 0.0, 1.0); // purple
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0.25, 0.52, 0.03);
-	glRotatef(-90, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(0.0, 1.0, 1.0); // green
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-0.25, 0.52, 0.03);
-	glRotatef(60, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(1.0, 1.0, 0.0); // yellow
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-0.25, 0.52, 0.05);
-	glRotatef(70, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(1.0, 1.0, 1.0); // white
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-0.25, 0.52, 0.04);
-	glRotatef(80, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(1.0, 0.0, 1.0); // purple
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(-0.25, 0.52, 0.03);
-	glRotatef(90, 1.0, 0.0, 0.0);
-	glRotatef(-40, 0.0, 1.0, 0.0);
-	glColor3f(0.0, 1.0, 1.0); // green
-	renderCylinder(0.005, 0.005, 0.05);
-	glPopMatrix();
 }
