@@ -77,13 +77,13 @@ bool isSpecularOn = false;
 float materialFv = 1;
 float lax = 0, lay = -1, laz = 0;
 float ldx = 0, ldy = 3, ldz = 0;
-float amb[] = { 1.0, 1.0, 1.0 ,1.0 };	
-float posA[] = { lax, lay, laz };		 
-float dif[] = { 0.0, 0.0, 1.0 ,1.0 };	
-float posD[] = { ldx, ldy, ldz };		
+float amb[] = { 1.0, 1.0, 1.0 ,1.0 };
+float posA[] = { lax, lay, laz };
+float dif[] = { 0.0, 0.0, 1.0 ,1.0 };
+float posD[] = { ldx, ldy, ldz };
 
-float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };	
-float difM[] = { 1.0, 0.0, 1.0 ,1.0 };	
+float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };
+float difM[] = { 1.0, 0.0, 1.0 ,1.0 };
 
 // texture
 GLuint textureArrInner[3];
@@ -270,12 +270,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			}
 		}
 		else if (wParam == 'R') {
-		if (rSpeed > 0) {
-			rSpeed = 0.0;
-		}
-		else {
-			rSpeed = 0.5;
-		}
+			if (rSpeed > 0) {
+				rSpeed = 0.0;
+			}
+			else {
+				rSpeed = 0.5;
+			}
 		}
 		else if (wParam == 'U') {
 			//left arm UP
@@ -3297,7 +3297,13 @@ void display()
 		break;
 	}
 	glDeleteTextures(1, &textureArrInner[0]);
+	glDeleteTextures(1, &textureArrInner[1]);
+	glDeleteTextures(1, &textureArrInner[2]);
 	glDeleteTextures(1, &textureArrOuter[0]);
+	glDeleteTextures(1, &textureArrOuter[1]);
+	glDeleteTextures(1, &textureArrOuter[2]);
+	glDeleteTextures(1, &textureArrOuter[3]);
+	glDeleteTextures(1, &textureArrOuter[4]);
 	glDisable(GL_TEXTURE_2D);
 }
 
