@@ -6,7 +6,7 @@
 
 #define WINDOW_TITLE "GgBot"
 
-int qNo = 1;
+int scene = 1;
 float stacks = 10;
 
 // transformation for projection matrix
@@ -14,12 +14,12 @@ float ptX, ptY, prY = 0;
 float ptSpeed = 0.1;
 
 // transformation for object
-float tX, tY, tZ = 0;
-float tSpeed = 0.5;
+float tX, tY, tZ = 0, tSpeed = 0.5;
+float rY = 0, rSpeed = 0.5;
 float faceAngle = 0;
 
 // set Perspective View as default
-boolean isOrtho = false;
+boolean isOrtho = true;
 float orthoNear = -20, orthoFar = 20.0;
 float perspecNear = 10, perspecFar = 20;
 
@@ -30,13 +30,22 @@ float perspecZoomLevel = -2.0f;
 
 // other (Seperate to your own sections too)
 
+// head animation
+float hx = 0, hy = 0, hz = 0, hAngle = 0, hSpeed = 1;
+
+// neck
+float ny = 0;
+
+// Body
+float rBody = 0, rBodySpeed = 0;
+
 // Hand
 bool leftArmUpBool = false, leftArmDownBool = false;
 bool rightArmUpBool = false, rightArmDownBool = false;
 bool fingerUpBool = false, fingerDownBool = false;
 bool armLeftBool = false, armRightBool = false;
 bool shootBullet = false;
-float armRSpeed = 0.1;
+float armRSpeed = 0.5;	// 0.1, but can be faster
 float	leftArmRup = 0.01, leftArmRup1 = 0.01,
 rightArmRup = 0.01, rightArmRup1 = 0.01,
 fingerRup = 0.01, fingerRup1 = 0.01,
@@ -48,6 +57,7 @@ bool boolHI = false;//example
 bool boolWeapon = false;
 bool boolSword = false;
 
+float raiseArmSpeed = 0.5;
 float handLeftAngle, handRightAngle = 0, wHandSpeed = 0.5;	// for moving animation
 
 // Leg
@@ -58,33 +68,38 @@ float wLegSpeed = 1;
 bool leftLegAtFront = false, moveLeftLeg = true;
 bool rightLegAtFront = false, moveRightLeg = false;
 
-float moveX = 0, moveY = 0, moveZ = 0;
-bool bodyAngle = 0;	// need?
-
 // Environment
 float rCream = 0;
 
 // Lighting
 bool isLightOn = true;
+bool isAmbientOn = true;
+bool isDiffuseOn = true;
+bool isSpecularOn = false;
+float materialFv = 1;
 float lax = 0, lay = -1, laz = 0;
 float ldx = 0, ldy = 3, ldz = 0;
-float amb[] = { 1.0, 1.0, 1.0 ,1.0 };			// red color ambient light 
+float amb[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient light 
 // light0 position (0,6,0) above 
 float posA[] = { lax, lay, laz };			// position of the light0 {x,y,z} - position 0,0,0 is actually inside the sphere 
 float dif[] = { 0.0, 0.0, 1.0 ,1.0 };		// green color diffuse light
-float posD[] = { ldx, ldy, ldz };		// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
+float posD[] = { ldx, ldy, ldz };			// position of the light1 {x,y,z} - position 0,0,0 is actually inside the sphere
 
 float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };		// red color ambient material
-float difM[] = { 0.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
+float difM[] = { 1.0, 0.0, 1.0 ,1.0 };		// blue color diffuse material
 
 // Texture
-bool isTextureOn = true;
+GLuint textureArrInner[3];
+GLuint textureArrOuter[7];
+int outerTextureNo = 0;
+int innerTextureNo = 0;
 BITMAP BMP;				// bitmap structure
 HBITMAP hBMP = NULL;	// bitmap handle
 
 // function declarations
 void walkFront();
-void iceCream();
+void attack360();
+void iceCream();	// delete ba no ice cream already
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -93,7 +108,6 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
-
 	case WM_MOUSEMOVE:
 		switch (wParam) {
 		case MK_LBUTTON:
@@ -112,7 +126,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 	case WM_LBUTTONUP:
 		//if (!textureOn)
-			//textureOn = true;
+		//	textureOn = true;
 		break;
 	case WM_MOUSEWHEEL:
 		perspecZoomLevel -= GET_WHEEL_DELTA_WPARAM(wParam) / 150.0f;
@@ -121,21 +135,35 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		if (wParam == VK_ESCAPE)
 			PostQuitMessage(0);
 		else if (wParam == 0x31) {	// press key '1'
-			qNo = 1;
+			scene = 1;
 		}
 		else if (wParam == 0x32) {
-			qNo = 2;
+			scene = 2;
 		}
 		else if (wParam == 0x33) {
-			qNo = 3;
+			dif[0] = 0.0, dif[1] = 0.0;
+			amb[0] = 1.0, amb[1] = 1.0;
+			difM[1] = 0.0;
+			materialFv = 1;
 		}
 		else if (wParam == 0x34) {
-			qNo = 4;
+			dif[0] = 1.0, dif[1] = 1.0;
+			amb[0] = 0.0, amb[1] = 0.0;
+			difM[1] = 1.0;
+			materialFv = 2;
 		}
+		// RESET 
 		else if (wParam == VK_SPACE) {
 			tX = 0, tY = 0, tZ = 0;
 			mouseXRotate = 0.0f, mouseYRotate = 0.0f, mouseZRotate = 0.0f, perspecZoomLevel = -2.0f;
 			ptX = 0, ptY = 0, prY = 0;
+
+			// head angle
+			hAngle = 0;
+
+			// body angle
+			rY = 0, rSpeed = 0.5;
+			rBody = 0, rBodySpeed = 0;
 
 			// arm 
 			leftArmRup = 0.01, leftArmRup1 = 0.01,
@@ -148,16 +176,13 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			armLeftBool = false, armRightBool = false;
 			boolHI = false;
 
+			// walking angles
 			handRightAngle = false, handLeftAngle = false;
-
-			// leg angles
 			legLeftUpperAngle = 0, legLeftLowerAngle = 0;
 			leftRightUpperAngle = 0, legRightLowerAngle = 0;
 			leftLegAtFront = false, moveLeftLeg = false;
 			rightLegAtFront = false, moveRightLeg = false;
-			moveX = 0, moveY = 0, moveZ = 0;
 
-			//walkSpeed = 0.5;
 		}
 		else if (wParam == VK_UP) {
 			if (isOrtho) {
@@ -225,20 +250,20 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			//}
 			faceAngle = 180;
 		}
-		else if (wParam == 'O') {
-			isOrtho = true;
-			tZ = 0.0;
-		}
+		//else if (wParam == 'O') {
+		//	isOrtho = true;
+		//	tZ = 0.0;
+		//}
 		else if (wParam == 'P') {
-			isOrtho = false;
+			isOrtho = !isOrtho;	// toggle perspective/ortho view
 			tZ = 0.0;
 		}
 		else if (wParam == 'F') {
-			if (tSpeed > 0) {
-				tSpeed = 0.0;
+			if (rBodySpeed > 0) {
+				rBodySpeed = 0.0;
 			}
 			else {
-				tSpeed = 0.5;
+				rBodySpeed = 0.5;
 			}
 		}
 		else if (wParam == 'U') {
@@ -337,18 +362,6 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				temp = wParam;
 			}
 		}
-		//else if (wParam == 'B') {	// not in used
-		//	//finger Down
-		//	armLeftBool = false;
-		//	if (wParam == temp) {
-		//		armRightBool = false;
-		//		temp = NULL;
-		//	}
-		//	else {
-		//		armRightBool = true;
-		//		temp = wParam;
-		//	}
-		//}
 		else if (wParam == VK_F1) {
 			boolWeapon = false;
 			boolHI = false;
@@ -360,8 +373,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolSword = false;
 			leftArmUpBool = true;
 			rightArmUpBool = true;
-			leftArmRup = 0.01, leftArmRup1 = 0.01,
-				rightArmRup = 0.01, rightArmRup1 = 0.01;
+			leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
+				rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
+			//rightArmRup = 15;		// instant ready
+			//rightArmRup1 = 75;	// instant ready
+			//leftArmRup = 15;
+			//leftArmRup1 = 75;
 		}
 		else if (wParam == VK_F3) {
 			boolWeapon = false;
@@ -369,6 +386,11 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			boolSword = true;
 			fingerRup1 = 90;
 			fingerRup = 90;
+			//rightArmRup = 15;		// instant ready
+			//rightArmRup1 = 75;	// instant ready
+			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed; // lift arm animation
+			leftArmUpBool = false;
+			rightArmUpBool = false;
 		}
 		else if (wParam == VK_F4) {
 			boolWeapon = false;
@@ -380,10 +402,41 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			walkFront();
 		}
 		else if (wParam == 'E') {
-			//walkBackwards();	// not sure what to do yet, maybe reverse walking
+			attack360();
 		}
 		else if (wParam == 'L') {
 			isLightOn = !isLightOn;
+		}
+		else if (wParam == 'N') {
+			hAngle += hSpeed;
+		}
+		else if (wParam == 'B') {
+			hAngle -= hSpeed;
+		}
+		else if (wParam == 'G') {
+			isAmbientOn = !isAmbientOn;
+		}
+		else if (wParam == 'H') {
+			isDiffuseOn = !isDiffuseOn;
+		}
+		else if (wParam == 'J') {
+			isSpecularOn = !isSpecularOn;
+		}
+		else if (wParam == 'K') {
+			if (outerTextureNo <= 3) {
+				outerTextureNo++;
+			}
+			else {
+				outerTextureNo = 0;
+			}
+		}
+		else if (wParam == 'M') {
+			if (innerTextureNo <= 1) {
+				innerTextureNo++;
+			}
+			else {
+				innerTextureNo = 0;
+			}
 		}
 		break;
 	default:
@@ -421,15 +474,33 @@ void lighting() {
 		glDisable(GL_LIGHTING);
 	}
 
-	// Light 0: Red Color Ambient Light at pos (0,6,0)
 	glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
 	glLightfv(GL_LIGHT0, GL_POSITION, posA);	// set the position of the light
-	glEnable(GL_LIGHT0);			// turn light 0 on
+	if (isAmbientOn) {
+		glEnable(GL_LIGHT0);
+	}
+	else {
+		glDisable(GL_LIGHT0);
+	}
 
 	// Light 1: Green Color Diffuse Light at pos (6,0,0)
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, dif);
 	glLightfv(GL_LIGHT1, GL_POSITION, posD);	// set the position of the light
-	glEnable(GL_LIGHT1);			// turn light 1 on
+	if (isDiffuseOn) {
+		glEnable(GL_LIGHT1);
+	}
+	else {
+		glDisable(GL_LIGHT1);
+	}
+
+	glLightfv(GL_LIGHT2, GL_SPECULAR, dif);
+	glLightfv(GL_LIGHT2, GL_POSITION, posD);	// set the position of the light
+	if (isSpecularOn) {
+		glEnable(GL_LIGHT2);
+	}
+	else {
+		glDisable(GL_LIGHT2);
+	}
 }
 
 // ***************************************** TEXTURES *******************************************//
@@ -924,14 +995,14 @@ void drawSpine() {
 		glPopMatrix();
 
 		// end of the spine
-		glPushMatrix();
-		{
-			glTranslatef(0.0, -1.3, 0.0);
-			glRotatef(90, 1.0, 0.0, 0.0);
-			glColor3f(1.0, 0.0, 1.0);
-			renderTrapezoid(0.1, 0.025, 0.4);
-		}
-		glPopMatrix();
+		//glPushMatrix();
+		//{
+		//	glTranslatef(0.0, -1.3, 0.0);
+		//	glRotatef(90, 1.0, 0.0, 0.0);
+		//	glColor3f(1.0, 0.0, 1.0);
+		//	renderTrapezoid(0.1, 0.025, 0.4);
+		//}
+		//glPopMatrix();
 	}
 	glPopMatrix();
 }
@@ -1317,22 +1388,22 @@ void drawPelvis() {
 	}
 	glPopMatrix();
 
-	glPushMatrix();
-	{
-		glColor3f(0.0, 0.0, 1.0);
-		glTranslatef(0.0, -1.6, -0.45);
-		renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
-	}
-	glPopMatrix();
+	//glPushMatrix();
+	//{
+	//	glColor3f(0.0, 0.0, 1.0);
+	//	glTranslatef(0.0, -1.6, -0.45);
+	//	renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
+	//}
+	//glPopMatrix();
 
-	glPushMatrix();
-	{
-		glColor3f(0.2, 0.2, 0.2);
-		glTranslatef(1.0, -1.5, -0.5);
-		glRotatef(-90, 0.0, 1.0, 0.0);
-		renderCylinder(0.1, 0.1, 2.0);
-	}
-	glPopMatrix();
+	//glPushMatrix();
+	//{
+	//	glColor3f(0.2, 0.2, 0.2);
+	//	glTranslatef(1.0, -1.5, -0.5);
+	//	glRotatef(-90, 0.0, 1.0, 0.0);
+	//	renderCylinder(0.1, 0.1, 2.0);
+	//}
+	//glPopMatrix();
 
 
 }
@@ -1581,7 +1652,6 @@ void drawLeftArm() {
 	if (leftArmUpBool) {
 		if (leftArmRup1 <= 50) {
 			leftArmRup1 += armRSpeed;
-
 		}
 		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
 			if (boolWeapon == false || boolSword == true) {
@@ -1644,55 +1714,54 @@ void drawLeftArm() {
 	}
 
 	//'V' atk action
-	if (armLeftBool) {
-		if (leftArmRup1 <= 50) {
-			leftArmRup1 += armRSpeed;
-		}
-		else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
-			if (leftArmRup <= 15) {
-				leftArmRup += armRSpeed / 2;
-				if (leftArmRup1 <= 110)
-					leftArmRup1 += armRSpeed / 2;
+	if (boolSword) {
+		if (armLeftBool) {
+			if (leftArmRup1 <= 50) {
+				leftArmRup1 += armRSpeed;
 			}
-			else {
-				if (leftArmRup1 <= 110)
-					leftArmRup1 += armRSpeed / 2;
-			}
-		}
-		else if (armRsword <= 60) {
-			armRsword += armRSpeed * 2;
-			leftArmRup1 -= armRSpeed * 2;
-		}
-		else {
-			armLeftBool = false;
-			armRightBool = true;
-		}
-
-	}
-	else if (armRightBool) {
-		if (armRsword >= 0) {
-			armRsword -= armRSpeed;
-
-		}
-		else {
-			if (leftArmRup1 >= 50) {
-				leftArmRup1 -= armRSpeed;
-
-			}
-			else if (leftArmRup1 >= 0) {
-				if (leftArmRup >= 0) {
-					leftArmRup -= armRSpeed / 2;
-					leftArmRup1 -= armRSpeed / 2;
+			else if (leftArmRup <= 15 || leftArmRup1 <= 110) {
+				if (leftArmRup <= 15) {
+					leftArmRup += armRSpeed / 2;
+					if (leftArmRup1 <= 110)
+						leftArmRup1 += armRSpeed / 2;
 				}
 				else {
-					leftArmRup1 -= armRSpeed;
+					if (leftArmRup1 <= 110)
+						leftArmRup1 += armRSpeed / 2;
 				}
 			}
-			if (leftArmRup1 <= 0) {
-				armRightBool = false;
+			else if (armRsword <= 60) {
+				armRsword += armRSpeed * 2;
+				leftArmRup1 -= armRSpeed * 2;
+			}
+			else {
+				armLeftBool = false;
+				armRightBool = true;
 			}
 		}
+		else if (armRightBool) {
+			if (armRsword >= 0) {
+				armRsword -= armRSpeed;
+			}
+			else {
+				if (leftArmRup1 >= 50) {
+					leftArmRup1 -= armRSpeed;
 
+				}
+				else if (leftArmRup1 >= 0) {
+					if (leftArmRup >= 0) {
+						leftArmRup -= armRSpeed / 2;
+						leftArmRup1 -= armRSpeed / 2;
+					}
+					else {
+						leftArmRup1 -= armRSpeed;
+					}
+				}
+				if (leftArmRup1 <= 0) {
+					armRightBool = false;
+				}
+			}
+		}
 	}
 
 	if (shootBullet) {
@@ -2298,6 +2367,24 @@ void drawRightArm() {
 
 // ******************************************** LEG **********************************************//
 
+void attack360() {
+	if (rBodySpeed > 0) {
+		rBodySpeed = 0.0;
+
+	}
+	else {
+		rBodySpeed = 0.5;
+
+		boolWeapon = true;
+		boolHI = false;
+		boolSword = false;
+		leftArmUpBool = true;
+		rightArmUpBool = true;
+		leftArmRup = raiseArmSpeed, leftArmRup1 = raiseArmSpeed,		// lift arm animation
+			rightArmRup = raiseArmSpeed, rightArmRup1 = raiseArmSpeed;	// lift arm animation
+	}
+}
+
 void walkFront() {
 
 	// move left leg & (left arm back, right arm front)
@@ -2328,7 +2415,7 @@ void walkFront() {
 			if (!legLeftUpperAngle == 0) {
 				legLeftUpperAngle -= 1;
 				legLeftLowerAngle += 1.5;
-				moveZ -= 0.01;
+				tZ -= 0.01;
 			}
 			else {
 				leftLegAtFront = false;
@@ -2365,86 +2452,7 @@ void walkFront() {
 			if (!leftRightUpperAngle == 0) {
 				leftRightUpperAngle -= 1;
 				legRightLowerAngle += 1.5;
-				moveZ -= 0.01;
-			}
-			else {
-				rightLegAtFront = false;
-				moveRightLeg = false;
-				moveLeftLeg = true;
-			}
-		}
-	}
-
-}
-
-void walkBackwards() {
-
-	// move left leg & (left arm back, right arm front)
-	if (moveLeftLeg) {
-
-		if (!leftLegAtFront) {
-
-			if (handRightAngle <= 40 && handRightAngle >= -40) {	// right hand moving up
-				handRightAngle -= wHandSpeed;
-				handLeftAngle += wHandSpeed;
-			}
-
-			if (legLeftUpperAngle <= 40 && legLeftUpperAngle >= -40) {
-				legLeftUpperAngle -= 1;
-				legLeftLowerAngle += 1.5;
-			}
-			else {
-				leftLegAtFront = true;
-			}
-		}
-		else {
-
-			if (!handRightAngle == 0) {		// right hand moving down
-				handRightAngle += wHandSpeed;
-				handLeftAngle -= wHandSpeed;
-			}
-
-			if (!legLeftUpperAngle == 0) {
-				legLeftUpperAngle += 1;
-				legLeftLowerAngle -= 1.5;
-				moveZ += 0.01;
-			}
-			else {
-				leftLegAtFront = false;
-				moveLeftLeg = false;
-				moveRightLeg = true;
-			}
-		}
-	}
-	// move right leg & (right arm back, left arm front)
-	else {
-
-		if (!rightLegAtFront) {
-
-			if (handLeftAngle <= 40 && handLeftAngle >= -40) {	// left hand moving up
-				handLeftAngle -= wHandSpeed;
-				handRightAngle += wHandSpeed;
-			}
-
-			if (leftRightUpperAngle <= 40 && leftRightUpperAngle >= -40) {
-				leftRightUpperAngle -= 1;
-				legRightLowerAngle += 1.5;
-			}
-			else {
-				rightLegAtFront = true;
-			}
-		}
-		else {
-
-			if (!handLeftAngle == 0) {		// left hand moving down
-				handLeftAngle += wHandSpeed;
-				handRightAngle -= wHandSpeed;
-			}
-
-			if (!leftRightUpperAngle == 0) {
-				leftRightUpperAngle += 1;
-				legRightLowerAngle -= 1.5;
-				moveZ += 0.01;
+				tZ -= 0.01;
 			}
 			else {
 				rightLegAtFront = false;
@@ -2942,6 +2950,29 @@ void drawLeftLeg() {
 
 void drawRightLeg() {
 
+	// connect leg with body
+	glPushMatrix();
+	{
+		glTranslatef(0.0, 1.0, 0.5);
+		glPushMatrix();
+		{
+			glColor3f(0.0, 0.0, 1.0);
+			glTranslatef(0.0, -1.6, -0.45);
+			renderTrapezoidWithoutGLU(0.5, 0.2, 0.3, 0.8, 1.5);
+		}
+		glPopMatrix();
+
+		glPushMatrix();
+		{
+			glColor3f(0.2, 0.2, 0.2);
+			glTranslatef(1.0, -1.5, -0.5);
+			glRotatef(-90, 0.0, 1.0, 0.0);
+			renderCylinder(0.1, 0.1, 2.0);
+		}
+		glPopMatrix();
+	}
+	glPopMatrix();
+
 	// whole leg
 	glPushMatrix();
 	{
@@ -3012,7 +3043,6 @@ void drawRightLeg() {
 }
 
 // ******************************************** ENVIRONMENT **********************************************//
-
 void drawOcean() {
 	glPushMatrix();
 
@@ -3031,28 +3061,35 @@ void drawOcean() {
 	glPopMatrix();
 }
 
-
 // ******************************************** DISPLAY **********************************************//
 
 void summonGgBot() {
 	glPushMatrix();
 	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, ambM);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, ambM);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, difM);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, difM);
 
-		glTranslatef(tX, tY, moveZ);
-		//glRotatef(bodyAngle, 1, 0, 0);
-		//moveX++;
+		glTranslatef(tX, tY, tZ);
+		glRotatef(rY, 0, 1, 0);
 
 		GLuint textureArr[3];
 
-		drawHead();
-		drawBody();
+		// rotate upper body
+		glPushMatrix();
+		{
+			glRotatef(rBody, 0, 1, 0);
+			rBody += rBodySpeed;
+			drawHead();
+			drawBody();
 
-		//GLuint textureArr[3];
-		textureArr[0] = loadTexture("textures/metal2.bmp");
+			//GLuint textureArr[3];
+			textureArr[0] = loadTexture("textures/metal2.bmp");
 
-		drawRightArm();
-		drawLeftArm();
+			drawRightArm();
+			drawLeftArm();
+		}
+		glPopMatrix();
 
 		drawLeftLeg();
 		drawRightLeg();
@@ -3069,7 +3106,7 @@ void scene1() {
 		glColor3f(0.0, 1.0, 1.0);
 		//glTranslatef(tX, tY, tZ);
 		//glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
-		//glRotatef(tX, 0, 1, 0);		// test rotation, look cool mah
+		//glRotatef(tY, 0, 1, 0);		// test rotation, look cool mah
 		//tX += tSpeed;					// press s to stop rotate, press f again to start rotate
 
 		//glTranslatef(tX, tY, tZ);           
@@ -3209,7 +3246,7 @@ void display()
 	glRotatef(faceAngle, 0.0f, 1.0f, 0.0f);
 
 
-	switch (qNo) {
+	switch (scene) {
 	case 1:
 		scene1();	// main robot structure here for ref
 		break;
