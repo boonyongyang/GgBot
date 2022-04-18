@@ -3317,10 +3317,6 @@ void display()
 	glDeleteTextures(1, &textureArrOuter[3]);
 	glDeleteTextures(1, &textureArrOuter[4]);
 
-	glDeleteTextures(1, &textureArrInner[0]);
-	glDeleteTextures(1, &textureArrInner[1]);
-	glDeleteTextures(1, &textureArrInner[2]);
-
 	glDisable(GL_TEXTURE_2D);
 }
 
