@@ -66,9 +66,6 @@ float wLegSpeed = 1;
 bool leftLegAtFront = false, moveLeftLeg = true;
 bool rightLegAtFront = false, moveRightLeg = false;
 
-// environment
-float rCream = 0;
-
 // lighting
 bool isLightOn = true;
 bool isAmbientOn = true;
@@ -77,13 +74,13 @@ bool isSpecularOn = false;
 float materialFv = 1;
 float lax = 0, lay = -1, laz = 0;
 float ldx = 0, ldy = 3, ldz = 0;
-float amb[] = { 1.0, 1.0, 1.0 ,1.0 };	
-float posA[] = { lax, lay, laz };		 
-float dif[] = { 0.0, 0.0, 1.0 ,1.0 };	
-float posD[] = { ldx, ldy, ldz };		
+float amb[] = { 1.0, 1.0, 1.0 ,1.0 };
+float posA[] = { lax, lay, laz };
+float dif[] = { 0.0, 0.0, 1.0 ,1.0 };
+float posD[] = { ldx, ldy, ldz };
 
-float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };	
-float difM[] = { 1.0, 0.0, 1.0 ,1.0 };	
+float ambM[] = { 1.0, 1.0, 1.0 ,1.0 };
+float difM[] = { 1.0, 0.0, 1.0 ,1.0 };
 
 // texture
 GLuint textureArrInner[3];
@@ -97,7 +94,6 @@ HBITMAP hBMP = NULL;	// bitmap handle
 // function declarations
 void walkFront();
 void attack360();
-void iceCream();
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -112,7 +108,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		case MK_LBUTTON:
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
-			mouseYRotate -= xPos - mouseLastX;
+			mouseYRotate += xPos - mouseLastX;
 			mouseXRotate -= yPos - mouseLastY;
 			mouseLastX = xPos;
 			mouseLastY = yPos;
@@ -123,10 +119,10 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		mouseLastX = GET_X_LPARAM(lParam);
 		mouseLastY = GET_Y_LPARAM(lParam);
 		break;
-	case WM_LBUTTONUP:
-		//if (!textureOn)
-			//textureOn = true;
-		break;
+		//case WM_LBUTTONUP:
+			//if (!textureOn)
+				//textureOn = true;
+			//break;
 	case WM_MOUSEWHEEL:
 		perspecZoomLevel -= GET_WHEEL_DELTA_WPARAM(wParam) / 150.0f;
 		break;
@@ -260,6 +256,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'P') {
 			isOrtho = !isOrtho;	// toggle perspective/ortho view
 			tZ = 0.0;
+			perspecZoomLevel = -2.0f;
 		}
 		else if (wParam == 'F') {
 			if (rBodySpeed > 0) {
@@ -270,12 +267,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			}
 		}
 		else if (wParam == 'R') {
-		if (rSpeed > 0) {
-			rSpeed = 0.0;
-		}
-		else {
-			rSpeed = 0.5;
-		}
+			if (rSpeed > 0) {
+				rSpeed = 0.0;
+			}
+			else {
+				rSpeed = 0.5;
+			}
 		}
 		else if (wParam == 'U') {
 			//left arm UP
@@ -463,6 +460,7 @@ void projection() {
 	glLoadIdentity();					// reset the projection matrix
 
 	glTranslatef(ptX, ptY, 0.0f);		// projection translation
+	glRotatef(180, 0.0, 1.0, 0.0);		// kinda reduces distortion on perspective 
 	glRotatef(prY, 0.0, 1.0, 0.0);		// projection rotation (y-axis only)
 
 	if (isOrtho) {
@@ -541,6 +539,8 @@ GLuint loadTexture(LPCSTR filename) {
 	DeleteObject(hBMP);
 	return texture;
 }
+
+// ************************************* OBJECTS RENDERING ***************************************//
 
 void renderSphere(float r) {
 	GLUquadricObj* sphere = NULL;
@@ -2179,6 +2179,7 @@ void drawLeftArm() {
 	}
 	glPopMatrix(); // translate up 2 via y-axis}
 }
+
 void drawRightArm() {
 	if (rightArmUpBool) {
 		if (rightArmRup1 <= 50) {
@@ -2463,6 +2464,7 @@ void drawRightArm() {
 	}
 	glPopMatrix(); // translate up 2 via y-axis}
 }
+
 // ******************************************** LEG **********************************************//
 
 void attack360() {
@@ -3184,17 +3186,18 @@ void drawOcean() {
 void drawSkyBox() {
 	glPushMatrix();
 	{
-		perspecZoomLevel = 8;
+		//perspecZoomLevel = 8;
 		GLuint textureArr[1];
 		textureArr[0] = loadTexture("textures/sky.bmp");
+		//textureArr[0] = loadTexture("textures/earth.bmp");
 		glColor3f(1.0, 1.0, 1.0);
 		glRotatef(90, 1.0, 0.0, 0.0);
-		renderSphere(20);
+		//renderSphere(20);
+		renderSphere(100);
 		glDeleteTextures(1, &textureArr[0]);
 	}
 	glPopMatrix();
 }
-
 
 // ******************************************** DISPLAY **********************************************//
 
@@ -3240,12 +3243,14 @@ void summonGgBot() {
 void scene1() {
 	glPushMatrix();
 	{
+		drawSkyBox();
 		if (isOrtho) {
-
-			drawSkyBox();
+			perspecZoomLevel = 8.0f;
+		}
+		else {
+			drawOcean();
 		}
 		glColor3f(0.0, 1.0, 1.0);
-
 		glColor3f(1.0, 1.0, 0.0);
 		glTranslatef(0, 0.8, 0);
 		//glMaterialfv(GL_FRONT, GL_AMBIENT, ambM1);	// different material can have different material
@@ -3254,11 +3259,17 @@ void scene1() {
 	glPopMatrix();
 }
 
+void scene2() {
+
+}
+
+
 void display()
 {
 	// project initialization
 	{
-		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		//glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		glClearColor(0.5, 0.3, 0.3, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
@@ -3292,12 +3303,24 @@ void display()
 	case 1:
 		scene1();	// main robot 
 		break;
+	case 2:
+		scene2();
+		break;
 	default:
 		scene1();
 		break;
 	}
-	glDeleteTextures(1, &textureArrInner[0]);
+
 	glDeleteTextures(1, &textureArrOuter[0]);
+	glDeleteTextures(1, &textureArrOuter[1]);
+	glDeleteTextures(1, &textureArrOuter[2]);
+	glDeleteTextures(1, &textureArrOuter[3]);
+	glDeleteTextures(1, &textureArrOuter[4]);
+
+	glDeleteTextures(1, &textureArrInner[0]);
+	glDeleteTextures(1, &textureArrInner[1]);
+	glDeleteTextures(1, &textureArrInner[2]);
+
 	glDisable(GL_TEXTURE_2D);
 }
 

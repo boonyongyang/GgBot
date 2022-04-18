@@ -153,6 +153,7 @@
     <Image Include="textures\camoTexture.bmp" />
     <Image Include="textures\complexTexture.bmp" />
     <Image Include="textures\darksteel32.bmp" />
+    <Image Include="textures\earth.bmp" />
     <Image Include="textures\eyetest.bmp" />
     <Image Include="textures\metal2.bmp" />
     <Image Include="textures\ocean.bmp" />
