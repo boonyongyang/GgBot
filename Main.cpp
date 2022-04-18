@@ -3243,6 +3243,7 @@ void summonGgBot() {
 void scene1() {
 	glPushMatrix();
 	{
+		//isOrtho = true;
 		drawSkyBox();
 		if (isOrtho) {
 			perspecZoomLevel = 8.0f;
@@ -3260,9 +3261,11 @@ void scene1() {
 }
 
 void scene2() {
+	//isOrtho = false;
+	//drawSkyBox();
+	//drawOcean();
 
 }
-
 
 void display()
 {
@@ -3303,9 +3306,9 @@ void display()
 	case 1:
 		scene1();	// main robot 
 		break;
-	case 2:
-		scene2();
-		break;
+	//case 2:
+		//scene2();
+		//break;
 	default:
 		scene1();
 		break;
@@ -3317,9 +3320,12 @@ void display()
 	glDeleteTextures(1, &textureArrOuter[3]);
 	glDeleteTextures(1, &textureArrOuter[4]);
 
+	glDeleteTextures(1, &textureArrInner[0]);
+	glDeleteTextures(1, &textureArrInner[1]);
+	glDeleteTextures(1, &textureArrInner[2]);
+
 	glDisable(GL_TEXTURE_2D);
 }
-
 
 bool initPixelFormat(HDC hdc)
 {

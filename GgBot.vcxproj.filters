@@ -26,9 +26,6 @@
     <Image Include="textures\darksteel32.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="textures\ocean.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="textures\eyetest.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -54,6 +51,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\earth.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\ocean.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
