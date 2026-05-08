@@ -35,26 +35,34 @@ FetchContent_Declare(glm
 )
 FetchContent_MakeAvailable(glm)
 
-add_executable(GgBot GgBotMac.cpp)
+set(SOURCES
+    src/main.cpp
+    src/state.cpp
+    src/shader.cpp
+    src/texture.cpp
+    src/input.cpp
+    src/animation.cpp
+    src/mesh.cpp
+    src/robot.cpp
+    src/scene.cpp
+)
+
+add_executable(GgBot ${SOURCES})
 
 target_include_directories(GgBot PRIVATE
     ${glad_SOURCE_DIR}/include
     vendor/stb
+    src
 )
 
-target_link_libraries(GgBot PRIVATE
-    glfw
-    glad
-    glm
-)
+target_link_libraries(GgBot PRIVATE glfw glad glm)
 
-# macOS OpenGL framework
 if(APPLE)
     target_link_libraries(GgBot PRIVATE "-framework OpenGL")
-    target_compile_options(GgBot PRIVATE -DGL_SILENCE_DEPRECATION)
+    target_compile_definitions(GgBot PRIVATE GL_SILENCE_DEPRECATION)
 endif()
 
-# Copy shaders and textures next to the executable
+# Copy shaders and textures next to the executable after build
 add_custom_command(TARGET GgBot POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:GgBot>/shaders
