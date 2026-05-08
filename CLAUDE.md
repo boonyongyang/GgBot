@@ -4,50 +4,109 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-GgBot is a Windows OpenGL application that renders and animates an interactive 3D robot. It uses the Win32 API with legacy OpenGL (1.x/2.x fixed-function pipeline via `opengl32.lib` and `glu32.lib`). The entire program is a single file: `Main.cpp` (~3400 lines).
+GgBot is an interactive 3D robot renderer with animations and weapon modes. The project exists in two forms:
 
-## Building
+- **`Main.cpp`** — the original single-file Windows-only implementation using Win32 + legacy OpenGL (1.x/2.x fixed-function pipeline, `opengl32.lib`/`glu32.lib`). ~3,400 lines. No longer the active development target.
+- **`src/`** — the current multi-file port targeting **macOS Apple Silicon** (and any platform with OpenGL 3.3 Core Profile support), built with CMake, GLFW 3.4, GLAD, and GLM.
 
-This is a Visual Studio project targeting Windows. Build using:
+## Building (macOS / cross-platform port)
 
-- **Visual Studio (recommended):** Open `GgBot.sln` and build via the IDE (Debug/Release, Win32/x64).
-- **MSBuild CLI:**
-  ```
-  msbuild GgBot.sln /p:Configuration=Debug /p:Platform=x64
-  ```
+```bash
+cmake -B build
+cmake --build build
+```
 
-The project has no external dependencies beyond the Windows SDK and OpenGL system libraries (`opengl32.lib`, `glu32.lib`). There is no package manager, no test suite, and no linter configuration.
+The executable and its required assets (`shaders/`, `textures/`) are automatically copied next to the binary by a CMake `POST_BUILD` step. Run from the build directory:
 
-Textures must be present in a `textures/` subdirectory relative to the working directory when the executable runs (the project loads them from relative paths like `"textures/sky.bmp"`).
+```bash
+./build/GgBot
+```
 
-## Architecture
+There is no test suite and no linter configuration.
 
-All code lives in `Main.cpp` and is organized into these logical sections (marked with comment banners):
+**Dependencies** — fetched automatically by CMake via `FetchContent`:
+- GLFW 3.4 (windowing + input)
+- GLAD v0.1.36 (GL 3.3 Core loader)
+- GLM 0.9.9.8 (header-only math)
+- `vendor/stb/stb_image.h` (texture loading, committed to repo)
 
-1. **Global state** (top of file) — All animation state, camera, lighting, and texture handles are plain global variables. There are no classes or structs. Animation is driven by boolean flags (e.g. `leftArmUpBool`, `moveLeftLeg`) and float angle accumulators (e.g. `leftArmRup`, `legLeftUpperAngle`).
+## Architecture of the `src/` Port
 
-2. **`WindowProcedure`** — Win32 message handler. Handles `WM_KEYDOWN`, mouse events (`WM_MOUSEMOVE`, `WM_LBUTTONDOWN`, `WM_MOUSEWHEEL`), and `WM_DESTROY`. All user input mutates global state here.
+The rendering pipeline flows: `main.cpp` → `display()` in `scene.cpp` → `summonGgBot()` → individual `draw*()` functions in `robot.cpp`. Every frame:
 
-3. **`projection()`** — Switches between orthographic (`glOrtho`) and perspective (`gluPerspective` + `glFrustum`) based on `isOrtho`. Camera panning and rotation are applied directly to the projection matrix.
+1. `display()` clears buffers, calls `scene1()`.
+2. `scene1()` calls `computeProjection()` + `setLighting()`, then calls `setFrameContext()` to store the per-frame `(prog, uniforms, view, proj)` as statics in `mesh.cpp`.
+3. `summonGgBot()` applies global robot position/yaw, splits the robot into an **upper body** (rotates for attack360) and **lower body** (legs only), then calls all `draw*()` functions.
+4. Each `draw*()` function constructs a `DrawCtx` (which calls `getFrameContext()` to recover the stored state) and builds its geometry using `render*()` helpers from `mesh.cpp`.
 
-4. **`lighting()`** — Configures three OpenGL lights (GL_LIGHT0 ambient, GL_LIGHT1 diffuse, GL_LIGHT2 specular) using global color and position arrays.
+### Module responsibilities
 
-5. **`loadTexture()`** — Loads `.bmp` textures from disk using `LoadImage` / `GetObject` and uploads them via `glTexImage2D`. Called once at startup inside `WinMain`.
+| File | Responsibility |
+|---|---|
+| `state.h/cpp` | All mutable global state — animation angles, mode flags, camera, lighting params, texture handles. Every other module reads/writes these globals directly. |
+| `shader.h/cpp` | Loads GLSL shaders from disk, caches all `GLint` uniform locations in `struct Uniforms`, and provides `setDrawUniforms()` (sets texture/color per draw call) and `setModelUniforms()` (pushes MVP matrices). |
+| `texture.h/cpp` | `loadTexture()` uses `stb_image` with vertical flip. `loadAllTextures()` fills `textureArrOuter[0..4]`, `textureArrInner[0..2]`, and the named handles `texEye`, `texMetal`, `texOcean`, `texSky`. Called once at startup. |
+| `mesh.h/cpp` | Procedural geometry generators (`getCubeMesh`, `getSphereMesh`, `getCylinderMesh`, etc.). Each generator is lazily computed and cached in a `std::map` keyed by its parameters — the first call for a given set of parameters uploads to GPU; subsequent calls return the cached `MeshData&`. High-level `render*()` wrappers call `setModelUniforms` + `setDrawUniforms` + `drawMesh` in one call. Also owns the per-frame context statics (`setFrameContext`/`getFrameContext`). |
+| `robot.h/cpp` | All 34 `draw*()` functions. Each takes a `glm::mat4 model` parameter passed down from its parent. Animation state mutations (advancing angle accumulators) happen inside the draw functions themselves (e.g. `drawLeftArm` advances `leftArmRup`, `leftArmRup1`, etc.). |
+| `scene.h/cpp` | `computeProjection()`, `setLighting()`, `summonGgBot()`, `scene1()`, `display()`. Bridges state → shaders → robot. |
+| `animation.h/cpp` | `walkFront()` and `attack360()` — pure state mutations with no GL calls. Triggered by key events in `input.cpp`. |
+| `input.h/cpp` | GLFW key/mouse/scroll callbacks. All user input mutates globals from `state.h` here. `walkFront()` / `attack360()` are called directly from the key callback on Q/E. |
+| `shaders/ggbot.vert/frag` | Single shader pair for the entire scene. Vertex layout: `location=0` pos (vec3), `location=1` normal (vec3), `location=2` texcoord (vec2) — stride 8 floats. Fragment shader implements Phong with three logical lights matching the original `GL_LIGHT0` (ambient), `GL_LIGHT1` (diffuse), `GL_LIGHT2` (specular). `uUseTexture > 0.5` enables texture sampling multiplied by `uColor`. |
 
-6. **Primitive renderers** — `renderSphere`, `renderCylinder`, `renderCone`, `renderPrism`, `renderCuboid`, `renderTrapezoid`, `renderCubeWithoutGLU`, `renderTrapezoidWithoutGLU` etc. These are the building blocks for all robot parts. GLU-based helpers use `gluNewQuadric`; the `WithoutGLU` variants use `glBegin/GL_QUADS`.
+### Key patterns in `robot.cpp`
 
-7. **Robot draw functions** — Each body part has its own `draw*` function (e.g. `drawHead`, `drawBody`, `drawSpine`, `drawLeftArm`, `drawRightArm`, `drawLeftLeg`, `drawRightLeg`). They use nested `glPushMatrix/glPopMatrix` for hierarchical transforms. Animations work by rotating/translating around a pivot point: translate to pivot → apply rotation → translate back.
+**DrawCtx** — constructed at the top of every `draw*()` function. Calls `getFrameContext()` to get `prog` and `u`, and resolves the current outer/inner texture from `textureArrOuter[outerTextureNo]` / `textureArrInner[innerTextureNo]`.
 
-8. **`walkFront()` / `attack360()`** — Called from `WinMain`'s render loop each frame. They advance angle accumulators based on the direction booleans and move `tZ` to translate the robot forward.
+**Transform shorthands** — three file-local helpers keep draw code terse:
+```cpp
+static glm::mat4 T(float x, float y, float z);          // translate
+static glm::mat4 R(float deg, float x, float y, float z); // rotate (degrees)
+static glm::mat4 Sc(float x, float y, float z);           // scale
+```
 
-9. **`WinMain`** — Entry point. Creates the Win32 window, sets up the OpenGL pixel format and rendering context (`PIXELFORMATDESCRIPTOR`, `wglCreateContext`), loads textures into `textureArrOuter[7]` and `textureArrInner[3]`, then runs the message/render loop calling `display()` each frame.
+**Pivot-based animation** — every animated joint follows the same pattern:
+```cpp
+glm::mat4 joint = parent * T(pivot) * R(angle, axis) * T(-pivot);
+// then draw children relative to `joint`
+```
 
-10. **`display()`** — Main render function called every frame. Calls `projection()`, `lighting()`, clears buffers, applies global transforms (mouse rotation, zoom, WASD facing angle), then calls all robot draw functions.
+**`renderTrapezoid` vs `renderTrapezoidGLU`** — two distinct shapes with similar names:
+- `renderTrapezoid(…, top, bot1, bot2, hy, hz)` — manual quad mesh (was `renderTrapezoidWithoutGLU` in `Main.cpp`). Used in body armor, legs, and foot.
+- `renderTrapezoidGLU(…, baseL, topL, h)` — 4-sided frustum cone with an internal 45° rotation (was `renderTrapezoid` in `Main.cpp`). Used in arms, neck, and head structure.
 
-## Key Conventions
+**Mesh caching** — `getCylinderMesh(baseR, topR, h, slices)` with `topR == 0` generates a cone (no separate cone generator). `getPrismMesh(l, h, sides)` delegates to `getCylinderMesh`. Mesh keys are `std::tuple` instances, so every unique combination of float parameters produces a separate GPU buffer.
 
-- **Pivot-based animation:** To rotate a limb around its joint, the pattern is always: `glTranslatef(pivot)` → `glRotatef(angle, ...)` → `glTranslatef(-pivot)` → draw child.
-- **Texture switching:** `textureArrOuter` (5 slots used) and `textureArrInner` (3 slots) are cycled by `outerTextureNo`/`innerTextureNo`. `glBindTexture` is called per-part before drawing.
-- **Toggle pattern:** Repeating the same key when a boolean action is active turns it off (via the `temp` char variable tracking the last active key).
-- **No depth test in perspective:** `glEnable(GL_DEPTH_TEST)` is commented out, which causes z-fighting in perspective mode — this is a known issue in the existing code.
-- **Weapon modes:** `boolWeapon` (dual cannon, F2), `boolSword` (sword + cannon, F3), normal (F1) affect which arm geometry is drawn and which attack animations are available.
+**Texture slots:**
+- `textureArrOuter[0..4]`: metal2, camoTexture, armorMetal, armorPattern3, complexTexture
+- `textureArrInner[0..2]`: darksteel32, armorPattern, armorPattern2
+- Named: `texEye` (eyetest), `texMetal` (metal2), `texOcean` (ocean), `texSky` (sky)
+
+**Weapon / mode flags** — `boolWeapon` (F2 dual cannon), `boolSword` (F3 sword + cannon), `boolHI` (F4 HI pose) are mutually exclusive modes that change which geometry is drawn in `drawLeftArm`/`drawRightArm`.
+
+**Upper vs lower body split** in `summonGgBot()` — the upper body matrix has `rBody` applied (for attack360 spinning), while `drawLeftLeg`/`drawRightLeg` receive the base `model` matrix without that rotation. This means leg animations (`legLeftUpperAngle`, `leftRightUpperAngle`, etc.) are independent of the upper body spin.
+
+## Controls Reference
+
+| Key | Action |
+|---|---|
+| P | Toggle ortho ↔ perspective |
+| WASD | Face direction (mutates `faceAngle`) |
+| Q | Step walking animation |
+| E | Toggle 360° attack spin |
+| F | Toggle upper body rotation |
+| B/N | Turn head left/right |
+| T/Y | Right arm up/down |
+| U/I | Left arm up/down |
+| Z/X | Fingers fist/open |
+| F1/F2/F3/F4 | Normal / dual cannon / sword+cannon / HI pose |
+| C | Shoot cannon (weapon modes) |
+| V | Sword attack (F3 mode) |
+| K/M | Cycle outer/inner texture |
+| L/G/H/J | Toggle light / ambient / diffuse / specular |
+| SPACE | Full state reset |
+| Mouse drag | Orbit camera |
+| Scroll | Zoom |
+
+## Original Windows Build (`Main.cpp`)
+
+Open `GgBot.sln` in Visual Studio and build (Debug/Release, Win32/x64). No external dependencies beyond Windows SDK. The `Main.cpp` is kept as a reference but is not actively maintained; the `src/` port is the working codebase.
