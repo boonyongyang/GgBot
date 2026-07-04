@@ -51,7 +51,7 @@ The rendering pipeline flows: `main.cpp` → `display()` in `scene.cpp` → `sum
 | `scene.h/cpp` | `computeProjection()`, `setLighting()`, `summonGgBot()`, `scene1()`, `display()`. Bridges state → shaders → robot. |
 | `animation.h/cpp` | `walkFront()` and `attack360()` — pure state mutations with no GL calls. Triggered by key events in `input.cpp`. |
 | `input.h/cpp` | GLFW key/mouse/scroll callbacks. All user input mutates globals from `state.h` here. `walkFront()` / `attack360()` are called directly from the key callback on Q/E. |
-| `shaders/ggbot.vert/frag` | Single shader pair for the entire scene. Vertex layout: `location=0` pos (vec3), `location=1` normal (vec3), `location=2` texcoord (vec2) — stride 8 floats. Fragment shader implements Phong with three logical lights matching the original `GL_LIGHT0` (ambient), `GL_LIGHT1` (diffuse), `GL_LIGHT2` (specular). `uUseTexture > 0.5` enables texture sampling multiplied by `uColor`. |
+| `shaders/ggbot.vert/frag` | Single shader pair for the entire scene. Vertex layout: `location=0` pos (vec3), `location=1` normal (vec3), `location=2` texcoord (vec2) — stride 8 floats. The fragment shader deliberately reproduces the original's **fixed-function look** rather than doing modern Phong (see "Rendering fidelity" below): flat/fullbright shading, and textured surfaces show the texture directly (`uColor` tints only untextured pieces). The `normal` attribute is still uploaded but not used for shading. |
 
 ### Key patterns in `robot.cpp`
 
@@ -91,6 +91,14 @@ The `draw*()` functions copy the original `Main.cpp` transform sequences **verba
 
 - **`getCylinderMesh` is oriented along +Z**, matching `gluCylinder` (base ring at `z=0`, top at `z=h`, cross-section in the XY plane). This is load-bearing: every cylinder/cone/prism/`renderTrapezoidGLU` call inherits the original's rotations, which assume a +Z tube axis. Do **not** "simplify" it to a +Y axis — that silently rotates every such part 90°. `getDiskMesh` likewise matches `gluDisk` (XY plane, +Z normal).
 - **Persistent GL state is resolved explicitly.** The original relied on the last-bound `glBindTexture` and last-set `glColor3f` persisting across draws. The port passes texture/color per call. Where a small internal detail piece (spine-joint sub-spheres, `drawScale`, `drawLegInnerNerve`, `drawCoreDetail1`) is drawn untextured (`texID 0`) and the wireframe foot sphere is drawn solid, that is a deliberate simplification, not a bug.
+
+## Rendering fidelity (matching the original look)
+
+`scene.cpp` and `ggbot.frag` are tuned to reproduce what `Main.cpp` renders under legacy fixed-function OpenGL, **not** a "nicer" modern pipeline. The three behaviours that surprise people:
+
+- **Projection is copied verbatim, quirks and all.** `computeProjection()` bakes panning, a 180° Y flip, and `prY` into the *projection* matrix, uses `glOrtho`/`glFrustum` with **no window-aspect correction**, and in perspective mode stacks `gluPerspective(35,1,-1,1)` *onto* `glFrustum(-10,10,-10,10,10,20)` (yes, two projections multiplied). `faceAngle` lives in the modelview, and ortho mode forces `perspecZoomLevel = 8`. Don't "clean this up" to a single `glm::perspective` — it changes the framing and default orientation.
+- **Shading is flat/fullbright.** The original sets **no normals anywhere** (no `gluQuadricNormals`, no `glNormal`), so every vertex uses the default `(0,0,1)` and lighting is flat; `GL_LIGHT0`'s white ambient then saturates it to fullbright. The shader mirrors this — it ignores the uploaded normals for shading.
+- **Per-part colors are intentionally dropped on textured surfaces.** The original never enables `GL_COLOR_MATERIAL`, so under lighting every `glColor3f` is ignored and textured parts show the texture directly (`GL_MODULATE`). The shader therefore does **not** multiply textured surfaces by `uColor`; `uColor` only affects the untextured detail pieces noted above. (The `draw*()` calls still pass their colors — harmless, and they'd matter if a future toggle re-enabled color-material.)
 
 ## Controls Reference
 
