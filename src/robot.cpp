@@ -152,10 +152,12 @@ void drawSpine(glm::mat4 m) {
 
 void drawTopBack(glm::mat4 m) {
     DrawCtx c;
+    // Original sets blue on cube 1 then leaves glColor3f commented out for the
+    // next three, so the persistent GL color stays blue for all four.
     renderCube(c.prog,c.u, m*T( 1,2.3f,-0.2f)*R(-10,1,0,0), c.outer,{0,0,1}, 0.6f,0.7f,0.4f);
-    renderCube(c.prog,c.u, m*T(-1,2.3f,-0.2f)*R(-10,1,0,0), c.outer,{1,1,1}, 0.6f,0.7f,0.4f);
-    renderCube(c.prog,c.u, m*T( 0.9f,1,-0.2f)*R(20,1,0,0),  c.outer,{1,1,1}, 0.5f,0.6f,0.4f);
-    renderCube(c.prog,c.u, m*T(-0.9f,1,-0.2f)*R(20,1,0,0),  c.outer,{1,1,1}, 0.5f,0.6f,0.4f);
+    renderCube(c.prog,c.u, m*T(-1,2.3f,-0.2f)*R(-10,1,0,0), c.outer,{0,0,1}, 0.6f,0.7f,0.4f);
+    renderCube(c.prog,c.u, m*T( 0.9f,1,-0.2f)*R(20,1,0,0),  c.outer,{0,0,1}, 0.5f,0.6f,0.4f);
+    renderCube(c.prog,c.u, m*T(-0.9f,1,-0.2f)*R(20,1,0,0),  c.outer,{0,0,1}, 0.5f,0.6f,0.4f);
     renderTrapezoid(c.prog,c.u, m*T( 0.2f,2.3f,0.05f)*R(-10,1,0,0)*R(-90,0,0,1),
                     c.outer,{0,0,1}, 0.6f,0.1f,0.5f,0.4f,0.35f);
     renderTrapezoid(c.prog,c.u, m*T(-0.2f,2.3f,0.05f)*R(-10,1,0,0)*R(90,0,0,1),
@@ -475,10 +477,10 @@ void drawLegUpperArmor(glm::mat4 m, float d) {
     glm::mat4 side = base * T(d*2.5f,0,0)*R(-90,0,1,0)*R(-15,0,0,1)*R(-d*90.f,1,0,0);
     renderTrapezoid(c.prog,c.u, side, c.outer,{1,1,1}, 1.5f,-0.25f,1.75f,0.5f,7.f);
 
-    // cylinders behind thigh
-    renderCylinder(c.prog,c.u, base*T(    0,-4,1.3f)*R(-90,1,0,0), c.inner,{1,1,1}, 0.3f,0.3f,7.5f);
-    renderCylinder(c.prog,c.u, base*T(-0.5f,-4,1.3f)*R(-90,1,0,0), c.inner,{1,1,1}, 0.3f,0.3f,7.5f);
-    renderCylinder(c.prog,c.u, base*T( 0.5f,-4,1.3f)*R(-90,1,0,0), c.inner,{1,1,1}, 0.3f,0.3f,7.5f);
+    // cylinders behind thigh (original has outer bound here, like the plates above)
+    renderCylinder(c.prog,c.u, base*T(    0,-4,1.3f)*R(-90,1,0,0), c.outer,{1,1,1}, 0.3f,0.3f,7.5f);
+    renderCylinder(c.prog,c.u, base*T(-0.5f,-4,1.3f)*R(-90,1,0,0), c.outer,{1,1,1}, 0.3f,0.3f,7.5f);
+    renderCylinder(c.prog,c.u, base*T( 0.5f,-4,1.3f)*R(-90,1,0,0), c.outer,{1,1,1}, 0.3f,0.3f,7.5f);
 }
 
 void drawLegLowerArmor(glm::mat4 m, float n) {
@@ -519,7 +521,7 @@ void drawLegFoot(glm::mat4 m, float d) {
     DrawCtx c;
     glm::mat4 base = m * R(90,1,0,0)*R(180,0,0,1)*Sc(0.5f,0.5f,0.5f);
     renderCube(c.prog,c.u, base,                                        c.outer,{1,1,1}, 0.75f,0.5f,0.25f);
-    renderCylinder(c.prog,c.u, base*T(0,0,-1.75f),                     c.inner,{1,1,1}, 0.2f,0.2f,2.f);
+    renderCylinder(c.prog,c.u, base*T(0,0,-1.75f),                     c.outer,{1,1,1}, 0.2f,0.2f,2.f);
     renderCube(c.prog,c.u, base*T(0,0,-0.5f),                          c.outer,{1,1,1}, 0.75f,0.5f,0.25f);
     renderCube(c.prog,c.u, base*T(0,1,0),                              c.outer,{1,1,1}, 0.75f,0.5f,0.25f);
     renderTrapezoid(c.prog,c.u, base*T(0,2,0),                         c.outer,{1,1,1}, 1.f,-0.25f,1.25f,1.f,0.5f);
@@ -553,7 +555,7 @@ void drawRightLeg(glm::mat4 m) {
     DrawCtx c;
     glm::mat4 conn = m * T(0,1,0.5f);
     renderTrapezoid(c.prog,c.u, conn*T(0,-1.6f,-0.45f),             c.outer,{0,0,1}, 0.5f,0.2f,0.3f,0.8f,1.5f);
-    renderCylinder(c.prog,c.u,  conn*T(1,-1.5f,-0.5f)*R(-90,0,1,0), c.inner,{0.2f,0.2f,0.2f}, 0.1f,0.1f,2.f);
+    renderCylinder(c.prog,c.u,  conn*T(1,-1.5f,-0.5f)*R(-90,0,1,0), c.outer,{0.2f,0.2f,0.2f}, 0.1f,0.1f,2.f);
 
     glm::mat4 base = m * R(leftRightUpperAngle,1,0,0);
 

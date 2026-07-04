@@ -200,42 +200,45 @@ MeshData& getSphereMesh(float r, int slices, int stacks) {
 static MeshData buildCylinderMesh(float baseR, float topR, float h, int slices) {
     MeshData m;
     const float pi = glm::pi<float>();
+    // Oriented along +Z to match gluCylinder: base ring at z=0, top ring at z=h,
+    // circular cross-section in the XY plane. Every draw* call copies the
+    // original's rotations verbatim, so the base axis MUST be +Z (not +Y).
     // side
     for (int i = 0; i <= slices; ++i) {
         float t = (float)i / slices;
         float a = 2.f * pi * t;
-        float cx = std::cos(a), cz = std::sin(a);
-        glm::vec3 nBot{cx, 0, cz}, nTop{cx, 0, cz};
-        pushVertex(m, {baseR*cx, 0,  baseR*cz}, nBot, {t, 0});
-        pushVertex(m, {topR*cx,  h,  topR*cz},  nTop, {t, 1});
+        float cx = std::cos(a), cy = std::sin(a);
+        glm::vec3 n{cx, cy, 0};
+        pushVertex(m, {baseR*cx, baseR*cy, 0}, n, {t, 0});
+        pushVertex(m, {topR*cx,  topR*cy,  h}, n, {t, 1});
     }
     for (int i = 0; i < slices; ++i) {
         unsigned int b = i*2, t2 = b+1;
         pushQuad(m, b, b+2, t2+2, t2);
     }
-    // bottom cap (fan)
+    // bottom cap (fan) at z=0, facing -Z
     if (baseR > 0.f) {
         unsigned int center = m.vertices.size() / 8;
-        pushVertex(m, {0,0,0}, {0,-1,0}, {0.5f,0.5f});
+        pushVertex(m, {0,0,0}, {0,0,-1}, {0.5f,0.5f});
         for (int i = 0; i <= slices; ++i) {
             float a = 2.f * pi * i / slices;
-            float cx = std::cos(a), cz = std::sin(a);
-            pushVertex(m, {baseR*cx,0,baseR*cz}, {0,-1,0},
-                       {cx*0.5f+0.5f, cz*0.5f+0.5f});
+            float cx = std::cos(a), cy = std::sin(a);
+            pushVertex(m, {baseR*cx,baseR*cy,0}, {0,0,-1},
+                       {cx*0.5f+0.5f, cy*0.5f+0.5f});
         }
         for (int i = 0; i < slices; ++i)
             m.indices.insert(m.indices.end(),
                              {center, center+i+2, center+i+1});
     }
-    // top cap
+    // top cap at z=h, facing +Z
     if (topR > 0.f) {
         unsigned int center = m.vertices.size() / 8;
-        pushVertex(m, {0,h,0}, {0,1,0}, {0.5f,0.5f});
+        pushVertex(m, {0,0,h}, {0,0,1}, {0.5f,0.5f});
         for (int i = 0; i <= slices; ++i) {
             float a = 2.f * pi * i / slices;
-            float cx = std::cos(a), cz = std::sin(a);
-            pushVertex(m, {topR*cx,h,topR*cz}, {0,1,0},
-                       {cx*0.5f+0.5f, cz*0.5f+0.5f});
+            float cx = std::cos(a), cy = std::sin(a);
+            pushVertex(m, {topR*cx,topR*cy,h}, {0,0,1},
+                       {cx*0.5f+0.5f, cy*0.5f+0.5f});
         }
         for (int i = 0; i < slices; ++i)
             m.indices.insert(m.indices.end(),

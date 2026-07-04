@@ -85,6 +85,13 @@ glm::mat4 joint = parent * T(pivot) * R(angle, axis) * T(-pivot);
 
 **Upper vs lower body split** in `summonGgBot()` — the upper body matrix has `rBody` applied (for attack360 spinning), while `drawLeftLeg`/`drawRightLeg` receive the base `model` matrix without that rotation. This means leg animations (`legLeftUpperAngle`, `leftRightUpperAngle`, etc.) are independent of the upper body spin.
 
+## Porting fidelity notes
+
+The `draw*()` functions copy the original `Main.cpp` transform sequences **verbatim** (each legacy `glTranslatef/glRotatef/glScalef` becomes one `T()/R()/Sc()` factor, same order). Two consequences future contributors must respect:
+
+- **`getCylinderMesh` is oriented along +Z**, matching `gluCylinder` (base ring at `z=0`, top at `z=h`, cross-section in the XY plane). This is load-bearing: every cylinder/cone/prism/`renderTrapezoidGLU` call inherits the original's rotations, which assume a +Z tube axis. Do **not** "simplify" it to a +Y axis — that silently rotates every such part 90°. `getDiskMesh` likewise matches `gluDisk` (XY plane, +Z normal).
+- **Persistent GL state is resolved explicitly.** The original relied on the last-bound `glBindTexture` and last-set `glColor3f` persisting across draws. The port passes texture/color per call. Where a small internal detail piece (spine-joint sub-spheres, `drawScale`, `drawLegInnerNerve`, `drawCoreDetail1`) is drawn untextured (`texID 0`) and the wireframe foot sphere is drawn solid, that is a deliberate simplification, not a bug.
+
 ## Controls Reference
 
 | Key | Action |
