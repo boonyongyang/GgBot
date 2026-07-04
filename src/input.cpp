@@ -77,6 +77,9 @@ static void keyCallback(GLFWwindow* window, int key, int /*scancode*/,
         if (isOrtho) { if (ptY <  1.3f) ptY += ptSpeed; }
         else          { perspecZoomLevel += 1.f; }
 
+    } else if (key == GLFW_KEY_O) {
+        legacyLook = !legacyLook;   // legacy Windows look <-> modern Phong
+
     } else if (key == GLFW_KEY_P) {
         isOrtho = !isOrtho;
         tZ = 0.f;

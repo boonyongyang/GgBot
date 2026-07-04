@@ -49,6 +49,7 @@ void setLighting(GLuint prog, const Uniforms& u) {
     glUniform3fv(u.materialAmbient, 1, ambM);
     glUniform3fv(u.materialDiffuse, 1, difM);
     glUniform1f (u.materialFv,    materialFv);
+    glUniform1i (u.legacyLook,    legacyLook ? 1 : 0);
 }
 
 void summonGgBot(glm::mat4 model) {

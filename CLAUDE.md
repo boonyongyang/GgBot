@@ -104,6 +104,7 @@ The `draw*()` functions copy the original `Main.cpp` transform sequences **verba
 
 | Key | Action |
 |---|---|
+| O | Toggle legacy Windows look ↔ modern Phong shading |
 | P | Toggle ortho ↔ perspective |
 | WASD | Face direction (mutates `faceAngle`) |
 | Q | Step walking animation |

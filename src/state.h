@@ -51,6 +51,12 @@ extern bool boolHI;
 extern bool boolWeapon;
 extern bool boolSword;
 
+// ── Render style ─────────────────────────────────────────────────────────────
+// true  = legacy fixed-function look (flat/fullbright, texture-only, matches the
+//         original Windows build). false = modern per-fragment Phong with per-part
+//         colors. Toggled with the O key.
+extern bool legacyLook;
+
 // ── Legs ─────────────────────────────────────────────────────────────────────
 extern int   r;
 extern float legLeftUpperAngle, legLeftLowerAngle;

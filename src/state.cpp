@@ -50,6 +50,9 @@ bool boolHI     = false;
 bool boolWeapon = false;
 bool boolSword  = false;
 
+// ── Render style ─────────────────────────────────────────────────────────────
+bool legacyLook = true;   // default to the original Windows look
+
 // ── Legs ─────────────────────────────────────────────────────────────────────
 int   r = 1;
 float legLeftUpperAngle  = 0.f, legLeftLowerAngle   = 0.f;

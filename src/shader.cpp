@@ -75,6 +75,7 @@ Uniforms cacheUniforms(GLuint prog) {
     u.materialAmbient = loc("uMaterialAmbient");
     u.materialDiffuse = loc("uMaterialDiffuse");
     u.materialFv     = loc("uMaterialFv");
+    u.legacyLook     = loc("uLegacyLook");
     return u;
 }
 

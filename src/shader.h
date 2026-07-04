@@ -14,6 +14,8 @@ struct Uniforms {
     GLint diffuseColor, diffusePos;
     // material
     GLint materialAmbient, materialDiffuse, materialFv;
+    // render style: 1 = legacy fixed-function look, 0 = modern Phong
+    GLint legacyLook;
 };
 
 GLuint   loadShaderProgram(const char* vertPath, const char* fragPath);

@@ -25,6 +25,9 @@ uniform vec3  uMaterialAmbient;
 uniform vec3  uMaterialDiffuse;
 uniform float uMaterialFv;   // 1=white scheme, 2=blue scheme
 
+// render style: true = legacy fixed-function look, false = modern Phong (O key)
+uniform bool  uLegacyLook;
+
 out vec4 FragColor;
 
 vec3 phong(vec3 lightPos, vec3 lightColor, vec3 norm, vec3 fragPos, float shininess) {
@@ -40,28 +43,41 @@ vec3 phong(vec3 lightPos, vec3 lightColor, vec3 norm, vec3 fragPos, float shinin
     return diffuse + specular;
 }
 
-void main() {
-    // The original renders with GL_COLOR_MATERIAL OFF, so per-part glColor3f is
-    // ignored under lighting: textured surfaces show the texture only (GL_MODULATE),
-    // and the material drives lighting. We mirror that — uColor tints only
-    // untextured detail pieces (which relied on a leftover binding in the original).
+// Legacy fixed-function look: matches the original Windows build. GL_COLOR_MATERIAL
+// is off, so per-part glColor3f is ignored — textured surfaces show the texture only
+// (GL_MODULATE) and uColor tints just the untextured detail pieces. No normals were
+// ever set, so shading is flat; LIGHT0's white ambient saturates it to fullbright.
+vec4 legacy() {
     vec4 baseColor = (uUseTexture > 0.5) ? texture(uTexture, vTexCoord)
                                          : vec4(uColor, 1.0);
+    if (!uLightOn) return baseColor;
 
-    if (!uLightOn) {
-        FragColor = baseColor;
-        return;
-    }
-
-    // The original sets NO normals anywhere, so every vertex keeps the default
-    // (0,0,1): lighting is flat (no per-face shading). With LIGHT0's white ambient
-    // and a white material ambient the ambient term saturates to white, making the
-    // model effectively fullbright — the "flat and bright" legacy look.
     vec3 result = vec3(0.0);
     if (uAmbientOn)  result += uAmbientColor * uMaterialAmbient;        // ~white
     if (uDiffuseOn)  result += uMaterialDiffuse * uDiffuseColor * 0.5;  // faint flat blue
     if (uSpecularOn) result += uMaterialDiffuse * uDiffuseColor * 0.3;
-    result = clamp(result, 0.0, 1.0);
+    return vec4(clamp(result, 0.0, 1.0), 1.0) * baseColor;
+}
 
-    FragColor = vec4(result, 1.0) * baseColor;
+// Modern look: per-fragment Phong using real geometry normals, with the per-part
+// colors kept as a tint on the texture.
+vec4 modern() {
+    vec4 baseColor = (uUseTexture > 0.5) ? texture(uTexture, vTexCoord) * vec4(uColor, 1.0)
+                                         : vec4(uColor, 1.0);
+    if (!uLightOn) return baseColor;
+
+    vec3 norm   = normalize(vNormal);
+    vec3 result = vec3(0.0);
+    if (uAmbientOn)  result += uAmbientColor * uMaterialAmbient;
+    if (uDiffuseOn)  result += phong(uDiffusePos, uDiffuseColor, norm, vFragPos, 32.0) * uMaterialDiffuse;
+    if (uSpecularOn) {
+        float shine = (uMaterialFv == 2.0) ? 64.0 : 32.0;
+        result += phong(uDiffusePos, uDiffuseColor, norm, vFragPos, shine);
+    }
+    result = max(result, vec3(0.05));
+    return vec4(result, 1.0) * baseColor;
+}
+
+void main() {
+    FragColor = uLegacyLook ? legacy() : modern();
 }
