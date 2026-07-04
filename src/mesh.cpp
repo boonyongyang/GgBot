@@ -66,7 +66,7 @@ static void pushQuad(MeshData& m,
 static MeshData buildCubeMesh(float x, float y, float z) {
     MeshData m;
     // 6 faces, each a quad → 4 vertices × 8 floats, face normal = constant
-    struct Face { glm::vec3 n; std::array<glm::vec3,4> v; };
+    struct Face { glm::vec3 n; glm::vec3 v[4]; };
     Face faces[6] = {
         // bottom  (-Y)
         {{ 0,-1, 0},{{ -x,-y,-z},{-x,-y, z},{ x,-y, z},{ x,-y,-z}}},
