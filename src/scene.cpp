@@ -9,23 +9,31 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void computeProjection(int width, int height, glm::mat4& view, glm::mat4& proj) {
-    float aspect = (height > 0) ? (float)width / height : 1.f;
+    (void)width; (void)height;   // original ignores window aspect
+
+    // PROJECTION — replicates the original projection() exactly: panning, a 180°
+    // flip ("reduces distortion"), and prY are baked into the projection matrix,
+    // and the perspective path stacks gluPerspective(35,1,-1,1) onto glFrustum.
+    proj = glm::mat4(1.f);
+    proj = glm::translate(proj, {ptX, ptY, 0.f});
+    proj = glm::rotate(proj, glm::radians(180.f), {0,1,0});
+    proj = glm::rotate(proj, glm::radians(prY),   {0,1,0});
     if (isOrtho) {
-        proj = glm::ortho(-10.f * aspect, 10.f * aspect,
-                          -10.f, 10.f, orthoNear, orthoFar);
+        proj = proj * glm::ortho(-10.f, 10.f, -10.f, 10.f, orthoNear, orthoFar);
     } else {
-        proj = glm::perspective(glm::radians(45.f), aspect, 0.1f, 500.f);
+        proj = proj * glm::perspective(glm::radians(35.f), 1.f, -1.f, 1.f)
+                    * glm::frustum(-10.f, 10.f, -10.f, 10.f, perspecNear, perspecFar);
     }
 
-    // camera: zoom + mouse orbit
+    // MODELVIEW — replicates display(): zoom, mouse orbit, then faceAngle.
+    // In ortho the original forces perspecZoomLevel = 8 each frame (scene1).
+    float zoom = isOrtho ? 8.f : perspecZoomLevel;
     view = glm::mat4(1.f);
-    view = glm::translate(view, {0.f, 0.f, perspecZoomLevel});
+    view = glm::translate(view, {0.f, 0.f, zoom});
     view = glm::rotate(view, glm::radians(mouseXRotate), {1,0,0});
     view = glm::rotate(view, glm::radians(mouseYRotate), {0,1,0});
     view = glm::rotate(view, glm::radians(mouseZRotate), {0,0,1});
-
-    // panning
-    view = glm::translate(view, {ptX, ptY, 0.f});
+    view = glm::rotate(view, glm::radians(faceAngle),    {0,1,0});
 }
 
 void setLighting(GLuint prog, const Uniforms& u) {
@@ -68,8 +76,9 @@ void scene1(GLuint prog, const Uniforms& u, int width, int height) {
     setFrameContext(prog, u, view, proj);
     setLighting(prog, u);
 
+    // faceAngle is applied in the modelview (see computeProjection), matching the
+    // original display(); scene1's world matrix therefore starts at identity.
     glm::mat4 world = glm::mat4(1.f);
-    world = glm::rotate(world, glm::radians(faceAngle), {0,1,0});
 
     drawSkyBox(world);
     if (!isOrtho) drawOcean(world);

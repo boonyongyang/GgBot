@@ -41,39 +41,27 @@ vec3 phong(vec3 lightPos, vec3 lightColor, vec3 norm, vec3 fragPos, float shinin
 }
 
 void main() {
-    vec4 baseColor;
-    if (uUseTexture > 0.5) {
-        baseColor = texture(uTexture, vTexCoord) * vec4(uColor, 1.0);
-    } else {
-        baseColor = vec4(uColor, 1.0);
-    }
+    // The original renders with GL_COLOR_MATERIAL OFF, so per-part glColor3f is
+    // ignored under lighting: textured surfaces show the texture only (GL_MODULATE),
+    // and the material drives lighting. We mirror that — uColor tints only
+    // untextured detail pieces (which relied on a leftover binding in the original).
+    vec4 baseColor = (uUseTexture > 0.5) ? texture(uTexture, vTexCoord)
+                                         : vec4(uColor, 1.0);
 
     if (!uLightOn) {
         FragColor = baseColor;
         return;
     }
 
-    vec3 norm    = normalize(vNormal);
-    vec3 result  = vec3(0.0);
-
-    // GL_LIGHT0: ambient
-    if (uAmbientOn) {
-        result += uAmbientColor * uMaterialAmbient;
-    }
-
-    // GL_LIGHT1: diffuse
-    if (uDiffuseOn) {
-        result += phong(uDiffusePos, uDiffuseColor, norm, vFragPos, 32.0) * uMaterialDiffuse;
-    }
-
-    // GL_LIGHT2: specular (reuses dif color/pos like original)
-    if (uSpecularOn) {
-        float shine = (uMaterialFv == 2.0) ? 64.0 : 32.0;
-        result += phong(uDiffusePos, uDiffuseColor, norm, vFragPos, shine);
-    }
-
-    // ensure minimum visibility when lights give zero contribution
-    result = max(result, vec3(0.05));
+    // The original sets NO normals anywhere, so every vertex keeps the default
+    // (0,0,1): lighting is flat (no per-face shading). With LIGHT0's white ambient
+    // and a white material ambient the ambient term saturates to white, making the
+    // model effectively fullbright — the "flat and bright" legacy look.
+    vec3 result = vec3(0.0);
+    if (uAmbientOn)  result += uAmbientColor * uMaterialAmbient;        // ~white
+    if (uDiffuseOn)  result += uMaterialDiffuse * uDiffuseColor * 0.5;  // faint flat blue
+    if (uSpecularOn) result += uMaterialDiffuse * uDiffuseColor * 0.3;
+    result = clamp(result, 0.0, 1.0);
 
     FragColor = vec4(result, 1.0) * baseColor;
 }
