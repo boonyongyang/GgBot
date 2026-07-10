@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20)
 project(GgBot CXX)
 set(CMAKE_CXX_STANDARD 17)
 
+# Some fetched dependencies (glad v0.1.36, glm 0.9.9.8) declare a
+# cmake_minimum_required below 3.5, which CMake 4+ rejects outright. This is the
+# documented escape hatch so they still configure on newer CMake (e.g. macOS
+# runners / Homebrew CMake); it is a harmless no-op on older CMake.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
+
 include(FetchContent)
 
 # GLFW
