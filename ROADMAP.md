@@ -20,16 +20,16 @@ Windows `Main.cpp` is reference-only and not tracked here.
 - [ ] **Run on real Apple Silicon hardware.** Everything so far was verified on a Linux
       toolchain with Mesa *software* GL. Needs a physical Mac (Apple GPU, real GL 3.3 Core
       context). *Owner: maintainer — see the checklist at the bottom.*
-- [ ] **GitHub Actions CI.** Build on `macos-latest` (validates the Apple path) and
-      `ubuntu-latest`; run a headless smoke render on Linux (Xvfb + Mesa) so regressions
-      are caught automatically. *Executable now.*
-- [ ] **Startup asset check.** Fail loudly with a clear message if `shaders/` or `textures/`
-      are missing, instead of a silent black/invisible model. *Executable now.*
+- [x] **GitHub Actions CI.** Builds on `macos-latest` (validates the Apple path) and
+      `ubuntu-latest`; runs a headless smoke render on Linux (Xvfb + Mesa via
+      `GGBOT_MAX_FRAMES`) so regressions are caught automatically. `.github/workflows/ci.yml`.
+- [x] **Startup asset check.** Fails loudly with a clear message if `shaders/` or `textures/`
+      are missing, instead of a silent black/invisible model.
 
 ## P1 — Robustness
 
-- [ ] **Resolve asset paths relative to the executable**, not the current working directory,
-      so `./GgBot` works from anywhere (today it must run from `build/`). *Executable now.*
+- [x] **Resolve asset paths relative to the executable** (chdir to the binary's directory at
+      startup), so `./GgBot` works from anywhere — no longer tied to `build/`.
 - [ ] **Frame-rate-independent animation.** Angles advance a fixed amount per frame, so
       animation speed scales with FPS (a 120 Hz Mac animates ~2× faster than 60 Hz). Drive
       updates by delta-time. *Executable now.*
@@ -45,7 +45,7 @@ Windows `Main.cpp` is reference-only and not tracked here.
 
 ## P3 — Docs / UX / cleanup
 
-- [ ] README: add a macOS/CMake build section (it currently lists only Windows controls).
+- [x] README: macOS/CMake build section added (plus the full modern controls incl. `O`).
 - [ ] Print the controls to stdout on launch, or add a small on-screen help overlay.
 - [ ] Remove or clearly annotate the intentionally-unused `drawInnerBodyStructure` and
       `renderCuboidGLU` (faithful to the original's dead code, but flagged for readers).
