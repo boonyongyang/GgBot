@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, "claude/**" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux:
+    name: Build + headless smoke (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+            libgl1-mesa-dev libglu1-mesa-dev \
+            xvfb mesa-utils
+
+      - name: Configure
+        run: cmake -B build -DGLFW_BUILD_WAYLAND=OFF
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Headless smoke test
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+          MESA_GL_VERSION_OVERRIDE: "3.3"
+          MESA_GLSL_VERSION_OVERRIDE: "330"
+          GGBOT_MAX_FRAMES: "10"
+        # Renders 10 frames under a virtual display with software GL, then exits 0.
+        # Fails the job if the binary crashes or the shaders/textures don't load.
+        run: |
+          cd build
+          xvfb-run -a -s "-screen 0 800x600x24" ./GgBot
+
+  macos:
+    name: Build (macOS / Apple Clang)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build
+
+      - name: Build
+        run: cmake --build build --parallel
+        # GitHub's macOS runners are headless, so we validate the Apple/Clang +
+        # -framework OpenGL build path here; interactive run is verified locally.
