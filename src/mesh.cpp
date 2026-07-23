@@ -420,6 +420,8 @@ void renderTrapezoidGLU(GLuint prog, const Uniforms& u, glm::mat4 model,
          getCylinderMesh(baseL, topL, h, 4));
 }
 
+// Unused, mirroring Main.cpp's renderCuboid (commented there as "no use dao?").
+// Kept for parity with the original; safe to drop if the reference is retired.
 void renderCuboidGLU(GLuint prog, const Uniforms& u, glm::mat4 model,
                      GLuint texID, glm::vec3 color, float l, float h) {
     glm::mat4 m2 = model *
@@ -430,7 +432,11 @@ void renderCuboidGLU(GLuint prog, const Uniforms& u, glm::mat4 model,
 
 void renderWireSphere(GLuint prog, const Uniforms& u, glm::mat4 model,
                       GLuint texID, glm::vec3 color, float r) {
+    // Original drew the foot decoration as a GL_LINE_STRIP wireframe; reproduce
+    // that by rasterizing the sphere in line mode, then restore fill.
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     draw(prog, u, model, s_view, s_proj, texID, color, getWireSphereMesh(r));
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void renderSwordTip(GLuint prog, const Uniforms& u, glm::mat4 model,

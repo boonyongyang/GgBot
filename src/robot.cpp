@@ -231,6 +231,8 @@ void drawNeck(glm::mat4 m) {
                         c.inner,{1,0,1}, 1.2f,0.f,0.f,0.4f,0.4f);
 }
 
+// Unused: the original's drawInnerBodyStructure() call is commented out in
+// Main.cpp. Ported for parity; kept so the reference stays 1:1.
 void drawInnerBodyStructure(glm::mat4 m) {
     DrawCtx c;
     renderTrapezoid(c.prog,c.u, m*T(0, 2.52f,-0.5f), 0,{0,1,0}, 5.f,0.2f,4.8f,1.f,1.5f);

@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <thread>
+#include <chrono>
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h>
@@ -70,6 +72,17 @@ static void framebufferSizeCallback(GLFWwindow* /*w*/, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+static void printControls() {
+    printf(
+        "GgBot — controls:\n"
+        "  O           legacy Windows look / modern Phong      P    ortho / perspective\n"
+        "  mouse drag  orbit                                   scroll  zoom\n"
+        "  WASD        face direction                          SPACE   reset\n"
+        "  Q walk   F body-spin   B/N head   T/Y right arm   U/I left arm   Z/X fingers\n"
+        "  F1 normal   F2 cannon   F3 sword   F4 HI   C shoot   V sword-attack   E 360 spin\n"
+        "  K/M texture   L/G/H/J lights   ESC quit\n");
+}
+
 int main() {
     chdirToExecutable();
     if (!assetsPresent()) return 1;
@@ -114,6 +127,7 @@ int main() {
     Uniforms u = cacheUniforms(prog);
 
     loadAllTextures();
+    printControls();
 
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
@@ -125,12 +139,23 @@ int main() {
     long maxFrames = mf ? atol(mf) : 0;
     long frame = 0;
 
+    // Cap to ~60 FPS. Animation state advances once per rendered frame, so without
+    // this the robot animates ~2x faster on a 120 Hz display. The cap only ever
+    // adds a wait, so it never introduces tearing; vsync stays on underneath.
+    const double targetFrame = 1.0 / 60.0;
+    double prevTime = glfwGetTime();
+
     while (!glfwWindowShouldClose(window)) {
         glfwGetFramebufferSize(window, &w, &h);
         display(prog, u, w, h);
         glfwSwapBuffers(window);
         glfwPollEvents();
         if (maxFrames > 0 && ++frame >= maxFrames) break;
+
+        double dt = glfwGetTime() - prevTime;
+        if (dt < targetFrame)
+            std::this_thread::sleep_for(std::chrono::duration<double>(targetFrame - dt));
+        prevTime = glfwGetTime();
     }
 
     glfwDestroyWindow(window);

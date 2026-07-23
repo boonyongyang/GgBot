@@ -47,7 +47,7 @@ void loadAllTextures() {
 
     // Specific-use textures
     texEye   = loadTexture("textures/eyetest.bmp");
-    texMetal = loadTexture("textures/metal2.bmp");
+    texMetal = textureArrOuter[0];   // same image as metal2.bmp — reuse, don't reload
     texOcean = loadTexture("textures/ocean.bmp");
     texSky   = loadTexture("textures/sky.bmp");
 }

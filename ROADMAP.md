@@ -30,25 +30,29 @@ Windows `Main.cpp` is reference-only and not tracked here.
 
 - [x] **Resolve asset paths relative to the executable** (chdir to the binary's directory at
       startup), so `./GgBot` works from anywhere — no longer tied to `build/`.
-- [ ] **Frame-rate-independent animation.** Angles advance a fixed amount per frame, so
-      animation speed scales with FPS (a 120 Hz Mac animates ~2× faster than 60 Hz). Drive
-      updates by delta-time. *Executable now.*
-- [ ] De-duplicate the `metal2.bmp` load (loaded for both `textureArrOuter[0]` and `texMetal`).
+- [x] **Consistent animation speed across displays.** Animation state advances once per
+      rendered frame, so on a 120 Hz display the robot moved ~2× too fast. The render loop
+      now caps to ~60 FPS. (A full delta-time rewrite would decouple update from render —
+      a larger refactor, since draw functions currently mutate animation state; the frame
+      cap solves the reported symptom with near-zero risk.)
+- [x] De-duplicated the `metal2.bmp` load (`texMetal` now reuses `textureArrOuter[0]`).
 
 ## P2 — Fidelity polish (optional)
 
-- [ ] Wireframe foot sphere rendered as actual lines (original used `GL_LINE_STRIP`; the port
-      draws a solid sphere).
+- [x] Wireframe foot sphere rendered as actual lines (`glPolygonMode(GL_LINE)`), matching
+      the original's `GL_LINE_STRIP`.
 - [ ] Optionally texture the flat detail pieces (spine-joint sub-spheres, `drawScale`,
-      `drawLegInnerNerve`, `drawCoreDetail1`) to match the original's inherited texture.
-- [ ] Sphere UV/pole axis matches `gluSphere` (affects sky/eye texture seam placement).
+      `drawLegInnerNerve`, `drawCoreDetail1`). **Intentionally left as-is** — documented in
+      CLAUDE.md as a deliberate "internal detail = flat color" simplification.
+- [ ] Sphere UV/pole axis matches `gluSphere`. **Deferred** — cosmetic only (shifts the
+      sky-sphere texture seam); negligible visual impact, not worth the churn.
 
 ## P3 — Docs / UX / cleanup
 
 - [x] README: macOS/CMake build section added (plus the full modern controls incl. `O`).
-- [ ] Print the controls to stdout on launch, or add a small on-screen help overlay.
-- [ ] Remove or clearly annotate the intentionally-unused `drawInnerBodyStructure` and
-      `renderCuboidGLU` (faithful to the original's dead code, but flagged for readers).
+- [x] Controls printed to stdout on launch.
+- [x] Annotated the intentionally-unused `drawInnerBodyStructure` and `renderCuboidGLU`
+      (faithful to the original's dead code, now flagged for readers).
 
 ## Apple Silicon verification checklist (for the maintainer)
 
